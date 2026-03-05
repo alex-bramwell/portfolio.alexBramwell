@@ -1,0 +1,72 @@
+@use '../../styles/variables' as *;
+
+.top-navigation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 0 clamp(20px, 5vw, 64px);
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: $color-background;
+  border-bottom: 1px solid $color-border-subtle;
+  transition: border-color 250ms ease;
+
+  &.navigation-scrolled {
+    border-color: $color-border;
+  }
+}
+
+.nav-logo-mark {
+  font-family: $font-display;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: $color-text-primary;
+
+  span {
+    color: $color-accent;
+  }
+}
+
+.nav-link-list {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+  align-items: center;
+
+  @media (max-width: $breakpoint-mobile) {
+    display: none;
+  }
+}
+
+.nav-link-item a {
+  color: $color-text-secondary;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 150ms ease;
+
+  &:hover {
+    color: $color-text-primary;
+  }
+}
+
+.nav-contact-button {
+  height: 34px;
+  padding: 0 18px;
+  background: $color-accent !important;
+  color: $color-background !important;
+  border-radius: $radius-small;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  transition: opacity 150ms ease, transform 150ms ease !important;
+
+  &:hover {
+    opacity: 0.85 !important;
+    transform: translateY(-1px) !important;
+  }
+}

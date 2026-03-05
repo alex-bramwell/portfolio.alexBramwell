@@ -1,0 +1,31 @@
+@use '../../styles/variables' as *;
+
+.site-footer {
+  padding: 28px 0;
+  border-top: 1px solid $color-border-subtle;
+}
+
+.footer-inner-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: $font-mono;
+  font-size: 11px;
+  color: $color-text-disabled;
+  letter-spacing: 0.5px;
+
+  @media (max-width: $breakpoint-mobile) {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+}
+
+.footer-tech-stack-list {
+  display: flex;
+  gap: 16px;
+}
+
+.footer-tech-stack-item {
+  color: $color-text-secondary;
+}

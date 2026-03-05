@@ -1,0 +1,49 @@
+@use 'variables' as *;
+
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --color-background:     #{$color-background};
+  --color-surface:        #{$color-surface};
+  --color-surface-raised: #{$color-surface-raised};
+  --color-border:         #{$color-border};
+  --color-border-subtle:  #{$color-border-subtle};
+  --color-border-hover:   #{$color-border-hover};
+  --color-text-primary:   #{$color-text-primary};
+  --color-text-secondary: #{$color-text-secondary};
+  --color-text-disabled:  #{$color-text-disabled};
+  --color-accent:         #{$color-accent};
+  --color-accent-dim:     #{$color-accent-dim};
+  --color-accent-border:  #{$color-accent-border};
+  --font-display: #{$font-display};
+  --font-body:    #{$font-body};
+  --font-mono:    #{$font-mono};
+  --radius-small:  #{$radius-small};
+  --radius-medium: #{$radius-medium};
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: $color-background;
+  color: $color-text-primary;
+  font-family: $font-body;
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar       { width: 4px; }
+::-webkit-scrollbar-track { background: $color-background; }
+::-webkit-scrollbar-thumb { background: $color-border; }

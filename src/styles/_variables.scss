@@ -1,0 +1,24 @@
+// Design tokens
+$color-background:     #0b0b0b;
+$color-surface:        #131313;
+$color-surface-raised: #1a1a1a;
+$color-border:         #2a2a2a;
+$color-border-subtle:  #1e1e1e;
+$color-border-hover:   #444;
+$color-text-primary:   #f2f2ee;
+$color-text-secondary: #7a7a74;
+$color-text-disabled:  #333330;
+$color-accent:         #dfff47;
+$color-accent-dim:     rgba(223, 255, 71, 0.08);
+$color-accent-border:  rgba(223, 255, 71, 0.25);
+
+$font-display: 'Bricolage Grotesque', sans-serif;
+$font-body:    'Instrument Sans', sans-serif;
+$font-mono:    'JetBrains Mono', monospace;
+
+$radius-small:  4px;
+$radius-medium: 8px;
+
+// Breakpoints
+$breakpoint-tablet: 960px;
+$breakpoint-mobile: 600px;

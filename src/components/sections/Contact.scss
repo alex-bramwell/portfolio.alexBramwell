@@ -1,0 +1,89 @@
+@use '../../styles/variables' as *;
+
+.contact-section {
+  background: $color-surface;
+}
+
+.contact-two-column-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+
+  @media (max-width: $breakpoint-tablet) {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+.contact-open-to-role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  background: rgba(74, 222, 128, 0.07);
+  border-radius: $radius-small;
+  padding: 6px 12px;
+  font-family: $font-mono;
+  font-size: 11px;
+  color: #86efac;
+  letter-spacing: 0.5px;
+  margin-bottom: 24px;
+}
+
+.contact-availability-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4ade80;
+  animation: status-pulse 1.5s ease-in-out infinite;
+}
+
+.contact-details-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border: 1px solid $color-border;
+  border-radius: $radius-medium;
+  overflow: hidden;
+}
+
+.contact-detail-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: $color-background;
+  text-decoration: none;
+  transition: background 150ms ease;
+
+  &:hover {
+    background: $color-surface-raised;
+  }
+
+  &:hover .contact-detail-row-arrow {
+    color: $color-accent;
+    transform: translateX(3px);
+  }
+}
+
+.contact-detail-field-label {
+  font-family: $font-mono;
+  font-size: 11px;
+  color: $color-text-secondary;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.contact-detail-field-value {
+  font-size: 14px;
+  color: $color-text-primary;
+  font-weight: 500;
+}
+
+.contact-detail-row-arrow {
+  font-family: $font-mono;
+  font-size: 12px;
+  color: $color-text-disabled;
+  transition: color 150ms ease, transform 150ms ease;
+}

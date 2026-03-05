@@ -1,0 +1,25 @@
+@use '../styles/variables' as *;
+
+.split-heading {
+  font-family: $font-display;
+  font-size: clamp(32px, 5vw, 58px);
+  font-weight: 800;
+  letter-spacing: -2px;
+  line-height: 1.0;
+
+  em {
+    font-style: normal;
+    color: $color-accent;
+  }
+}
+
+.split-word-wrapper {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+}
+
+.split-word {
+  display: inline-block;
+  will-change: transform, opacity;
+}
