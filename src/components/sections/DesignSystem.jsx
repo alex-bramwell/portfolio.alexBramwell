@@ -38,6 +38,34 @@ const TOKEN_GROUPS = [
   },
 ];
 
+const PIPELINE_STEPS = [
+  {
+    label: "Design Tokens",
+    desc: "SCSS variables compiled to CSS custom properties on :root. Theme swap changes every token at runtime.",
+    tech: "_variables.scss → var(--color-*)",
+  },
+  {
+    label: "React Components",
+    desc: "Stateless UI primitives consume tokens directly. No hardcoded values — every component adapts to both themes automatically.",
+    tech: "JSX + SCSS modules",
+  },
+  {
+    label: "Storybook",
+    desc: "Each component is documented in isolation with interactive controls, theme toggle, and live preview.",
+    tech: "storybook build → /storybook",
+  },
+  {
+    label: "CI / CD",
+    desc: "Push to main triggers GitHub Actions: Vite builds the site, Storybook builds alongside it, both deploy to Pages.",
+    tech: "GitHub Actions → Pages",
+  },
+  {
+    label: "Live Site",
+    desc: "Portfolio and Storybook served from the same domain. Components you see here are the same ones documented there.",
+    tech: "alex-bramwell.github.io",
+  },
+];
+
 const COMPONENTS = [
   { name: "MagneticButton", desc: "GSAP cursor-follow interaction" },
   { name: "ThemeToggle", desc: "Animated sun/moon switcher" },
@@ -103,16 +131,61 @@ export default function DesignSystem() {
                   </div>
                 ))}
               </div>
-              <MagneticButton
-                href="/portfolio.alexBramwell/storybook/"
-                className="button-filled ds-storybook-link"
-                target="_blank"
-              >
-                Open Storybook &rarr;
-              </MagneticButton>
             </div>
           </ScrollReveal>
         </div>
+
+        <ScrollReveal>
+          <div className="ds-pipeline">
+            <h3 className="ds-pipeline-title">How it all connects</h3>
+            <div className="ds-pipeline-steps">
+              {PIPELINE_STEPS.map((step, i) => (
+                <div key={step.label} className="ds-pipeline-step">
+                  <div className="ds-pipeline-step-header">
+                    <span className="ds-pipeline-step-number">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="ds-pipeline-step-label">{step.label}</span>
+                  </div>
+                  <p className="ds-pipeline-step-desc">{step.desc}</p>
+                  <span className="ds-pipeline-step-tech">{step.tech}</span>
+                  {i < PIPELINE_STEPS.length - 1 && (
+                    <div className="ds-pipeline-arrow" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M8 2v10M4 8l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </ScrollReveal>
+
+        <ScrollReveal>
+          <a
+            href="/portfolio.alexBramwell/storybook/"
+            target="_blank"
+            rel="noopener"
+            className="ds-storybook-card"
+          >
+            <div className="ds-storybook-card-icon">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                <line x1="9" y1="7" x2="15" y2="7" />
+                <line x1="9" y1="11" x2="13" y2="11" />
+              </svg>
+            </div>
+            <div className="ds-storybook-card-content">
+              <h3 className="ds-storybook-card-title">Explore the live Storybook</h3>
+              <p className="ds-storybook-card-desc">
+                Browse every component in isolation with interactive controls, theme switching,
+                and full design token documentation — the same tooling I use to build and
+                maintain design systems in production.
+              </p>
+            </div>
+            <span className="ds-storybook-card-arrow">&rarr;</span>
+          </a>
+        </ScrollReveal>
 
         <ScrollReveal>
           <div className="ds-type-strip">
