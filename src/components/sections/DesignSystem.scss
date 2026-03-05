@@ -1,0 +1,186 @@
+@use '../../styles/variables' as *;
+
+.design-system-section {
+  background: var(--color-surface);
+}
+
+.ds-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 56px;
+
+  @media (max-width: $breakpoint-tablet) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Shared panel style
+.ds-token-panel,
+.ds-component-panel {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  padding: 32px;
+  height: 100%;
+}
+
+.ds-panel-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  letter-spacing: -0.5px;
+  margin-bottom: 4px;
+}
+
+.ds-panel-subtitle {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  margin-bottom: 24px;
+}
+
+// Colour tokens
+.ds-token-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ds-token-group-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--color-accent);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.ds-swatch-row {
+  display: flex;
+  gap: 12px;
+}
+
+.ds-swatch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ds-swatch-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.ds-swatch-name {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+
+// Component list
+.ds-component-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 24px;
+}
+
+.ds-component-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-border-subtle);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.ds-component-index {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-disabled);
+  flex-shrink: 0;
+}
+
+.ds-component-name {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  display: block;
+}
+
+.ds-component-desc {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.ds-storybook-link {
+  margin-top: 4px;
+}
+
+// Typography strip
+.ds-type-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  overflow: hidden;
+  margin-top: 24px;
+  background: var(--color-border-subtle);
+
+  @media (max-width: $breakpoint-mobile) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ds-type-sample {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px;
+  background: var(--color-background);
+
+  [data-theme="light"] & {
+    background: #ffffff;
+  }
+}
+
+.ds-type-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--color-accent);
+}
+
+.ds-type-preview {
+  color: var(--color-text-primary);
+  line-height: 1.2;
+}
+
+.ds-type-display {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.ds-type-body {
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.ds-type-mono {
+  font-family: var(--font-mono);
+  font-size: 15px;
+}

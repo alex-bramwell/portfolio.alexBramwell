@@ -57,6 +57,7 @@ export default function Navbar({ isScrolled, onOpenContact }) {
           <li className="nav-link-item"><a href="#about">About</a></li>
           <li className="nav-link-item"><a href="#skills">Skills</a></li>
           <li className="nav-link-item"><a href="#projects">Work</a></li>
+          <li className="nav-link-item"><a href="#design-system">System</a></li>
           <li className="nav-link-item"><a href="#experience">Experience</a></li>
           <li className="nav-link-item"><ThemeToggle /></li>
           <li className="nav-link-item">
@@ -95,12 +96,16 @@ export default function Navbar({ isScrolled, onOpenContact }) {
             <span className="mobile-nav-link-number">03</span>
             <span className="mobile-nav-link-text">Work</span>
           </a>
-          <a href="#experience" className="mobile-nav-link" onClick={handleLinkClick}>
+          <a href="#design-system" className="mobile-nav-link" onClick={handleLinkClick}>
             <span className="mobile-nav-link-number">04</span>
+            <span className="mobile-nav-link-text">System</span>
+          </a>
+          <a href="#experience" className="mobile-nav-link" onClick={handleLinkClick}>
+            <span className="mobile-nav-link-number">05</span>
             <span className="mobile-nav-link-text">Experience</span>
           </a>
           <a href="#contact" className="mobile-nav-link" onClick={handleLinkClick}>
-            <span className="mobile-nav-link-number">05</span>
+            <span className="mobile-nav-link-number">06</span>
             <span className="mobile-nav-link-text">Contact</span>
           </a>
           <div className="mobile-nav-footer">
