@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { ThemeProvider } from "./context/ThemeContext";
 import BackgroundCanvas from "./components/BackgroundCanvas";
 import ContactModal from "./components/ContactModal";
+import CaseStudy from "./components/CaseStudy";
 import Navbar from "./components/sections/Navbar";
 import Hero from "./components/sections/Hero";
 import About from "./components/sections/About";
@@ -14,6 +15,7 @@ import Footer from "./components/sections/Footer";
 export default function App() {
   const [isNavigationScrolled, setIsNavigationScrolled] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
+  const [isCaseStudyOpen, setIsCaseStudyOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setIsNavigationScrolled(window.scrollY > 40);
@@ -32,7 +34,7 @@ export default function App() {
         <hr className="full-width-rule" />
         <Skills />
         <hr className="full-width-rule" />
-        <Projects />
+        <Projects onOpenCaseStudy={() => setIsCaseStudyOpen(true)} />
         <hr className="full-width-rule" />
         <Experience />
         <hr className="full-width-rule" />
@@ -41,6 +43,7 @@ export default function App() {
         <Footer />
       </div>
       <ContactModal isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />
+      <CaseStudy isOpen={isCaseStudyOpen} onClose={() => setIsCaseStudyOpen(false)} />
     </ThemeProvider>
   );
 }
