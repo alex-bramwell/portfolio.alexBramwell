@@ -4,8 +4,8 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  border: 1px solid $color-border;
-  border-radius: $radius-medium;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
   overflow: hidden;
   margin-top: 40px;
 }
@@ -13,11 +13,11 @@
 .experience-timeline-item {
   display: grid;
   grid-template-columns: 200px 1fr;
-  background: $color-surface;
+  background: var(--color-surface);
   transition: background 150ms ease;
 
   &:hover {
-    background: $color-surface-raised;
+    background: var(--color-surface-raised);
   }
 
   @media (max-width: $breakpoint-tablet) {
@@ -27,16 +27,16 @@
 
 .experience-company-meta-column {
   padding: 28px;
-  border-right: 1px solid $color-border-subtle;
+  border-right: 1px solid var(--color-border-subtle);
 
   @media (max-width: $breakpoint-tablet) {
     border-right: none;
-    border-bottom: 1px solid $color-border-subtle;
+    border-bottom: 1px solid var(--color-border-subtle);
   }
 }
 
 .experience-company-name {
-  font-family: $font-display;
+  font-family: var(--font-display);
   font-size: 16px;
   font-weight: 700;
   letter-spacing: -0.3px;
@@ -45,15 +45,15 @@
 
 .experience-job-title {
   font-size: 13px;
-  color: $color-accent;
+  color: var(--color-accent);
   font-weight: 500;
   margin-bottom: 12px;
 }
 
 .experience-date-range {
-  font-family: $font-mono;
+  font-family: var(--font-mono);
   font-size: 11px;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   letter-spacing: 0.5px;
 }
 
@@ -72,13 +72,13 @@
   display: flex;
   gap: 12px;
   font-size: 14px;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   line-height: 1.65;
 }
 
 .experience-achievement-bullet-marker {
-  color: $color-accent;
-  font-family: $font-mono;
+  color: var(--color-accent);
+  font-family: var(--font-mono);
   font-size: 12px;
   flex-shrink: 0;
   margin-top: 3px;

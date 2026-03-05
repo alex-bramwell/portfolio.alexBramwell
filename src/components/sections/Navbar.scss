@@ -11,24 +11,24 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: $color-background;
-  border-bottom: 1px solid $color-border-subtle;
-  transition: border-color 250ms ease;
+  background: var(--color-background);
+  border-bottom: 1px solid var(--color-border-subtle);
+  transition: border-color 250ms ease, background 300ms ease;
 
   &.navigation-scrolled {
-    border-color: $color-border;
+    border-color: var(--color-border);
   }
 }
 
 .nav-logo-mark {
-  font-family: $font-display;
+  font-family: var(--font-display);
   font-size: 17px;
   font-weight: 800;
   letter-spacing: -0.5px;
-  color: $color-text-primary;
+  color: var(--color-text-primary);
 
   span {
-    color: $color-accent;
+    color: var(--color-accent);
   }
 }
 
@@ -44,29 +44,35 @@
 }
 
 .nav-link-item a {
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
   transition: color 150ms ease;
 
   &:hover {
-    color: $color-text-primary;
+    color: var(--color-text-primary);
   }
 }
 
 .nav-contact-button {
+  display: inline-flex;
+  align-items: center;
   height: 34px;
   padding: 0 18px;
-  background: $color-accent !important;
-  color: $color-background !important;
-  border-radius: $radius-small;
-  font-weight: 600 !important;
-  font-size: 13px !important;
-  transition: opacity 150ms ease, transform 150ms ease !important;
+  background: var(--color-accent);
+  color: var(--color-background);
+  border: none;
+  border-radius: var(--radius-small);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 150ms ease, transform 150ms ease;
 
   &:hover {
-    opacity: 0.85 !important;
-    transform: translateY(-1px) !important;
+    opacity: 0.85;
+    transform: translateY(-1px);
   }
 }

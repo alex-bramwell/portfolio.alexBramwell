@@ -24,13 +24,13 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  border: 1px solid $color-border;
-  border-radius: $radius-small;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
   padding: 6px 12px;
-  font-family: $font-mono;
+  font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 500;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   letter-spacing: 0.5px;
   margin-bottom: 28px;
 }
@@ -39,7 +39,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #4ade80;
+  background: var(--color-success);
   animation: status-pulse 2s ease-in-out infinite;
 }
 
@@ -49,7 +49,7 @@
 }
 
 .hero-main-heading {
-  font-family: $font-display;
+  font-family: var(--font-display);
   font-size: clamp(52px, 7.5vw, 96px);
   font-weight: 800;
   letter-spacing: -4px;
@@ -58,21 +58,21 @@
 }
 
 .hero-name-accent {
-  color: $color-accent;
+  color: var(--color-accent);
   display: block;
 }
 
 .hero-role-typewriter-line {
   font-size: clamp(16px, 2vw, 20px);
   font-weight: 400;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   margin-bottom: 28px;
   min-height: 1.6em;
   font-style: italic;
 }
 
 .hero-role-current-text {
-  color: $color-text-primary;
+  color: var(--color-text-primary);
   font-style: normal;
   font-weight: 600;
 }
@@ -81,7 +81,7 @@
   display: inline-block;
   width: 2px;
   height: 1em;
-  background: $color-accent;
+  background: var(--color-accent);
   vertical-align: text-bottom;
   margin-left: 2px;
   animation: cursor-blink 0.85s step-end infinite;
@@ -94,7 +94,7 @@
 
 .hero-description-paragraph {
   font-size: 16px;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   line-height: 1.8;
   max-width: 440px;
   margin-bottom: 40px;
@@ -120,14 +120,14 @@
 .hero-stats-row {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  border: 1px solid $color-border;
-  border-radius: $radius-medium;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
   overflow: hidden;
 }
 
 .hero-stat-item {
   padding: 24px 20px;
-  border-right: 1px solid $color-border;
+  border-right: 1px solid var(--color-border);
 
   &:last-child {
     border-right: none;
@@ -135,33 +135,33 @@
 }
 
 .hero-stat-number {
-  font-family: $font-display;
+  font-family: var(--font-display);
   font-size: 36px;
   font-weight: 800;
   letter-spacing: -2px;
-  color: $color-accent;
+  color: var(--color-accent);
   line-height: 1;
   margin-bottom: 4px;
 }
 
 .hero-stat-descriptor {
-  font-family: $font-mono;
+  font-family: var(--font-mono);
   font-size: 10px;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   text-transform: uppercase;
   letter-spacing: 1px;
   line-height: 1.4;
 }
 
 .hero-code-snippet-block {
-  background: $color-surface;
-  border: 1px solid $color-border;
-  border-radius: $radius-medium;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
   padding: 20px 24px;
-  font-family: $font-mono;
+  font-family: var(--font-mono);
   font-size: 12.5px;
   line-height: 1.9;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   overflow: hidden;
 }
 
@@ -170,14 +170,22 @@
 .code-string   { color: #86efac; }
 .code-comment  { color: #333330; }
 .code-property { color: #fde68a; }
-.code-value    { color: $color-accent; }
+.code-value    { color: var(--color-accent); }
+
+[data-theme="light"] {
+  .code-keyword  { color: #7c3aed; }
+  .code-function { color: #2563eb; }
+  .code-string   { color: #16a34a; }
+  .code-comment  { color: #a3a3a0; }
+  .code-property { color: #b45309; }
+}
 
 .hero-tech-stack-tag-strip {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   padding: 16px 20px;
-  background: $color-surface;
-  border: 1px solid $color-border;
-  border-radius: $radius-medium;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
 }

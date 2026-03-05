@@ -4,8 +4,8 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2px;
-  border: 1px solid $color-border;
-  border-radius: $radius-medium;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
   overflow: hidden;
   margin-top: 40px;
 
@@ -15,12 +15,12 @@
 }
 
 .skill-category-card {
-  background: $color-surface;
+  background: var(--color-surface);
   padding: 32px 28px;
   transition: background 150ms ease;
 
   &:hover {
-    background: $color-surface-raised;
+    background: var(--color-surface-raised);
   }
 }
 
@@ -30,19 +30,19 @@
   justify-content: space-between;
   margin-bottom: 20px;
   padding-bottom: 16px;
-  border-bottom: 1px solid $color-border-subtle;
+  border-bottom: 1px solid var(--color-border-subtle);
 }
 
 .skill-category-title {
-  font-family: $font-display;
+  font-family: var(--font-display);
   font-size: 15px;
   font-weight: 700;
   letter-spacing: -0.3px;
 }
 
 .skill-category-item-count {
-  font-family: $font-mono;
+  font-family: var(--font-mono);
   font-size: 11px;
-  color: $color-text-disabled;
+  color: var(--color-text-disabled);
   letter-spacing: 0.5px;
 }

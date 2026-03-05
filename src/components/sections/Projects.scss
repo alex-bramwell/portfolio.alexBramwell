@@ -1,15 +1,15 @@
 @use '../../styles/variables' as *;
 
 .projects-section {
-  background: $color-surface;
+  background: var(--color-surface);
 }
 
 .project-card-layout-grid {
   display: grid;
   grid-template-columns: 3fr 2fr;
   gap: 2px;
-  border: 1px solid $color-border;
-  border-radius: $radius-medium;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
   overflow: hidden;
   margin-top: 40px;
 
@@ -20,7 +20,7 @@
 
 // Featured card
 .featured-project-card {
-  background: $color-background;
+  background: var(--color-background);
   padding: 40px 40px 36px;
   position: relative;
   overflow: hidden;
@@ -33,22 +33,22 @@
     right: 0;
     width: 1px;
     height: 100%;
-    background: $color-border-subtle;
+    background: var(--color-border-subtle);
   }
 }
 
 .featured-project-type-label {
-  font-family: $font-mono;
+  font-family: var(--font-mono);
   font-size: 10px;
   font-weight: 500;
-  color: $color-accent;
+  color: var(--color-accent);
   text-transform: uppercase;
   letter-spacing: 2px;
   margin-bottom: 16px;
 }
 
 .featured-project-name {
-  font-family: $font-display;
+  font-family: var(--font-display);
   font-size: clamp(28px, 3.5vw, 44px);
   font-weight: 800;
   letter-spacing: -2px;
@@ -58,7 +58,7 @@
 
 .featured-project-description {
   font-size: 16px;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   line-height: 1.7;
   max-width: 440px;
   margin-bottom: 28px;
@@ -77,23 +77,23 @@
 }
 
 .project-external-link {
-  font-family: $font-mono;
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 500;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   text-decoration: none;
   letter-spacing: 0.3px;
   transition: color 150ms ease;
 
   &:hover {
-    color: $color-text-primary;
+    color: var(--color-text-primary);
   }
 
   &-primary {
-    color: $color-accent !important;
+    color: var(--color-accent) !important;
 
     &:hover {
-      color: #f0ff8a !important;
+      opacity: 0.75;
     }
   }
 }
@@ -107,31 +107,31 @@
 
 .secondary-project-card {
   flex: 1;
-  background: $color-background;
+  background: var(--color-background);
   padding: 28px;
   transition: background 150ms ease;
 
   &:hover {
-    background: $color-surface-raised;
+    background: var(--color-surface-raised);
   }
 }
 
 .secondary-project-icon-box {
   width: 40px;
   height: 40px;
-  border: 1px solid $color-border;
-  border-radius: $radius-small;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: $font-mono;
+  font-family: var(--font-mono);
   font-size: 13px;
-  color: $color-accent;
+  color: var(--color-accent);
   margin-bottom: 16px;
 }
 
 .secondary-project-name {
-  font-family: $font-display;
+  font-family: var(--font-display);
   font-size: 17px;
   font-weight: 700;
   letter-spacing: -0.5px;
@@ -140,7 +140,7 @@
 
 .secondary-project-description {
   font-size: 13px;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   line-height: 1.65;
   margin-bottom: 16px;
 }
