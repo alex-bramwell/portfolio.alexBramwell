@@ -68,15 +68,15 @@ export default function Hero() {
 
       // Subtle floating glow orbs
       gsap.to(".hero-glow-1", {
-        x: 60, y: -40, scale: 1.15, opacity: 0.6,
+        x: 60, y: -40, scale: 1.15, opacity: 0.25,
         duration: 8, repeat: -1, yoyo: true, ease: "sine.inOut",
       });
       gsap.to(".hero-glow-2", {
-        x: -50, y: 50, scale: 0.9, opacity: 0.4,
+        x: -50, y: 50, scale: 0.9, opacity: 0.18,
         duration: 10, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 2,
       });
       gsap.to(".hero-glow-3", {
-        x: 40, y: 30, scale: 1.1, opacity: 0.5,
+        x: 40, y: 30, scale: 1.1, opacity: 0.12,
         duration: 12, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 4,
       });
     }, sectionRef);

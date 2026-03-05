@@ -21,7 +21,7 @@
   position: absolute;
   border-radius: 50%;
   filter: blur(120px);
-  opacity: 0.35;
+  opacity: 0.15;
   will-change: transform, opacity;
 }
 
@@ -39,7 +39,7 @@
   bottom: -5%;
   right: 10%;
   background: var(--color-accent);
-  opacity: 0.2;
+  opacity: 0.1;
 }
 
 .hero-glow-3 {
@@ -48,21 +48,21 @@
   top: 30%;
   right: 35%;
   background: var(--color-accent);
-  opacity: 0.15;
+  opacity: 0.07;
 }
 
 [data-theme="light"] {
   .hero-glow {
     filter: blur(140px);
-    opacity: 0.2;
+    opacity: 0.1;
   }
 
   .hero-glow-2 {
-    opacity: 0.12;
+    opacity: 0.06;
   }
 
   .hero-glow-3 {
-    opacity: 0.08;
+    opacity: 0.04;
   }
 }
 
