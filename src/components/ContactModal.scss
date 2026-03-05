@@ -1,0 +1,237 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.modal-container {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  padding: 40px;
+  overflow: hidden;
+}
+
+.modal-close-button {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: border-color 200ms ease, color 200ms ease, transform 200ms ease;
+
+  &:hover {
+    border-color: var(--color-accent-border);
+    color: var(--color-accent);
+    transform: rotate(90deg);
+  }
+}
+
+.modal-header-line {
+  width: 40px;
+  height: 3px;
+  background: var(--color-accent);
+  border-radius: 2px;
+  margin-bottom: 24px;
+  transform-origin: left;
+}
+
+.modal-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 6px;
+}
+
+.modal-subtitle {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin-bottom: 32px;
+}
+
+// Form fields with floating labels
+.modal-form-field {
+  position: relative;
+  margin-bottom: 20px;
+
+  input,
+  textarea {
+    width: 100%;
+    background: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-small);
+    padding: 18px 16px 8px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--color-text-primary);
+    outline: none;
+    transition: border-color 250ms ease;
+    resize: vertical;
+
+    &:focus {
+      border-color: var(--color-accent);
+    }
+
+    // Floating label trigger
+    &:focus ~ label,
+    &:not(:placeholder-shown) ~ label {
+      top: 6px;
+      font-size: 10px;
+      color: var(--color-accent);
+      letter-spacing: 0.5px;
+    }
+
+    &:focus ~ .field-focus-line {
+      transform: scaleX(1);
+    }
+  }
+
+  textarea {
+    min-height: 100px;
+  }
+
+  label {
+    position: absolute;
+    left: 16px;
+    top: 14px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    pointer-events: none;
+    transition: top 200ms ease, font-size 200ms ease, color 200ms ease;
+  }
+
+  .field-focus-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--color-accent);
+    border-radius: 0 0 var(--radius-small) var(--radius-small);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 300ms ease;
+  }
+}
+
+// Submit button
+.modal-submit-button {
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--color-accent);
+  color: var(--color-background);
+  border: none;
+  border-radius: var(--radius-small);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  margin-top: 8px;
+  transition: opacity 200ms ease;
+
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+
+  &:disabled {
+    cursor: wait;
+  }
+
+  .submit-button-arrow {
+    transition: transform 200ms ease;
+  }
+
+  &:hover:not(:disabled) .submit-button-arrow {
+    transform: translateX(4px);
+  }
+}
+
+.submit-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top-color: var(--color-background);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  position: absolute;
+  right: 20px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// Success state
+.modal-success-state {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+  text-align: center;
+}
+
+.success-icon-container {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .success-ring,
+  .success-check {
+    position: absolute;
+  }
+}
+
+.success-particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  margin: -3px 0 0 -3px;
+}
+
+.modal-success-text {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 4px;
+}
+
+.modal-success-subtext {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
