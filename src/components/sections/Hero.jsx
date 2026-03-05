@@ -77,7 +77,7 @@ export default function Hero() {
           <div>
             <div className="hero-availability-badge">
               <div className="availability-status-dot" />
-              Open to Senior roles · WFH / London hybrid
+              Available for new opportunities
             </div>
             <h1 className="hero-main-heading">
               Alex
@@ -103,8 +103,8 @@ export default function Hero() {
             <div className="hero-stats-row">
               <AnimatedStat endValue={7} suffix="+" descriptor={"Years in\nSaaS"} />
               <div className="hero-stat-item">
-                <div className="hero-stat-number">50/50</div>
-                <div className="hero-stat-descriptor" style={{ whiteSpace: "pre-line" }}>{"Design /\nDev split"}</div>
+                <div className="hero-stat-number">Design ↔ Code</div>
+                <div className="hero-stat-descriptor" style={{ whiteSpace: "pre-line" }}>{"Full\npipeline"}</div>
               </div>
               <AnimatedStat endValue={18} suffix="" descriptor={"Screen spec\ndelivered"} />
             </div>

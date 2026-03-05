@@ -16,8 +16,8 @@ export default function About() {
               <SplitHeading className="section-main-heading">Design <br /><em>meets</em> <br />engineering</SplitHeading>
               <p className="about-body-paragraph" style={{ marginTop: "24px" }}>
                 I'm a UX Engineer with a <strong>BA in Graphic Design</strong> from the University of Lincoln
-                and 7+ years shipping interfaces for SaaS platforms. I thrive in the 50/50 space —
-                equally at home in Figma as in a React codebase.
+                and 7+ years shipping interfaces for SaaS platforms. I work across the full design-to-code
+                pipeline — equally at home in Figma as in a React codebase.
               </p>
               <p className="about-body-paragraph">
                 I've built token-based design systems, authored full wireframe specifications for

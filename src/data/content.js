@@ -52,12 +52,12 @@ export const CONTACT_DETAILS = [
   { label: "Phone", value: "07961 099 889", href: "tel:07961099889" },
   { label: "GitHub", value: "github.com/alex-bramwell", href: "https://github.com/alex-bramwell" },
   { label: "LinkedIn", value: "linkedin.com/in/alexbramwell", href: "https://linkedin.com/in/alexbramwell" },
-  { label: "Location", value: "Nottinghamshire, UK · Hybrid", href: null },
+  { label: "Location", value: "Nottinghamshire, UK", href: null },
 ];
 
 export const ROLE_PHRASES = [
-  "Senior UI/UX Designer",
-  "Frontend Engineer",
+  "UX Engineer",
+  "Frontend Developer",
   "Design Systems Lead",
   "React + TypeScript Dev",
 ];

@@ -1,5 +1,3 @@
-@use 'variables' as *;
-
 // Layout
 .background-canvas {
   position: fixed;
@@ -23,7 +21,7 @@
 .full-width-rule {
   width: 100%;
   height: 1px;
-  background: $color-border-subtle;
+  background: var(--color-border-subtle);
   border: none;
   margin: 0;
 }
@@ -41,23 +39,23 @@
 }
 
 .section-number-label {
-  font-family: $font-mono;
+  font-family: var(--font-mono);
   font-size: 11px;
-  color: $color-text-disabled;
+  color: var(--color-text-disabled);
   letter-spacing: 1px;
 }
 
 .section-eyebrow-label {
-  font-family: $font-mono;
+  font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 500;
-  color: $color-accent;
+  color: var(--color-accent);
   text-transform: uppercase;
   letter-spacing: 2px;
 }
 
 .section-main-heading {
-  font-family: $font-display;
+  font-family: var(--font-display);
   font-size: clamp(32px, 5vw, 58px);
   font-weight: 800;
   letter-spacing: -2px;
@@ -65,13 +63,13 @@
 
   em {
     font-style: normal;
-    color: $color-accent;
+    color: var(--color-accent);
   }
 }
 
 .section-supporting-text {
   font-size: 17px;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   max-width: 540px;
   line-height: 1.75;
   margin-top: 16px;
@@ -80,23 +78,23 @@
 // Skill chips (used across multiple sections)
 .skill-chip {
   display: inline-block;
-  border: 1px solid $color-border;
-  border-radius: $radius-small;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
   padding: 4px 10px;
   font-size: 12px;
   font-weight: 500;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   transition: border-color 150ms ease, color 150ms ease;
 
   &:hover {
-    border-color: $color-accent-border;
-    color: $color-accent;
+    border-color: var(--color-accent-border);
+    color: var(--color-accent);
   }
 
   &-highlighted {
-    border-color: $color-accent-border;
-    color: $color-accent;
-    background: $color-accent-dim;
+    border-color: var(--color-accent-border);
+    color: var(--color-accent);
+    background: var(--color-accent-dim);
   }
 }
 
@@ -113,11 +111,11 @@
   gap: 8px;
   height: 44px;
   padding: 0 24px;
-  background: $color-accent;
-  color: $color-background;
-  border: 1px solid $color-accent;
-  border-radius: $radius-small;
-  font-family: $font-body;
+  background: var(--color-accent);
+  color: var(--color-background);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-small);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -137,10 +135,10 @@
   height: 44px;
   padding: 0 24px;
   background: transparent;
-  color: $color-text-primary;
-  border: 1px solid $color-border;
-  border-radius: $radius-small;
-  font-family: $font-body;
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -148,7 +146,7 @@
   transition: border-color 150ms ease, transform 150ms ease;
 
   &:hover {
-    border-color: $color-border-hover;
+    border-color: var(--color-border-hover);
     transform: translateY(-2px);
   }
 }

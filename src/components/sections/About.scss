@@ -1,7 +1,7 @@
 @use '../../styles/variables' as *;
 
 .about-section {
-  background: $color-surface;
+  background: var(--color-surface);
 }
 
 .about-two-column-grid {
@@ -17,12 +17,12 @@
 
 .about-body-paragraph {
   font-size: 16px;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   line-height: 1.85;
   margin-bottom: 20px;
 
   strong {
-    color: $color-text-primary;
+    color: var(--color-text-primary);
     font-weight: 600;
   }
 }
@@ -38,12 +38,12 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  border: 1px solid $color-border;
-  border-radius: $radius-small;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
   padding: 6px 12px;
-  font-family: $font-mono;
+  font-family: var(--font-mono);
   font-size: 11px;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   letter-spacing: 0.3px;
 }
 
@@ -55,14 +55,14 @@
 
 .about-strength-card {
   padding: 20px 24px;
-  border: 1px solid $color-border;
-  border-radius: $radius-medium;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
   cursor: default;
   transition: border-color 150ms ease, background 150ms ease;
 
   &:hover {
-    border-color: $color-accent-border;
-    background: $color-accent-dim;
+    border-color: var(--color-accent-border);
+    background: var(--color-accent-dim);
   }
 }
 
@@ -74,15 +74,15 @@
 }
 
 .about-strength-number-marker {
-  font-family: $font-mono;
+  font-family: var(--font-mono);
   font-size: 13px;
-  color: $color-accent;
+  color: var(--color-accent);
   width: 20px;
   flex-shrink: 0;
 }
 
 .about-strength-title {
-  font-family: $font-display;
+  font-family: var(--font-display);
   font-size: 15px;
   font-weight: 700;
   letter-spacing: -0.3px;
@@ -91,6 +91,6 @@
 .about-strength-description {
   padding-left: 32px;
   font-size: 13px;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   line-height: 1.6;
 }

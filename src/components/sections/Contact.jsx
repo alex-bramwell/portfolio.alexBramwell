@@ -3,7 +3,7 @@ import SplitHeading from "../SplitHeading";
 import { CONTACT_DETAILS } from "../../data/content";
 import "./Contact.scss";
 
-export default function Contact() {
+export default function Contact({ onOpenContact }) {
   return (
     <section className="page-section contact-section" id="contact">
       <div className="page-container">
@@ -16,16 +16,19 @@ export default function Contact() {
               </div>
               <SplitHeading className="section-main-heading">Let's build <br />something <br /><em>remarkable</em></SplitHeading>
               <p className="section-supporting-text">
-                Actively looking for a Senior UI/UX + Frontend role where design systems and
-                engineering intersect. Currently targeting permanent, remote-first or London hybrid positions.
+                Looking for my next role at the intersection of design systems and frontend
+                engineering. Open to permanent positions, remote or hybrid.
               </p>
+              <button className="contact-send-message-button" onClick={onOpenContact}>
+                Send a message &rarr;
+              </button>
             </div>
           </ScrollReveal>
           <ScrollReveal direction="right">
             <div>
               <div className="contact-open-to-role-badge">
                 <div className="contact-availability-dot" />
-                Open to Senior UI/UX + Frontend roles
+                Open to new opportunities
               </div>
               <div className="contact-details-list">
                 {CONTACT_DETAILS.map((detail) =>

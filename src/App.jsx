@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
+import { ThemeProvider } from "./context/ThemeContext";
 import BackgroundCanvas from "./components/BackgroundCanvas";
+import ContactModal from "./components/ContactModal";
 import Navbar from "./components/sections/Navbar";
 import Hero from "./components/sections/Hero";
 import About from "./components/sections/About";
@@ -11,6 +13,7 @@ import Footer from "./components/sections/Footer";
 
 export default function App() {
   const [isNavigationScrolled, setIsNavigationScrolled] = useState(false);
+  const [isContactOpen, setIsContactOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setIsNavigationScrolled(window.scrollY > 40);
@@ -19,10 +22,10 @@ export default function App() {
   }, []);
 
   return (
-    <>
+    <ThemeProvider>
       <BackgroundCanvas />
       <div className="page-wrapper">
-        <Navbar isScrolled={isNavigationScrolled} />
+        <Navbar isScrolled={isNavigationScrolled} onOpenContact={() => setIsContactOpen(true)} />
         <Hero />
         <hr className="full-width-rule" />
         <About />
@@ -33,10 +36,11 @@ export default function App() {
         <hr className="full-width-rule" />
         <Experience />
         <hr className="full-width-rule" />
-        <Contact />
+        <Contact onOpenContact={() => setIsContactOpen(true)} />
         <hr className="full-width-rule" />
         <Footer />
       </div>
-    </>
+      <ContactModal isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />
+    </ThemeProvider>
   );
 }
