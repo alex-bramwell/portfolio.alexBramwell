@@ -65,6 +65,20 @@ export default function Hero() {
           { opacity: 0, x: 40, duration: 0.6 },
           "-=0.4"
         );
+
+      // Subtle floating glow orbs
+      gsap.to(".hero-glow-1", {
+        x: 60, y: -40, scale: 1.15, opacity: 0.6,
+        duration: 8, repeat: -1, yoyo: true, ease: "sine.inOut",
+      });
+      gsap.to(".hero-glow-2", {
+        x: -50, y: 50, scale: 0.9, opacity: 0.4,
+        duration: 10, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 2,
+      });
+      gsap.to(".hero-glow-3", {
+        x: 40, y: 30, scale: 1.1, opacity: 0.5,
+        duration: 12, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 4,
+      });
     }, sectionRef);
 
     return () => ctx.revert();
@@ -72,6 +86,11 @@ export default function Hero() {
 
   return (
     <section className="hero-section" id="home" ref={sectionRef}>
+      <div className="hero-glow-container" aria-hidden="true">
+        <div className="hero-glow hero-glow-1" />
+        <div className="hero-glow hero-glow-2" />
+        <div className="hero-glow hero-glow-3" />
+      </div>
       <div className="page-container">
         <div className="hero-two-column-grid">
           <div>
