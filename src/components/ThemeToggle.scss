@@ -1,0 +1,23 @@
+.theme-toggle-button {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: border-color 200ms ease, color 200ms ease;
+
+  &:hover {
+    border-color: var(--color-accent-border);
+    color: var(--color-accent);
+  }
+
+  svg {
+    position: absolute;
+  }
+}

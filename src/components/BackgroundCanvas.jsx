@@ -1,7 +1,9 @@
 import { useRef, useEffect } from "react";
+import { useTheme } from "../context/ThemeContext";
 
 export default function BackgroundCanvas() {
   const canvasRef = useRef(null);
+  const { theme } = useTheme();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -26,9 +28,13 @@ export default function BackgroundCanvas() {
     window.addEventListener("resize", handleWindowResize);
 
     const drawFrame = () => {
+      const styles = getComputedStyle(document.documentElement);
+      const gridColor = styles.getPropertyValue("--canvas-grid").trim();
+      const dotRGB = styles.getPropertyValue("--canvas-dot").trim();
+
       ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
-      ctx.strokeStyle = "rgba(42,42,42,0.5)";
+      ctx.strokeStyle = gridColor;
       ctx.lineWidth = 0.5;
       const gridCellSize = 100;
       for (let x = 0; x <= canvasWidth; x += gridCellSize) {
@@ -47,7 +53,7 @@ export default function BackgroundCanvas() {
         if (dot.y > canvasHeight) dot.y = 0;
         ctx.beginPath();
         ctx.arc(dot.x, dot.y, dot.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(223,255,71,${dot.opacity})`;
+        ctx.fillStyle = `rgba(${dotRGB},${dot.opacity})`;
         ctx.fill();
       });
 
@@ -55,7 +61,7 @@ export default function BackgroundCanvas() {
         floatingDots.slice(index + 1).forEach((dotB) => {
           const distanceBetweenDots = Math.hypot(dotA.x - dotB.x, dotA.y - dotB.y);
           if (distanceBetweenDots < 100) {
-            ctx.strokeStyle = `rgba(223,255,71,${0.05 * (1 - distanceBetweenDots / 100)})`;
+            ctx.strokeStyle = `rgba(${dotRGB},${0.05 * (1 - distanceBetweenDots / 100)})`;
             ctx.lineWidth = 0.5;
             ctx.beginPath();
             ctx.moveTo(dotA.x, dotA.y);
@@ -73,7 +79,7 @@ export default function BackgroundCanvas() {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("resize", handleWindowResize);
     };
-  }, []);
+  }, [theme]);
 
   return <canvas className="background-canvas" ref={canvasRef} />;
 }
