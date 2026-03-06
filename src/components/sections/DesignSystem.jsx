@@ -158,9 +158,7 @@ export default function DesignSystem() {
               ))}
             </div>
           </div>
-        </ScrollReveal>
 
-        <ScrollReveal>
           <a
             href="/portfolio.alexBramwell/storybook/"
             target="_blank"
@@ -185,9 +183,7 @@ export default function DesignSystem() {
             </div>
             <span className="ds-storybook-card-arrow">&rarr;</span>
           </a>
-        </ScrollReveal>
 
-        <ScrollReveal>
           <div className="ds-type-strip">
             <div className="ds-type-sample">
               <span className="ds-type-label">Display</span>
