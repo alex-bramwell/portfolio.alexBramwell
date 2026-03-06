@@ -36,6 +36,7 @@ export default function MotionToggle() {
           </>
         )}
       </svg>
+      <span className="motion-toggle-label">{isReduced ? "Off" : "On"}</span>
     </button>
   );
 }

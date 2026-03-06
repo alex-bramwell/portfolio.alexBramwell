@@ -1,10 +1,10 @@
 .theme-toggle-button {
   position: relative;
-  width: 36px;
-  height: 36px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 12px;
   background: transparent;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-small);
@@ -17,9 +17,26 @@
     color: var(--color-accent);
   }
 
+  .theme-toggle-icons {
+    position: relative;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
   svg {
     position: absolute;
+    top: 0;
+    left: 0;
   }
+}
+
+.theme-toggle-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 // CSS fallback when GSAP is disabled
