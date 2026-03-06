@@ -1,6 +1,7 @@
 import { useRef, useEffect, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useTheme } from "../context/ThemeContext";
 import "./CaseStudy.scss";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -61,12 +62,12 @@ const PROCESS_STEPS = [
   { phase: "05", title: "Ship & Iterate", detail: "Deployed to Vercel edge network. Continuous deployment from main branch with preview URLs per PR." },
 ];
 
-function CountUpStat({ endValue, suffix, label }) {
+function CountUpStat({ endValue, suffix, label, isReduced }) {
   const ref = useRef(null);
   const valRef = useRef(null);
 
   useEffect(() => {
-    if (!ref.current || !valRef.current) return;
+    if (!ref.current || !valRef.current || isReduced) return;
     const counter = { val: 0 };
     const tween = gsap.to(counter, {
       val: endValue,
@@ -78,11 +79,11 @@ function CountUpStat({ endValue, suffix, label }) {
       },
     });
     return () => { tween.scrollTrigger?.kill(); tween.kill(); };
-  }, [endValue, suffix]);
+  }, [endValue, suffix, isReduced]);
 
   return (
     <div className="cs-metric-card" ref={ref}>
-      <span className="cs-metric-value" ref={valRef}>0{suffix}</span>
+      <span className="cs-metric-value" ref={valRef}>{isReduced ? endValue + suffix : "0" + suffix}</span>
       <span className="cs-metric-label">{label}</span>
     </div>
   );
@@ -93,6 +94,7 @@ export default function CaseStudy({ isOpen, onClose }) {
   const scrollContainerRef = useRef(null);
   const heroRef = useRef(null);
   const triggersRef = useRef([]);
+  const { isReduced } = useTheme();
 
   const cleanup = useCallback(() => {
     triggersRef.current.forEach((st) => st.kill());
@@ -106,6 +108,11 @@ export default function CaseStudy({ isOpen, onClose }) {
     if (!isOpen || !overlayRef.current) return;
 
     document.body.style.overflow = "hidden";
+
+    if (isReduced) {
+      return () => { document.body.style.overflow = ""; };
+    }
+
     const scroller = scrollContainerRef.current;
 
     // --- Entrance ---
@@ -238,9 +245,15 @@ export default function CaseStudy({ isOpen, onClose }) {
       cleanup();
       document.body.style.overflow = "";
     };
-  }, [isOpen, cleanup]);
+  }, [isOpen, cleanup, isReduced]);
 
   const handleClose = () => {
+    if (isReduced) {
+      cleanup();
+      onClose();
+      return;
+    }
+
     const tl = gsap.timeline({
       onComplete: () => {
         cleanup();
@@ -288,7 +301,7 @@ export default function CaseStudy({ isOpen, onClose }) {
         {/* ===== METRICS ===== */}
         <div className="cs-metrics-strip">
           {METRICS.map((m) => (
-            <CountUpStat key={m.label} endValue={m.value} suffix={m.suffix} label={m.label} />
+            <CountUpStat key={m.label} endValue={m.value} suffix={m.suffix} label={m.label} isReduced={isReduced} />
           ))}
         </div>
 

@@ -478,3 +478,71 @@
     transform: translateY(-2px);
   }
 }
+
+// CSS fallback when GSAP is disabled
+[data-motion="reduced"] {
+  .cs-overlay {
+    animation: csFadeIn 0.25s ease both;
+  }
+
+  .cs-scroll-container {
+    animation: csSlideUp 0.35s ease both;
+  }
+
+  .cs-hero-eyebrow,
+  .cs-hero-title,
+  .cs-hero-subtitle,
+  .cs-close-button {
+    animation: csFadeUp 0.4s ease both;
+  }
+
+  .cs-hero-chip {
+    animation: csFadeUp 0.3s ease both;
+
+    @for $i from 1 through 8 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{$i * 0.03}s;
+      }
+    }
+  }
+
+  .cs-hero-links a {
+    animation: csFadeUp 0.3s ease both;
+  }
+
+  .cs-process-step {
+    opacity: 1;
+  }
+
+  .cs-process-line-fill {
+    transform: scaleY(1);
+  }
+
+  .cs-feature-card {
+    opacity: 1;
+  }
+
+  .cs-metric-card {
+    opacity: 1;
+  }
+
+  .cs-arch-bar-fill {
+    transform: scaleX(1);
+    transition: transform 0.6s ease;
+  }
+}
+
+@keyframes csFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes csSlideUp {
+  from { transform: translateY(40px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes csFadeUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

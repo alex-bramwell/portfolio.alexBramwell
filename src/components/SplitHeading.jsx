@@ -1,16 +1,18 @@
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useTheme } from "../context/ThemeContext";
 import "./SplitHeading.scss";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function SplitHeading({ children, className = "", tag: Tag = "h2" }) {
   const containerRef = useRef(null);
+  const { isReduced } = useTheme();
 
   useEffect(() => {
     const container = containerRef.current;
-    if (!container) return;
+    if (!container || isReduced) return;
 
     const words = container.querySelectorAll(".split-word");
 
@@ -34,7 +36,7 @@ export default function SplitHeading({ children, className = "", tag: Tag = "h2"
       tween.scrollTrigger?.kill();
       tween.kill();
     };
-  }, []);
+  }, [isReduced]);
 
   const wrapWords = (node) => {
     if (typeof node === "string") {
@@ -72,7 +74,7 @@ export default function SplitHeading({ children, className = "", tag: Tag = "h2"
     : wrapWords(children);
 
   return (
-    <Tag ref={containerRef} className={`split-heading ${className}`} style={{ perspective: "600px" }}>
+    <Tag ref={containerRef} className={`split-heading ${className}`} style={isReduced ? undefined : { perspective: "600px" }}>
       {processedChildren}
     </Tag>
   );

@@ -235,3 +235,33 @@
   font-size: 14px;
   color: var(--color-text-secondary);
 }
+
+// CSS fallback when GSAP is disabled
+[data-motion="reduced"] {
+  .modal-overlay {
+    animation: cssFadeIn 0.25s ease both;
+  }
+
+  .modal-container {
+    animation: cssScaleIn 0.3s ease both;
+    animation-delay: 0.05s;
+  }
+
+  .modal-success-state {
+    animation: cssFadeIn 0.3s ease both;
+  }
+
+  .success-ring {
+    opacity: 1;
+  }
+}
+
+@keyframes cssFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes cssScaleIn {
+  from { opacity: 0; transform: scale(0.95) translateY(20px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}

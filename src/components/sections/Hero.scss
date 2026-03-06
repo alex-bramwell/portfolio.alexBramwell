@@ -250,3 +250,43 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-medium);
 }
+
+// CSS fallback entrance when GSAP is disabled
+[data-motion="reduced"] {
+  .hero-availability-badge,
+  .hero-main-heading,
+  .hero-role-typewriter-line,
+  .hero-description-paragraph,
+  .hero-action-button-row {
+    animation: heroFadeUp 0.5s ease both;
+  }
+
+  .hero-main-heading        { animation-delay: 0.05s; }
+  .hero-role-typewriter-line { animation-delay: 0.1s; }
+  .hero-description-paragraph { animation-delay: 0.15s; }
+  .hero-action-button-row    { animation-delay: 0.2s; }
+
+  .hero-stats-row,
+  .hero-code-snippet-block,
+  .hero-tech-stack-tag-strip {
+    animation: heroFadeLeft 0.5s ease both;
+  }
+
+  .hero-code-snippet-block   { animation-delay: 0.1s; }
+  .hero-tech-stack-tag-strip { animation-delay: 0.15s; }
+
+  .hero-glow {
+    animation: none;
+    will-change: auto;
+  }
+}
+
+@keyframes heroFadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes heroFadeLeft {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}

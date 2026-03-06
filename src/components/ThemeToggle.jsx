@@ -4,13 +4,13 @@ import { useTheme } from "../context/ThemeContext";
 import "./ThemeToggle.scss";
 
 export default function ThemeToggle() {
-  const { theme, toggleTheme } = useTheme();
+  const { theme, toggleTheme, isReduced } = useTheme();
   const buttonRef = useRef(null);
   const isLight = theme === "light";
 
   useEffect(() => {
     const btn = buttonRef.current;
-    if (!btn) return;
+    if (!btn || isReduced) return;
 
     const sun = btn.querySelector(".theme-toggle-sun");
     const moon = btn.querySelector(".theme-toggle-moon");
@@ -22,7 +22,7 @@ export default function ThemeToggle() {
       gsap.to(moon, { scale: 1, rotate: 0, opacity: 1, duration: 0.4, ease: "back.out(1.7)" });
       gsap.to(sun, { scale: 0.5, rotate: 90, opacity: 0, duration: 0.3, ease: "power2.in" });
     }
-  }, [isLight]);
+  }, [isLight, isReduced]);
 
   return (
     <button

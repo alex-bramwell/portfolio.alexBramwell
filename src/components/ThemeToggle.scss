@@ -21,3 +21,32 @@
     position: absolute;
   }
 }
+
+// CSS fallback when GSAP is disabled
+[data-motion="reduced"] {
+  .theme-toggle-button svg {
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+
+  .theme-toggle-sun {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+
+  .theme-toggle-moon {
+    opacity: 0;
+    transform: scale(0.5) rotate(-90deg);
+  }
+}
+
+[data-motion="reduced"][data-theme="dark"] {
+  .theme-toggle-sun {
+    opacity: 0;
+    transform: scale(0.5) rotate(90deg);
+  }
+
+  .theme-toggle-moon {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}

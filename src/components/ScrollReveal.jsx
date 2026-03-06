@@ -1,6 +1,7 @@
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useTheme } from "../context/ThemeContext";
 import "./ScrollReveal.scss";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -13,10 +14,11 @@ const directionProps = {
 
 export default function ScrollReveal({ children, direction = "up", stagger = 0, className = "" }) {
   const elementRef = useRef(null);
+  const { isReduced } = useTheme();
 
   useEffect(() => {
     const el = elementRef.current;
-    if (!el) return;
+    if (!el || isReduced) return;
 
     const { x, y } = directionProps[direction] || directionProps.up;
 
@@ -42,10 +44,16 @@ export default function ScrollReveal({ children, direction = "up", stagger = 0, 
       tween.scrollTrigger?.kill();
       tween.kill();
     };
-  }, [direction, stagger]);
+  }, [direction, stagger, isReduced]);
+
+  const dirClass = isReduced ? `css-reveal css-reveal-${direction}` : "";
 
   return (
-    <div ref={elementRef} className={`scroll-reveal ${className}`} style={{ opacity: 0 }}>
+    <div
+      ref={elementRef}
+      className={`scroll-reveal ${dirClass} ${className}`}
+      style={isReduced ? undefined : { opacity: 0 }}
+    >
       {children}
     </div>
   );

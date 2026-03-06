@@ -2,6 +2,7 @@ import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { useTypewriter } from "../../hooks/useTypewriter";
 import { useCountUp } from "../../hooks/useCountUp";
+import { useTheme } from "../../context/ThemeContext";
 import { ROLE_PHRASES } from "../../data/content";
 import MagneticButton from "../MagneticButton";
 import "./Hero.scss";
@@ -19,8 +20,11 @@ function AnimatedStat({ endValue, suffix, descriptor }) {
 export default function Hero() {
   const currentRoleText = useTypewriter(ROLE_PHRASES, 65, 2200);
   const sectionRef = useRef(null);
+  const { isReduced } = useTheme();
 
   useEffect(() => {
+    if (isReduced) return;
+
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
@@ -82,7 +86,7 @@ export default function Hero() {
     }, sectionRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [isReduced]);
 
   return (
     <section className="hero-section" id="home" ref={sectionRef}>

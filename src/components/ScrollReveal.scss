@@ -1,3 +1,37 @@
 .scroll-reveal {
   will-change: transform, opacity;
 }
+
+// CSS fallback when GSAP is disabled
+[data-motion="reduced"] {
+  .css-reveal {
+    animation: cssRevealUp 0.5s ease both;
+  }
+
+  .css-reveal-up {
+    animation-name: cssRevealUp;
+  }
+
+  .css-reveal-left {
+    animation-name: cssRevealLeft;
+  }
+
+  .css-reveal-right {
+    animation-name: cssRevealRight;
+  }
+}
+
+@keyframes cssRevealUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cssRevealLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes cssRevealRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}

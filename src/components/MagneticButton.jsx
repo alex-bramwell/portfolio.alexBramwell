@@ -1,10 +1,13 @@
 import { useRef, useCallback } from "react";
 import gsap from "gsap";
+import { useTheme } from "../context/ThemeContext";
 
 export default function MagneticButton({ children, className = "", href, ...props }) {
   const buttonRef = useRef(null);
+  const { isReduced } = useTheme();
 
   const handleMouseMove = useCallback((e) => {
+    if (isReduced) return;
     const el = buttonRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
@@ -16,9 +19,10 @@ export default function MagneticButton({ children, className = "", href, ...prop
       duration: 0.3,
       ease: "power2.out",
     });
-  }, []);
+  }, [isReduced]);
 
   const handleMouseLeave = useCallback(() => {
+    if (isReduced) return;
     const el = buttonRef.current;
     if (!el) return;
     gsap.to(el, {
@@ -27,7 +31,7 @@ export default function MagneticButton({ children, className = "", href, ...prop
       duration: 0.5,
       ease: "elastic.out(1, 0.4)",
     });
-  }, []);
+  }, [isReduced]);
 
   const Tag = href ? "a" : "button";
 

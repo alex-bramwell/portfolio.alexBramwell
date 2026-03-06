@@ -3,3 +3,8 @@ dist
 
 *storybook.log
 storybook-static
+
+# Cover letters & CVs
+cover-letter*
+alex-bramwell-*.pdf
+.DS_Store

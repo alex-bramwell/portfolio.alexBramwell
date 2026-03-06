@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
+import { useTheme } from "../context/ThemeContext";
 import "./ContactModal.scss";
 
 export default function ContactModal({ isOpen, onClose }) {
@@ -9,12 +10,15 @@ export default function ContactModal({ isOpen, onClose }) {
   const tlRef = useRef(null);
   const [formState, setFormState] = useState("idle"); // idle | sending | success | error
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const { isReduced } = useTheme();
 
   useEffect(() => {
     if (!overlayRef.current || !modalRef.current) return;
 
     if (isOpen) {
       document.body.style.overflow = "hidden";
+
+      if (isReduced) return;
 
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
       tlRef.current = tl;
@@ -69,9 +73,16 @@ export default function ContactModal({ isOpen, onClose }) {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [isOpen]);
+  }, [isOpen, isReduced]);
 
   const handleClose = () => {
+    if (isReduced) {
+      onClose();
+      setFormState("idle");
+      setFormData({ name: "", email: "", message: "" });
+      return;
+    }
+
     const tl = gsap.timeline({
       onComplete: () => {
         onClose();
@@ -93,12 +104,14 @@ export default function ContactModal({ isOpen, onClose }) {
     e.preventDefault();
     setFormState("sending");
 
-    gsap.to(".modal-submit-button", {
-      scale: 0.95,
-      duration: 0.15,
-      yoyo: true,
-      repeat: 1,
-    });
+    if (!isReduced) {
+      gsap.to(".modal-submit-button", {
+        scale: 0.95,
+        duration: 0.15,
+        yoyo: true,
+        repeat: 1,
+      });
+    }
 
     try {
       const response = await fetch("https://formsubmit.co/ajax/alex.s.bramwell.86@gmail.com", {
@@ -116,58 +129,62 @@ export default function ContactModal({ isOpen, onClose }) {
 
       setFormState("success");
 
-      const tl = gsap.timeline();
-      tl.to(".modal-form-inner", { opacity: 0, y: -20, duration: 0.3 })
-        .fromTo(
-          ".modal-success-state",
-          { opacity: 0, scale: 0.8, display: "none" },
-          { opacity: 1, scale: 1, display: "flex", duration: 0.4, ease: "back.out(2)" }
-        )
-        .fromTo(
-          ".success-check-path",
-          { strokeDashoffset: 100 },
-          { strokeDashoffset: 0, duration: 0.6, ease: "power2.out" },
-          "-=0.2"
-        )
-        .fromTo(
-          ".success-ring",
-          { scale: 0, opacity: 0 },
-          { scale: 1, opacity: 1, duration: 0.5, ease: "elastic.out(1, 0.5)" },
-          "-=0.5"
-        )
-        .fromTo(
-          ".modal-success-text",
-          { opacity: 0, y: 15 },
-          { opacity: 1, y: 0, duration: 0.3 },
-          "-=0.2"
-        );
+      if (!isReduced) {
+        const tl = gsap.timeline();
+        tl.to(".modal-form-inner", { opacity: 0, y: -20, duration: 0.3 })
+          .fromTo(
+            ".modal-success-state",
+            { opacity: 0, scale: 0.8, display: "none" },
+            { opacity: 1, scale: 1, display: "flex", duration: 0.4, ease: "back.out(2)" }
+          )
+          .fromTo(
+            ".success-check-path",
+            { strokeDashoffset: 100 },
+            { strokeDashoffset: 0, duration: 0.6, ease: "power2.out" },
+            "-=0.2"
+          )
+          .fromTo(
+            ".success-ring",
+            { scale: 0, opacity: 0 },
+            { scale: 1, opacity: 1, duration: 0.5, ease: "elastic.out(1, 0.5)" },
+            "-=0.5"
+          )
+          .fromTo(
+            ".modal-success-text",
+            { opacity: 0, y: 15 },
+            { opacity: 1, y: 0, duration: 0.3 },
+            "-=0.2"
+          );
 
-      // fire particles
-      const particles = document.querySelectorAll(".success-particle");
-      particles.forEach((p, i) => {
-        const angle = (i / particles.length) * Math.PI * 2;
-        const dist = 60 + Math.random() * 40;
-        gsap.fromTo(
-          p,
-          { x: 0, y: 0, opacity: 1, scale: 1 },
-          {
-            x: Math.cos(angle) * dist,
-            y: Math.sin(angle) * dist,
-            opacity: 0,
-            scale: 0,
-            duration: 0.7 + Math.random() * 0.3,
-            ease: "power2.out",
-            delay: 0.2,
-          }
-        );
-      });
+        // fire particles
+        const particles = document.querySelectorAll(".success-particle");
+        particles.forEach((p, i) => {
+          const angle = (i / particles.length) * Math.PI * 2;
+          const dist = 60 + Math.random() * 40;
+          gsap.fromTo(
+            p,
+            { x: 0, y: 0, opacity: 1, scale: 1 },
+            {
+              x: Math.cos(angle) * dist,
+              y: Math.sin(angle) * dist,
+              opacity: 0,
+              scale: 0,
+              duration: 0.7 + Math.random() * 0.3,
+              ease: "power2.out",
+              delay: 0.2,
+            }
+          );
+        });
+      }
     } catch {
       setFormState("error");
-      gsap.fromTo(
-        modalRef.current,
-        { x: -8 },
-        { x: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" }
-      );
+      if (!isReduced) {
+        gsap.fromTo(
+          modalRef.current,
+          { x: -8 },
+          { x: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" }
+        );
+      }
     }
   };
 
@@ -183,7 +200,7 @@ export default function ContactModal({ isOpen, onClose }) {
         className="modal-container"
         ref={modalRef}
         onClick={(e) => e.stopPropagation()}
-        style={{ perspective: "800px" }}
+        style={isReduced ? undefined : { perspective: "800px" }}
       >
         <button className="modal-close-button" onClick={handleClose} aria-label="Close">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -256,7 +273,7 @@ export default function ContactModal({ isOpen, onClose }) {
           </form>
         </div>
 
-        <div className="modal-success-state">
+        <div className="modal-success-state" style={formState === "success" && isReduced ? { display: "flex" } : undefined}>
           <div className="success-icon-container">
             {Array.from({ length: 12 }).map((_, i) => (
               <div
@@ -278,7 +295,7 @@ export default function ContactModal({ isOpen, onClose }) {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeDasharray="100"
-                strokeDashoffset="100"
+                strokeDashoffset={isReduced ? "0" : "100"}
               />
             </svg>
           </div>

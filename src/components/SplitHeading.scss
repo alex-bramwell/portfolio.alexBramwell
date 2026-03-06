@@ -21,3 +21,22 @@
   display: inline-block;
   will-change: transform, opacity;
 }
+
+// CSS fallback — words just fade in with stagger via animation-delay
+[data-motion="reduced"] {
+  .split-word {
+    animation: cssSplitWord 0.4s ease both;
+    will-change: auto;
+  }
+
+  @for $i from 1 through 12 {
+    .split-word-wrapper:nth-child(#{$i}) .split-word {
+      animation-delay: #{($i - 1) * 0.04}s;
+    }
+  }
+}
+
+@keyframes cssSplitWord {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

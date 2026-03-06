@@ -1,16 +1,21 @@
 import { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useTheme } from "../context/ThemeContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export function useCountUp(endValue, suffix = "", duration = 1.8) {
-  const [display, setDisplay] = useState("0" + suffix);
+  const { isReduced } = useTheme();
+  const [display, setDisplay] = useState(isReduced ? endValue + suffix : "0" + suffix);
   const triggerRef = useRef(null);
 
   useEffect(() => {
     const el = triggerRef.current;
-    if (!el) return;
+    if (!el || isReduced) {
+      setDisplay(endValue + suffix);
+      return;
+    }
 
     const counter = { val: 0 };
 
@@ -32,7 +37,7 @@ export function useCountUp(endValue, suffix = "", duration = 1.8) {
       tween.scrollTrigger?.kill();
       tween.kill();
     };
-  }, [endValue, suffix, duration]);
+  }, [endValue, suffix, duration, isReduced]);
 
   return { display, triggerRef };
 }

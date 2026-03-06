@@ -1,16 +1,21 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import gsap from "gsap";
 import ThemeToggle from "../ThemeToggle";
+import MotionToggle from "../MotionToggle";
+import { useTheme } from "../../context/ThemeContext";
 import "./Navbar.scss";
 
 export default function Navbar({ isScrolled, onOpenContact }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
   const tlRef = useRef(null);
+  const { isReduced } = useTheme();
 
   const openMenu = useCallback(() => {
     setIsMenuOpen(true);
     document.body.style.overflow = "hidden";
+
+    if (isReduced) return;
 
     const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
     tlRef.current = tl;
@@ -18,9 +23,15 @@ export default function Navbar({ isScrolled, onOpenContact }) {
     tl.fromTo(menuRef.current, { clipPath: "inset(0 0 100% 0)" }, { clipPath: "inset(0 0 0% 0)", duration: 0.45 })
       .fromTo(".mobile-nav-link", { opacity: 0, y: 24, rotateX: -15 }, { opacity: 1, y: 0, rotateX: 0, duration: 0.35, stagger: 0.06 }, "-=0.2")
       .fromTo(".mobile-nav-footer", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.3 }, "-=0.15");
-  }, []);
+  }, [isReduced]);
 
   const closeMenu = useCallback(() => {
+    if (isReduced) {
+      setIsMenuOpen(false);
+      document.body.style.overflow = "";
+      return;
+    }
+
     const tl = gsap.timeline({
       onComplete: () => {
         setIsMenuOpen(false);
@@ -29,7 +40,7 @@ export default function Navbar({ isScrolled, onOpenContact }) {
     });
     tl.to(".mobile-nav-link, .mobile-nav-footer", { opacity: 0, y: -12, duration: 0.2, stagger: 0.03 })
       .to(menuRef.current, { clipPath: "inset(0 0 100% 0)", duration: 0.3, ease: "power3.in" }, "-=0.1");
-  }, []);
+  }, [isReduced]);
 
   const handleLinkClick = useCallback(() => {
     if (isMenuOpen) closeMenu();
@@ -59,6 +70,7 @@ export default function Navbar({ isScrolled, onOpenContact }) {
           <li className="nav-link-item"><a href="#projects">Work</a></li>
           <li className="nav-link-item"><a href="#design-system">Design System</a></li>
           <li className="nav-link-item"><a href="#experience">Experience</a></li>
+          <li className="nav-link-item"><MotionToggle /></li>
           <li className="nav-link-item"><ThemeToggle /></li>
           <li className="nav-link-item">
             <button className="nav-contact-button" onClick={onOpenContact}>Get in touch</button>
@@ -81,9 +93,9 @@ export default function Navbar({ isScrolled, onOpenContact }) {
       <div
         className={`mobile-nav-overlay ${isMenuOpen ? "mobile-nav-visible" : ""}`}
         ref={menuRef}
-        style={{ clipPath: "inset(0 0 100% 0)" }}
+        style={isReduced ? undefined : { clipPath: "inset(0 0 100% 0)" }}
       >
-        <div className="mobile-nav-inner" style={{ perspective: "600px" }}>
+        <div className="mobile-nav-inner" style={isReduced ? undefined : { perspective: "600px" }}>
           <a href="#about" className="mobile-nav-link" onClick={handleLinkClick}>
             <span className="mobile-nav-link-number">01</span>
             <span className="mobile-nav-link-text">About</span>
@@ -109,6 +121,7 @@ export default function Navbar({ isScrolled, onOpenContact }) {
             <span className="mobile-nav-link-text">Contact</span>
           </a>
           <div className="mobile-nav-footer">
+            <MotionToggle />
             <ThemeToggle />
             <button className="nav-contact-button" onClick={handleContactClick}>Get in touch</button>
           </div>
