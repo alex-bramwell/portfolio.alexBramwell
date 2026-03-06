@@ -51,7 +51,7 @@ export const CONTACT_DETAILS = [
   { label: "Email", value: "alex.s.bramwell.86@gmail.com", href: "mailto:alex.s.bramwell.86@gmail.com" },
   { label: "Phone", value: "07961 099 889", href: "tel:07961099889" },
   { label: "GitHub", value: "github.com/alex-bramwell", href: "https://github.com/alex-bramwell" },
-  { label: "LinkedIn", value: "linkedin.com/in/alexbramwell", href: "https://linkedin.com/in/alexbramwell" },
+  { label: "Instagram", value: "@alex.bramwell.73113", href: "https://www.instagram.com/alex.bramwell.73113" },
   { label: "Location", value: "Nottinghamshire, UK", href: null },
 ];
 
