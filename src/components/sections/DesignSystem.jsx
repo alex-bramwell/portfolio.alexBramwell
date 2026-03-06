@@ -41,27 +41,27 @@ const TOKEN_GROUPS = [
 const PIPELINE_STEPS = [
   {
     label: "Design Tokens",
-    desc: "SCSS variables compiled to CSS custom properties on :root. Theme swap changes every token at runtime.",
+    desc: "SCSS variables compile to CSS custom properties on :root. Toggle the theme on this page — every token swaps at runtime.",
     tech: "_variables.scss → var(--color-*)",
   },
   {
     label: "React Components",
-    desc: "Stateless UI primitives consume tokens directly. No hardcoded values — every component adapts to both themes automatically.",
+    desc: "Every UI element on this page is a reusable React component consuming tokens directly. No hardcoded values anywhere.",
     tech: "JSX + SCSS modules",
   },
   {
     label: "Storybook",
-    desc: "Each component is documented in isolation with interactive controls, theme toggle, and live preview.",
+    desc: "The same components on this page are documented in Storybook with interactive controls and theme toggle.",
     tech: "storybook build → /storybook",
   },
   {
     label: "CI / CD",
-    desc: "Push to main triggers GitHub Actions: Vite builds the site, Storybook builds alongside it, both deploy to Pages.",
+    desc: "Every push to main triggers GitHub Actions — Vite builds this site, Storybook builds alongside it, both deploy to Pages.",
     tech: "GitHub Actions → Pages",
   },
   {
     label: "Live Site",
-    desc: "Portfolio and Storybook served from the same domain. Components you see here are the same ones documented there.",
+    desc: "You're looking at it. This portfolio and its Storybook are served from the same domain — what you see is what's documented.",
     tech: "alex-bramwell.github.io",
   },
 ];
@@ -85,11 +85,12 @@ export default function DesignSystem() {
             <span className="section-eyebrow-label">Design System</span>
           </div>
           <SplitHeading className="section-main-heading">
-            Tokens, components &<br /><em>documentation</em>
+            Built on a <em>system</em>
           </SplitHeading>
           <p className="section-supporting-text">
-            A themeable design system built with CSS custom properties, SCSS, and React.
-            Every component is documented in Storybook with live controls and theme switching.
+            This portfolio is powered by its own design system — themeable tokens, reusable
+            React components, and a live Storybook. Every element on this page pulls from
+            the same source of truth.
           </p>
         </ScrollReveal>
 
@@ -97,7 +98,7 @@ export default function DesignSystem() {
           <ScrollReveal direction="left">
             <div className="ds-token-panel">
               <h3 className="ds-panel-title">Colour Tokens</h3>
-              <p className="ds-panel-subtitle">Runtime-switchable via CSS custom properties</p>
+              <p className="ds-panel-subtitle">The tokens powering every colour on this page</p>
               <div className="ds-token-groups">
                 {TOKEN_GROUPS.map((group) => (
                   <div key={group.label} className="ds-token-group">
@@ -119,7 +120,7 @@ export default function DesignSystem() {
           <ScrollReveal direction="right">
             <div className="ds-component-panel">
               <h3 className="ds-panel-title">Component Library</h3>
-              <p className="ds-panel-subtitle">6 documented components with live playground</p>
+              <p className="ds-panel-subtitle">The components that build this portfolio</p>
               <div className="ds-component-list">
                 {COMPONENTS.map((c, i) => (
                   <div key={c.name} className="ds-component-row">
@@ -137,7 +138,7 @@ export default function DesignSystem() {
 
         <ScrollReveal>
           <div className="ds-pipeline">
-            <h3 className="ds-pipeline-title">How it all connects</h3>
+            <h3 className="ds-pipeline-title">How this site is built and shipped</h3>
             <div className="ds-pipeline-steps">
               {PIPELINE_STEPS.map((step, i) => (
                 <div key={step.label} className="ds-pipeline-step">
@@ -174,11 +175,11 @@ export default function DesignSystem() {
               </svg>
             </div>
             <div className="ds-storybook-card-content">
-              <h3 className="ds-storybook-card-title">Explore the live Storybook</h3>
+              <h3 className="ds-storybook-card-title">Explore this site's Storybook</h3>
               <p className="ds-storybook-card-desc">
-                Browse every component in isolation with interactive controls, theme switching,
-                and full design token documentation — the same tooling I use to build and
-                maintain design systems in production.
+                Every component on this page is documented in a live Storybook — interactive
+                controls, theme switching, and full token documentation. The same workflow
+                I use to build and maintain design systems in production.
               </p>
             </div>
             <span className="ds-storybook-card-arrow">&rarr;</span>
