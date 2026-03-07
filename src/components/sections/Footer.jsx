@@ -5,9 +5,9 @@ export default function Footer() {
     <footer className="site-footer">
       <div className="page-container">
         <div className="footer-inner-row">
-          <span>&copy; 2025 ALEX BRAMWELL</span>
+          <span>&copy; {new Date().getFullYear()} ALEX BRAMWELL</span>
           <div className="footer-tech-stack-list">
-            {["REACT 19", "TYPESCRIPT", "VITE", "SCSS"].map((item) => (
+            {["REACT 19", "JAVASCRIPT", "VITE", "SCSS"].map((item) => (
               <span key={item} className="footer-tech-stack-item">{item}</span>
             ))}
           </div>

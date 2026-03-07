@@ -27,7 +27,7 @@ export default function App() {
   return (
     <ThemeProvider>
       <BackgroundCanvas />
-      <div className="page-wrapper">
+      <main className="page-wrapper">
         <Navbar isScrolled={isNavigationScrolled} onOpenContact={() => setIsContactOpen(true)} />
         <Hero />
         <hr className="full-width-rule" />
@@ -44,7 +44,7 @@ export default function App() {
         <Contact onOpenContact={() => setIsContactOpen(true)} />
         <hr className="full-width-rule" />
         <Footer />
-      </div>
+      </main>
       <ContactModal isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />
       <CaseStudy isOpen={isCaseStudyOpen} onClose={() => setIsCaseStudyOpen(false)} />
     </ThemeProvider>

@@ -81,7 +81,7 @@ export const Typography = {
     <div style={{ maxWidth: "600px" }}>
       <div style={{ marginBottom: "32px" }}>
         <div style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "var(--color-accent)", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "2px" }}>
-          Display — Bricolage Grotesque
+          Display / Bricolage Grotesque
         </div>
         <div style={{ fontFamily: "var(--font-display)", fontSize: "48px", fontWeight: 800, letterSpacing: "-2px", color: "var(--color-text-primary)", lineHeight: 1 }}>
           Design <span style={{ color: "var(--color-accent)" }}>Systems</span>
@@ -89,15 +89,15 @@ export const Typography = {
       </div>
       <div style={{ marginBottom: "32px" }}>
         <div style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "var(--color-accent)", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "2px" }}>
-          Body — Instrument Sans
+          Body / Instrument Sans
         </div>
         <p style={{ fontFamily: "var(--font-body)", fontSize: "16px", color: "var(--color-text-secondary)", lineHeight: 1.75 }}>
-          I own the full pipeline — Figma wireframes through to deployed React components — with deep expertise in design systems, accessibility, and mobile-first UX.
+          I own the full pipeline, Figma wireframes through to deployed React components, with deep expertise in design systems, accessibility, and mobile-first UX.
         </p>
       </div>
       <div>
         <div style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "var(--color-accent)", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "2px" }}>
-          Mono — JetBrains Mono
+          Mono / JetBrains Mono
         </div>
         <div style={{ fontFamily: "var(--font-mono)", fontSize: "13px", color: "var(--color-text-secondary)", lineHeight: 1.8 }}>
           const tokens = {"{"} radius: "4px | 8px", fonts: 3, themes: 2 {"}"};
@@ -110,8 +110,8 @@ export const Typography = {
 export const Spacing = {
   render: () => {
     const radii = [
-      { token: "--radius-small", label: "4px — chips, buttons, badges" },
-      { token: "--radius-medium", label: "8px — cards, panels, inputs" },
+      { token: "--radius-small", label: "4px / chips, buttons, badges" },
+      { token: "--radius-medium", label: "8px / cards, panels, inputs" },
     ];
     return (
       <div style={{ maxWidth: "400px" }}>

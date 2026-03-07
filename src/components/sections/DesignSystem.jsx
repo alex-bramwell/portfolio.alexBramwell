@@ -41,7 +41,7 @@ const TOKEN_GROUPS = [
 const PIPELINE_STEPS = [
   {
     label: "Design Tokens",
-    desc: "SCSS variables compile to CSS custom properties on :root. Toggle the theme on this page — every token swaps at runtime.",
+    desc: "SCSS variables compile to CSS custom properties on :root. Toggle the theme on this page and every token swaps at runtime.",
     tech: "_variables.scss → var(--color-*)",
   },
   {
@@ -56,12 +56,12 @@ const PIPELINE_STEPS = [
   },
   {
     label: "CI / CD",
-    desc: "Every push to main triggers GitHub Actions — Vite builds this site, Storybook builds alongside it, both deploy to Pages.",
+    desc: "Every push to main triggers GitHub Actions. Vite builds this site, Storybook builds alongside it, both deploy to Pages.",
     tech: "GitHub Actions → Pages",
   },
   {
     label: "Live Site",
-    desc: "You're looking at it. This portfolio and its Storybook are served from the same domain — what you see is what's documented.",
+    desc: "You're looking at it. This portfolio and its Storybook are served from the same domain. What you see is what's documented.",
     tech: "alex-bramwell.github.io",
   },
 ];
@@ -88,7 +88,7 @@ export default function DesignSystem() {
             Built on a <em>system</em>
           </SplitHeading>
           <p className="section-supporting-text">
-            This portfolio is powered by its own design system — themeable tokens, reusable
+            This portfolio is powered by its own design system: themeable tokens, reusable
             React components, and a live Storybook. Every element on this page pulls from
             the same source of truth.
           </p>
@@ -177,7 +177,7 @@ export default function DesignSystem() {
             <div className="ds-storybook-card-content">
               <h3 className="ds-storybook-card-title">Explore this site's Storybook</h3>
               <p className="ds-storybook-card-desc">
-                Every component on this page is documented in a live Storybook — interactive
+                Every component on this page is documented in a live Storybook with interactive
                 controls, theme switching, and full token documentation. The same workflow
                 I use to build and maintain design systems in production.
               </p>
@@ -197,6 +197,29 @@ export default function DesignSystem() {
             <div className="ds-type-sample">
               <span className="ds-type-label">Mono</span>
               <span className="ds-type-preview ds-type-mono">JetBrains Mono</span>
+            </div>
+          </div>
+
+          <div className="ds-perf-strip">
+            <div className="ds-perf-item">
+              <span className="ds-perf-score">3</span>
+              <span className="ds-perf-label">Dependencies</span>
+              <span className="ds-perf-detail">React, React-DOM, GSAP</span>
+            </div>
+            <div className="ds-perf-item">
+              <span className="ds-perf-score">0</span>
+              <span className="ds-perf-label">CSS frameworks</span>
+              <span className="ds-perf-detail">Hand-written SCSS tokens</span>
+            </div>
+            <div className="ds-perf-item">
+              <span className="ds-perf-score">~120kB</span>
+              <span className="ds-perf-label">JS bundle (gzip)</span>
+              <span className="ds-perf-detail">Vite tree-shaking</span>
+            </div>
+            <div className="ds-perf-item">
+              <span className="ds-perf-score">A11y</span>
+              <span className="ds-perf-label">Motion toggle</span>
+              <span className="ds-perf-detail">GSAP off, CSS fallbacks</span>
             </div>
           </div>
         </ScrollReveal>

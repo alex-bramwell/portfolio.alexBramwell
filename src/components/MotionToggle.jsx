@@ -9,7 +9,7 @@ export default function MotionToggle() {
       className={`motion-toggle-button ${isReduced ? "motion-reduced" : ""}`}
       onClick={toggleMotion}
       aria-label={`${isReduced ? "Enable" : "Disable"} animations`}
-      title={isReduced ? "Animations off — click to enable" : "Animations on — click to disable"}
+      title={isReduced ? "Animations off - click to enable" : "Animations on - click to disable"}
     >
       <svg
         className="motion-toggle-icon"

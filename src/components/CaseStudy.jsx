@@ -10,7 +10,7 @@ const FEATURES = [
   {
     icon: "\u2693",
     title: "Multi-tenant Architecture",
-    description: "Every gym gets an isolated data silo via Supabase Row-Level Security. One codebase, infinite tenants — zero config per client.",
+    description: "Every gym gets an isolated data silo via Supabase Row-Level Security. One codebase, infinite tenants, zero config per client.",
   },
   {
     icon: "\u2728",
@@ -20,7 +20,7 @@ const FEATURES = [
   {
     icon: "\uD83D\uDCC5",
     title: "Class Booking Engine",
-    description: "Real-time class timetable with capacity tracking, waitlists, cancellation policies, and calendar sync — all optimistically updated.",
+    description: "Real-time class timetable with capacity tracking, waitlists, cancellation policies, and calendar sync, all optimistically updated.",
   },
   {
     icon: "\uD83D\uDCB3",
@@ -283,7 +283,7 @@ export default function CaseStudy({ isOpen, onClose }) {
             <span className="cs-hero-eyebrow">Case Study</span>
             <h1 className="cs-hero-title">NoSweat<br />Fitness</h1>
             <p className="cs-hero-subtitle">
-              Multi-tenant SaaS platform for gyms — from Figma wireframes
+              Multi-tenant SaaS platform for gyms, from Figma wireframes
               to production React, built end-to-end as a solo project.
             </p>
             <div className="cs-hero-chips">

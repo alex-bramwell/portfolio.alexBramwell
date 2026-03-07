@@ -22,7 +22,7 @@ export const EXPERIENCE_ITEMS = [
     role: "UX Engineer",
     dateRange: "2023 – 2025",
     achievements: [
-      "Built and maintained the MailMetrics component library in Storybook.js — token-based design system spanning the full product suite.",
+      "Built and maintained the MailMetrics component library in Storybook.js, a token-based design system spanning the full product suite.",
       "Delivered 18-screen wireframe specification for ESB Networks' stock management system, translating complex requirements into WCAG-compliant responsive UI.",
       "Developed MFA frontend flows and user management modules in React + TypeScript within a .NET ecosystem.",
       "Mentored junior developers through technical presentations covering search, document retrieval, and user management architecture.",
@@ -42,7 +42,7 @@ export const EXPERIENCE_ITEMS = [
     role: "Frontend Developer",
     dateRange: "2018 – 2021",
     achievements: [
-      "Delivered responsive, accessible frontend solutions across multiple B2B SaaS products — component architecture, accessibility audits, and design system work.",
+      "Delivered responsive, accessible frontend solutions across multiple B2B SaaS products: component architecture, accessibility audits, and design system work.",
     ],
   },
 ];

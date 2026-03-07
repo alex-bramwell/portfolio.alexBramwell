@@ -21,7 +21,7 @@ export default function Projects({ onOpenCaseStudy }) {
               <p className="featured-project-description">
                 Multi-tenant SaaS platform for gyms. Each gym gets a fully branded site with
                 class booking, WOD programming, Stripe payments, coach profiles, and a member
-                dashboard — designed and built end-to-end as a solo project.
+                dashboard, designed and built end-to-end as a solo project.
               </p>
               <div className="project-tech-stack-tag-row">
                 {["React 19", "TypeScript", "SCSS Modules", "Supabase", "Stripe", "Docker", "Vercel"].map((tech) => (
@@ -42,7 +42,12 @@ export default function Projects({ onOpenCaseStudy }) {
               <div className="secondary-project-card">
                 <div className="secondary-project-icon-box">&#x25C8;</div>
                 <div className="secondary-project-name">MailMetrics Design System</div>
-                <p className="secondary-project-description">Token-based Storybook component library powering the MailMetrics product suite with full WCAG 2.1 AA compliance.</p>
+                <p className="secondary-project-description">
+                  Built and maintained the token-based Storybook component library powering the full
+                  MailMetrics product suite. Established a single source of truth for colours, spacing,
+                  and typography, cutting UI inconsistencies and onboarding time for new developers.
+                  Full WCAG 2.1 AA compliance across every component.
+                </p>
                 <div className="skill-chip-list">
                   {["Storybook", "React", "SCSS", "TypeScript"].map((t) => (
                     <span key={t} className="skill-chip">{t}</span>
@@ -54,7 +59,12 @@ export default function Projects({ onOpenCaseStudy }) {
               <div className="secondary-project-card">
                 <div className="secondary-project-icon-box">&#x2726;</div>
                 <div className="secondary-project-name">ESB Networks · 18-Screen Spec</div>
-                <p className="secondary-project-description">End-to-end wireframe specification for a stock management system — from requirements catalogue to client-approved, responsive UI.</p>
+                <p className="secondary-project-description">
+                  Translated a complex requirements catalogue into an 18-screen wireframe specification
+                  for ESB Networks' stock management system. Delivered responsive, WCAG-compliant UI
+                  from initial discovery through to client-approved handoff, bridging stakeholder needs
+                  and engineering constraints.
+                </p>
                 <div className="skill-chip-list">
                   {["Figma", "Balsamiq", "UX Spec", "WCAG 2.1"].map((t) => (
                     <span key={t} className="skill-chip">{t}</span>

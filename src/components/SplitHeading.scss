@@ -22,7 +22,7 @@
   will-change: transform, opacity;
 }
 
-// CSS fallback — words just fade in with stagger via animation-delay
+// CSS fallback - words just fade in with stagger via animation-delay
 [data-motion="reduced"] {
   .split-word {
     animation: cssSplitWord 0.4s ease both;

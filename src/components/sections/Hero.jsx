@@ -109,16 +109,17 @@ export default function Hero() {
             <p className="hero-role-typewriter-line">
               <span className="hero-role-current-text">{currentRoleText}</span>
               <span className="typewriter-cursor" />
-              {" "}&mdash; design&nbsp;&harr;&nbsp;code
+              {" "}&ndash; design&nbsp;&harr;&nbsp;code
             </p>
             <p className="hero-description-paragraph">
-              7+ years designing and shipping production SaaS interfaces. I own the full pipeline —
-              Figma wireframes through to deployed React components — with deep expertise in
+              7+ years designing and shipping production SaaS interfaces. I own the full pipeline,
+              Figma wireframes through to deployed React components, with deep expertise in
               design systems, WCAG accessibility, and mobile-first UX.
             </p>
             <div className="hero-action-button-row">
               <MagneticButton href="#projects" className="button-filled">View my work &rarr;</MagneticButton>
               <MagneticButton href="#contact" className="button-outlined">Get in touch</MagneticButton>
+              <MagneticButton href="/portfolio.alexBramwell/alex-bramwell-cv.pdf" className="button-outlined" target="_blank" rel="noopener">Download CV &darr;</MagneticButton>
             </div>
           </div>
 
