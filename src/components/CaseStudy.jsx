@@ -62,28 +62,12 @@ const PROCESS_STEPS = [
   { phase: "05", title: "Ship & Iterate", detail: "Deployed to Vercel edge network. Continuous deployment from main branch with preview URLs per PR." },
 ];
 
-function CountUpStat({ endValue, suffix, label, isReduced }) {
-  const ref = useRef(null);
-  const valRef = useRef(null);
-
-  useEffect(() => {
-    if (!ref.current || !valRef.current || isReduced) return;
-    const counter = { val: 0 };
-    const tween = gsap.to(counter, {
-      val: endValue,
-      duration: 2,
-      ease: "power2.out",
-      scrollTrigger: { trigger: ref.current, start: "top 85%", once: true },
-      onUpdate: () => {
-        if (valRef.current) valRef.current.textContent = Math.round(counter.val) + suffix;
-      },
-    });
-    return () => { tween.scrollTrigger?.kill(); tween.kill(); };
-  }, [endValue, suffix, isReduced]);
-
+function MetricCard({ endValue, suffix, label, isReduced }) {
   return (
-    <div className="cs-metric-card" ref={ref}>
-      <span className="cs-metric-value" ref={valRef}>{isReduced ? endValue + suffix : "0" + suffix}</span>
+    <div className="cs-metric-card">
+      <span className="cs-metric-value" data-end={endValue} data-suffix={suffix}>
+        {isReduced ? endValue + suffix : "0" + suffix}
+      </span>
       <span className="cs-metric-label">{label}</span>
     </div>
   );
@@ -126,6 +110,30 @@ export default function CaseStudy({ isOpen, onClose }) {
       .fromTo(".cs-hero-chip", { opacity: 0, scale: 0.8, y: 10 }, { opacity: 1, scale: 1, y: 0, duration: 0.3, stagger: 0.04 }, "-=0.25")
       .fromTo(".cs-hero-links a", { opacity: 0, x: -15 }, { opacity: 1, x: 0, duration: 0.3, stagger: 0.08 }, "-=0.2")
       .fromTo(".cs-close-button", { opacity: 0, rotate: -180 }, { opacity: 1, rotate: 0, duration: 0.4 }, "-=0.4");
+
+    // --- Metrics count-up ---
+    document.querySelectorAll(".cs-metric-value").forEach((el) => {
+      const endValue = parseInt(el.dataset.end, 10);
+      const suffix = el.dataset.suffix || "";
+      const counter = { val: 0 };
+      const st = ScrollTrigger.create({
+        trigger: el.closest(".cs-metric-card"),
+        scroller,
+        start: "top 85%",
+        once: true,
+        onEnter: () => {
+          gsap.to(counter, {
+            val: endValue,
+            duration: 2,
+            ease: "power2.out",
+            onUpdate: () => {
+              el.textContent = Math.round(counter.val) + suffix;
+            },
+          });
+        },
+      });
+      triggersRef.current.push(st);
+    });
 
     // --- Parallax hero image placeholder ---
     const heroSt = ScrollTrigger.create({
@@ -208,23 +216,6 @@ export default function CaseStudy({ isOpen, onClose }) {
       triggersRef.current.push(st);
     });
 
-    // --- Metrics count-up triggers ---
-    document.querySelectorAll(".cs-metric-card").forEach((card) => {
-      const st = ScrollTrigger.create({
-        trigger: card,
-        scroller,
-        start: "top 85%",
-        once: true,
-        onEnter: () => {
-          gsap.fromTo(card,
-            { opacity: 0, y: 30 },
-            { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }
-          );
-        },
-      });
-      triggersRef.current.push(st);
-    });
-
     // --- SVG connector draw ---
     document.querySelectorAll(".cs-svg-connector path").forEach((path) => {
       const length = path.getTotalLength();
@@ -301,7 +292,7 @@ export default function CaseStudy({ isOpen, onClose }) {
         {/* ===== METRICS ===== */}
         <div className="cs-metrics-strip">
           {METRICS.map((m) => (
-            <CountUpStat key={m.label} endValue={m.value} suffix={m.suffix} label={m.label} isReduced={isReduced} />
+            <MetricCard key={m.label} endValue={m.value} suffix={m.suffix} label={m.label} isReduced={isReduced} />
           ))}
         </div>
 
