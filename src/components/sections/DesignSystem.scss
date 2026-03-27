@@ -390,16 +390,9 @@
   animation: lhPulse 1.5s ease-in-out infinite;
 }
 
-.ds-lh-live {
-  color: #0cce6b;
-  border-color: rgba(12, 206, 107, 0.3);
-  background: rgba(12, 206, 107, 0.08);
-}
-
-.ds-lh-cached {
+.ds-lh-date {
   color: var(--color-text-secondary);
   border-color: var(--color-border);
-  background: var(--color-surface-raised);
 }
 
 @keyframes lhPulse {
