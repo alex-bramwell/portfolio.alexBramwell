@@ -9,7 +9,7 @@ export default function Experience() {
       <div className="page-container">
         <ScrollReveal>
           <div className="section-meta-row">
-            <span className="section-number-label">05</span>
+            <span className="section-number-label">06</span>
             <span className="section-eyebrow-label">Experience</span>
           </div>
           <SplitHeading className="section-main-heading">Where I've <em>shipped</em></SplitHeading>

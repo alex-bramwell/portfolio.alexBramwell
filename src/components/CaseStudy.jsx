@@ -296,6 +296,18 @@ export default function CaseStudy({ isOpen, onClose }) {
           ))}
         </div>
 
+        {/* ===== TEAM CONTEXT ===== */}
+        <div className="cs-team-context">
+          <p className="cs-team-context-text">
+            <span className="cs-team-context-icon" aria-hidden="true">&#9670;</span>
+            Built solo to demonstrate full-stack range. In a team setting, I would
+            collaborate with backend engineers on RLS policies and data modelling,
+            work alongside product designers on research and validation, and pair
+            with QA on test coverage. The decisions here reflect breadth of
+            ownership, not a preference for working alone.
+          </p>
+        </div>
+
         {/* ===== PROCESS ===== */}
         <section className="cs-section cs-process-section">
           <div className="cs-section-inner">

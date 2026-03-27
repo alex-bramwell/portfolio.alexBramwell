@@ -11,7 +11,7 @@ export default function Contact({ onOpenContact }) {
           <ScrollReveal direction="left">
             <div>
               <div className="section-meta-row">
-                <span className="section-number-label">06</span>
+                <span className="section-number-label">07</span>
                 <span className="section-eyebrow-label">Get in touch</span>
               </div>
               <SplitHeading className="section-main-heading">Let's build <br />something <br /><em>remarkable</em></SplitHeading>

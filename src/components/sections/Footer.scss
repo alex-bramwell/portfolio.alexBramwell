@@ -5,6 +5,40 @@
   border-top: 1px solid var(--color-border-subtle);
 }
 
+.footer-cta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 28px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid var(--color-border-subtle);
+
+  @media (max-width: $breakpoint-mobile) {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+}
+
+.footer-cta-text {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 3vw, 28px);
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: var(--color-text-primary);
+}
+
+.footer-cta-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.footer-cta-button {
+  height: 40px;
+  font-size: 13px;
+  padding: 0 20px;
+}
+
 .footer-inner-row {
   display: flex;
   justify-content: space-between;

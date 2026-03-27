@@ -5,7 +5,7 @@ const ThemeContext = createContext();
 function getInitialTheme() {
   const stored = localStorage.getItem("theme");
   if (stored) return stored;
-  return "light";
+  return "dark";
 }
 
 function getInitialMotion() {

@@ -39,6 +39,12 @@
   letter-spacing: 0.5px;
 }
 
+.theme-toggle-compact {
+  padding: 0 8px;
+  border: none;
+  height: 32px;
+}
+
 // CSS fallback when GSAP is disabled
 [data-motion="reduced"] {
   .theme-toggle-button svg {

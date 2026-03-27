@@ -21,6 +21,16 @@
     color: var(--color-accent);
     border-color: var(--color-accent-border);
   }
+
+  &.motion-toggle-compact {
+    padding: 0 8px;
+    border: none;
+    height: 32px;
+
+    &.motion-reduced {
+      border: none;
+    }
+  }
 }
 
 .motion-toggle-label {
