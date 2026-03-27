@@ -302,6 +302,32 @@ export default function DesignSystem() {
             <span className="ds-storybook-card-arrow">&rarr;</span>
           </a>
 
+          <a
+            href="https://www.figma.com/design/O0OKgQEqNpLCjZHJBeH9NR/Untitled?node-id=0-1&t=ZZVuirsqb6JfJCTX-1"
+            target="_blank"
+            rel="noopener"
+            className="ds-storybook-card"
+          >
+            <div className="ds-storybook-card-icon">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none">
+                <path d="M8 24c2.2 0 4-1.8 4-4v-4H8c-2.2 0-4 1.8-4 4s1.8 4 4 4z" fill="var(--color-accent)" opacity="0.6" />
+                <path d="M4 12c0-2.2 1.8-4 4-4h4v8H8c-2.2 0-4-1.8-4-4z" fill="var(--color-accent)" opacity="0.75" />
+                <path d="M4 4c0-2.2 1.8-4 4-4h4v8H8C5.8 8 4 6.2 4 4z" fill="var(--color-accent)" opacity="0.9" />
+                <path d="M12 0h4c2.2 0 4 1.8 4 4s-1.8 4-4 4h-4V0z" fill="var(--color-accent)" opacity="0.5" />
+                <path d="M20 12c0 2.2-1.8 4-4 4s-4-1.8-4-4 1.8-4 4-4 4 1.8 4 4z" fill="var(--color-accent)" opacity="0.4" />
+              </svg>
+            </div>
+            <div className="ds-storybook-card-content">
+              <h3 className="ds-storybook-card-title">View the Figma design tokens</h3>
+              <p className="ds-storybook-card-desc">
+                The same design tokens powering this site are available in Figma via
+                Tokens Studio. Colours, typography, and radii synced across design and
+                code, with full Dark and Light theme sets.
+              </p>
+            </div>
+            <span className="ds-storybook-card-arrow">&rarr;</span>
+          </a>
+
           <div className="ds-type-strip">
             <div className="ds-type-sample">
               <span className="ds-type-label">Display</span>
