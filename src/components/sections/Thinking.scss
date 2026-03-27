@@ -4,11 +4,102 @@
   background: var(--color-surface);
 }
 
+// Featured article card
+.thinking-featured-card {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  width: 100%;
+  margin-top: 56px;
+  padding: 40px;
+  border: 1px solid var(--color-accent-border);
+  border-radius: var(--radius-medium);
+  background: var(--color-accent-dim);
+  cursor: pointer;
+  text-align: left;
+  color: inherit;
+  font-family: inherit;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 200ms ease, transform 200ms ease;
+
+  &:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-3px);
+  }
+
+  &:hover .thinking-article-arrow {
+    transform: translateX(6px);
+    color: var(--color-accent);
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    flex-direction: column;
+    padding: 28px;
+    gap: 20px;
+  }
+}
+
+.thinking-featured-accent {
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  opacity: 0.04;
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+.thinking-featured-content {
+  flex: 1;
+}
+
+.thinking-featured-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.thinking-featured-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent-border);
+  padding: 2px 8px;
+  border-radius: var(--radius-small);
+}
+
+.thinking-featured-title {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3.5vw, 32px);
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  line-height: 1.1;
+  margin-bottom: 10px;
+  color: var(--color-text-primary);
+}
+
+.thinking-featured-subtitle {
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin-bottom: 20px;
+  max-width: 520px;
+}
+
+// Article grid
 .thinking-article-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 24px;
-  margin-top: 56px;
+  margin-top: 24px;
 
   @media (max-width: $breakpoint-tablet) {
     grid-template-columns: 1fr;
@@ -93,4 +184,5 @@
   color: var(--color-text-disabled);
   transition: transform 200ms ease, color 200ms ease;
   margin-top: auto;
+  flex-shrink: 0;
 }

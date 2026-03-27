@@ -130,6 +130,72 @@ function SpecIllustration() {
   );
 }
 
+function PipelineIllustration() {
+  const svgRef = useRef(null);
+  const { isReduced } = useTheme();
+
+  useEffect(() => {
+    if (isReduced || !svgRef.current) return;
+    const ctx = gsap.context(() => {
+      // Draw the three stage boxes
+      gsap.fromTo(".pip-box", { strokeDashoffset: 400, opacity: 0 }, {
+        strokeDashoffset: 0, opacity: 1, duration: 0.8, stagger: 0.25, delay: 0.2, ease: "power2.out",
+      });
+      // Labels appear
+      gsap.fromTo(".pip-label", { opacity: 0, y: 8 }, {
+        opacity: 1, y: 0, duration: 0.4, stagger: 0.25, delay: 0.5, ease: "power2.out",
+      });
+      // Draw connecting arrows
+      gsap.fromTo(".pip-arrow", { strokeDashoffset: 60, opacity: 0 }, {
+        strokeDashoffset: 0, opacity: 1, duration: 0.5, stagger: 0.2, delay: 1.0, ease: "power2.out",
+      });
+      // Pulse the sync indicators
+      gsap.fromTo(".pip-sync", { scale: 0, opacity: 0 }, {
+        scale: 1, opacity: 1, duration: 0.3, stagger: 0.15, delay: 1.5, ease: "back.out(2)",
+      });
+      gsap.to(".pip-sync", {
+        scale: 1.3, opacity: 0.5, duration: 1.2, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 2.0,
+      });
+    }, svgRef);
+    return () => ctx.revert();
+  }, [isReduced]);
+
+  return (
+    <svg ref={svgRef} className="article-illustration" viewBox="0 0 400 280" fill="none">
+      {/* Figma stage */}
+      <rect className="pip-box" x="20" y="80" width="100" height="120" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" strokeDasharray="400" fill="none" style={{ transformOrigin: "70px 140px" }} />
+      <text className="pip-label" x="70" y="110" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)" fontWeight="600">FIGMA</text>
+      <text className="pip-label" x="70" y="135" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="8" fontFamily="var(--font-mono)">Tokens</text>
+      <text className="pip-label" x="70" y="150" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="8" fontFamily="var(--font-mono)">Wireframes</text>
+      <text className="pip-label" x="70" y="165" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="8" fontFamily="var(--font-mono)">Components</text>
+      {/* Arrow 1 */}
+      <line className="pip-arrow" x1="130" y1="140" x2="148" y2="140" stroke="var(--color-accent)" strokeWidth="1.5" strokeDasharray="60" />
+      <polygon className="pip-arrow" points="148,135 158,140 148,145" fill="var(--color-accent)" opacity="0.8" />
+      {/* Storybook stage */}
+      <rect className="pip-box" x="160" y="80" width="100" height="120" rx="4" stroke="var(--color-accent-border)" strokeWidth="1.5" strokeDasharray="400" fill="none" style={{ transformOrigin: "210px 140px" }} />
+      <text className="pip-label" x="210" y="110" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)" fontWeight="600">STORYBOOK</text>
+      <text className="pip-label" x="210" y="135" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="8" fontFamily="var(--font-mono)">Documentation</text>
+      <text className="pip-label" x="210" y="150" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="8" fontFamily="var(--font-mono)">Isolation</text>
+      <text className="pip-label" x="210" y="165" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="8" fontFamily="var(--font-mono)">Testing</text>
+      {/* Arrow 2 */}
+      <line className="pip-arrow" x1="270" y1="140" x2="288" y2="140" stroke="var(--color-accent)" strokeWidth="1.5" strokeDasharray="60" />
+      <polygon className="pip-arrow" points="288,135 298,140 288,145" fill="var(--color-accent)" opacity="0.8" />
+      {/* Production stage */}
+      <rect className="pip-box" x="300" y="80" width="100" height="120" rx="4" stroke="var(--color-border)" strokeWidth="1.5" strokeDasharray="400" fill="none" style={{ transformOrigin: "350px 140px" }} />
+      <text className="pip-label" x="350" y="110" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)" fontWeight="600">PRODUCTION</text>
+      <text className="pip-label" x="350" y="135" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="8" fontFamily="var(--font-mono)">React + SCSS</text>
+      <text className="pip-label" x="350" y="150" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="8" fontFamily="var(--font-mono)">CI/CD</text>
+      <text className="pip-label" x="350" y="165" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="8" fontFamily="var(--font-mono)">GitHub Pages</text>
+      {/* Sync indicators */}
+      <circle className="pip-sync" cx="145" cy="140" r="4" fill="var(--color-accent)" style={{ transformOrigin: "145px 140px" }} />
+      <circle className="pip-sync" cx="285" cy="140" r="4" fill="var(--color-accent)" style={{ transformOrigin: "285px 140px" }} />
+      {/* Token flow line underneath */}
+      <path className="pip-arrow" d="M70 210 Q210 240 350 210" stroke="var(--color-accent-border)" strokeWidth="1" strokeDasharray="60" fill="none" />
+      <text className="pip-label" x="210" y="255" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)" letterSpacing="2">SHARED DESIGN TOKENS</text>
+    </svg>
+  );
+}
+
 /* ===== ARTICLE CONTENT ===== */
 
 const ARTICLES = {
@@ -220,6 +286,57 @@ Design systems are already specifications. Tokens, component APIs, interaction p
 The spec itself is a design artefact. It captures user journeys, success metrics, and constraints, all of which require the research, empathy, and strategic thinking that sit at the heart of UX practice. When AI writes the code, the differentiating skill is not typing speed. It is the ability to articulate what to build and why, with enough precision that a machine can execute it faithfully.
 
 Vibe coding and SDD are not opposed. The consensus in 2026 is that they are complementary: vibe coding for early exploration and rapid prototyping, SDD for production systems requiring maintainability, collaboration, and reliability. The people who will thrive are those who can move fluently between the two modes, and who have the cross-disciplinary literacy to write specs that cover both the user experience and the technical architecture.`,
+      },
+    ],
+  },
+  "design-to-production-pipeline": {
+    title: "The design-to-production pipeline",
+    subtitle: "How Figma, Storybook, and React share a single source of truth",
+    date: "March 2026",
+    readTime: "5 min read",
+    illustration: PipelineIllustration,
+    sections: [
+      {
+        heading: "One system, three surfaces",
+        body: `Most design systems have a gap. Designers maintain a Figma library. Developers maintain a component library. The two drift apart, and nobody notices until a QA engineer flags that the button radius in production does not match the mockup.
+
+The portfolio you are reading right now is built to close that gap. The same set of design tokens (colours, typography, spacing, radii) powers three surfaces simultaneously: a Figma file via Tokens Studio, a Storybook instance documenting every component, and the live production site. Change a token in one place and it propagates to the others.
+
+This is not a theoretical exercise. It is the workflow I use in production, and it is the workflow I built this site to demonstrate.`,
+      },
+      {
+        heading: "Figma: where decisions are made",
+        body: `The pipeline starts in Figma. Design tokens are defined using the Tokens Studio plugin, which stores them as structured JSON: colour primitives, semantic aliases, typography scales, border radii. Each token has a name, a value, and a type.
+
+The key detail: tokens are organised into sets. This site has a Dark set and a Light set, with identical token names but different values. Toggle between them in Figma and every frame updates. The same mechanism drives the theme toggle on this site.
+
+Wireframes and component mockups reference tokens by name, not by raw hex value. A background fill is not "#0b0b0b". It is "color.background". This indirection is what makes the entire pipeline possible. When the value changes, the name stays stable, and everything downstream picks it up.`,
+      },
+      {
+        heading: "Storybook: where components are isolated",
+        body: `From Figma, the same tokens flow into code as SCSS variables, compiled to CSS custom properties on :root. Every React component consumes them via var(--color-accent), var(--font-display), and so on. No hardcoded values.
+
+Storybook documents these components in isolation. Each story renders a component with interactive controls (Storybook's args system), and the ThemeProvider wraps everything so the Dark/Light toggle works exactly as it does on the live site.
+
+This is where the design system proves itself. If a component looks wrong in Storybook, it will look wrong in production. There is no "it works on my machine" problem because Storybook and the site consume identical tokens and identical component code. The Storybook instance is built alongside the site in the same CI pipeline and deployed to the same domain.`,
+      },
+      {
+        heading: "Production: where it ships",
+        body: `The final surface is the live site. Every push to main triggers a GitHub Actions workflow: Vite builds the site, Storybook builds alongside it, and both deploy to GitHub Pages. A second workflow runs Lighthouse audits and commits the scores back to the repo.
+
+The production site does not import a separate copy of the design system. It is the design system. The components you see on this page are the same components documented in Storybook, consuming the same tokens defined in Figma.
+
+This has a practical benefit beyond consistency. When a hiring manager asks "show me your design system work," I do not need to switch between tools. The portfolio itself is the artefact: tokens visible in the Design System section, components interactive in Storybook, the Figma file linked alongside, and real Lighthouse scores proving the whole thing performs in production.`,
+      },
+      {
+        heading: "Why this matters for teams",
+        body: `For a solo portfolio, this pipeline is admittedly over-engineered. But it demonstrates a workflow that scales to teams.
+
+In a team setting, a designer updates a colour token in Figma. Tokens Studio syncs the change to a JSON file in the repository via a pull request. A developer reviews and merges. The CI pipeline rebuilds Storybook and the site. Every surface updates from a single change.
+
+The reverse works too. If a developer adds a new component in code, they document it in Storybook. The designer sees it in the Storybook instance and references it in future Figma work. There is no "throw it over the wall" handoff because both sides are working from the same system.
+
+The people who thrive in this workflow are those who understand both sides: designers who can read a component's prop interface, and developers who can interpret a Figma frame's token bindings. That intersection is exactly where a UX Engineer operates.`,
       },
     ],
   },

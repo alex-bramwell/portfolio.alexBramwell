@@ -4,8 +4,17 @@ import "./Thinking.scss";
 
 const ARTICLES = [
   {
-    id: "outcome-oriented-design",
+    id: "design-to-production-pipeline",
     number: "01",
+    title: "The design-to-production pipeline",
+    subtitle: "How Figma, Storybook, and React share a single source of truth",
+    tags: ["Design Systems", "Figma", "Storybook", "Workflow"],
+    readTime: "5 min read",
+    featured: true,
+  },
+  {
+    id: "outcome-oriented-design",
+    number: "02",
     title: "Outcome-oriented design",
     subtitle: "Why AI is shifting UX from pixels to purpose",
     tags: ["UX Strategy", "AI-assisted Design", "Measurement"],
@@ -13,7 +22,7 @@ const ARTICLES = [
   },
   {
     id: "spec-driven-development",
-    number: "02",
+    number: "03",
     title: "Spec-driven development",
     subtitle: "Writing specifications that AI turns into code",
     tags: ["Engineering", "AI Workflow", "Specifications"],
@@ -22,6 +31,9 @@ const ARTICLES = [
 ];
 
 export default function Thinking({ onOpenArticle }) {
+  const featured = ARTICLES.find((a) => a.featured);
+  const rest = ARTICLES.filter((a) => !a.featured);
+
   return (
     <section className="page-section thinking-section" id="thinking">
       <div className="page-container">
@@ -40,8 +52,36 @@ export default function Thinking({ onOpenArticle }) {
           </p>
         </ScrollReveal>
 
+        {/* Featured article */}
+        {featured && (
+          <ScrollReveal>
+            <button
+              className="thinking-featured-card"
+              onClick={() => onOpenArticle(featured.id)}
+            >
+              <div className="thinking-featured-accent" aria-hidden="true" />
+              <div className="thinking-featured-content">
+                <div className="thinking-featured-meta">
+                  <span className="thinking-article-number">{featured.number}</span>
+                  <span className="thinking-featured-badge">Featured</span>
+                  <span className="thinking-article-read-time">{featured.readTime}</span>
+                </div>
+                <h3 className="thinking-featured-title">{featured.title}</h3>
+                <p className="thinking-featured-subtitle">{featured.subtitle}</p>
+                <div className="thinking-article-tags">
+                  {featured.tags.map((tag) => (
+                    <span key={tag} className="skill-chip">{tag}</span>
+                  ))}
+                </div>
+              </div>
+              <span className="thinking-article-arrow">&rarr;</span>
+            </button>
+          </ScrollReveal>
+        )}
+
+        {/* Article grid */}
         <div className="thinking-article-grid">
-          {ARTICLES.map((article, i) => (
+          {rest.map((article, i) => (
             <ScrollReveal key={article.id} direction={i === 0 ? "left" : "right"}>
               <button
                 className="thinking-article-card"
