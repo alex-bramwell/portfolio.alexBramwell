@@ -9,8 +9,8 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: var(--color-accent);
+  border: none;
   color: var(--color-background);
   cursor: pointer;
   display: flex;
@@ -22,7 +22,6 @@
 
   &:hover {
     transform: scale(1.08);
-    border-color: var(--color-accent-border);
     box-shadow: 0 6px 28px rgba(0, 0, 0, 0.4), 0 0 0 4px var(--color-accent-border);
   }
 
@@ -39,7 +38,7 @@
   }
 }
 
-.thoughts-fab-brain {
+.thoughts-fab-icon {
   display: block;
 }
 
