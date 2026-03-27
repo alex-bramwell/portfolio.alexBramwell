@@ -85,31 +85,29 @@ export default function ThoughtsFab({ onOpenArticle }) {
         onClick={() => setIsOpen((v) => !v)}
         aria-label="Open articles menu"
       >
-        <svg className="thoughts-fab-brain" viewBox="0 0 64 64" width="30" height="30" fill="none" xmlns="http://www.w3.org/2000/svg">
-          {/* Brain outline / shadow */}
-          <path d="M32 56c-1.5 0-3-1-4-2.5-2-3-3.5-5-6-7C18 43 14.5 40 12 36c-2-3.2-3-6.5-3-10 0-4 1.5-7.5 4-10C15.5 13 19 11 23 10.5c1.5-.2 3-.1 4.5.2 1-2 2.5-3.2 4.5-3.2s3.5 1.2 4.5 3.2c1.5-.3 3-.4 4.5-.2 4 .5 7.5 2.5 10 5.5 2.5 2.5 4 6 4 10 0 3.5-1 6.8-3 10-2.5 4-6 6.8-10 10.5-2.5 2-4 4-6 7-1 1.5-2.5 2.5-4 2.5z" fill="var(--color-background)" stroke="var(--color-background)" strokeWidth="2" />
-          {/* Left hemisphere - back lobe */}
-          <path d="M30 52c-2-3-4-5.5-7-8-3.5-3-7-6-9.5-9.5C11.5 31.5 11 28.5 11 26c0-3.5 1.2-6.5 3.5-8.5C16.5 15.5 20 14 24 14c2 0 3.8.4 5.5 1.2.3.1.5.3.5.6V52z" fill="var(--color-accent)" opacity="0.85" />
-          {/* Right hemisphere - back lobe */}
-          <path d="M34 52c2-3 4-5.5 7-8 3.5-3 7-6 9.5-9.5C52.5 31.5 53 28.5 53 26c0-3.5-1.2-6.5-3.5-8.5C47.5 15.5 44 14 40 14c-2 0-3.8.4-5.5 1.2-.3.1-.5.3-.5.6V52z" fill="var(--color-accent)" opacity="0.85" />
-          {/* Left top lobe */}
-          <path d="M30 15.8c-1.5-.8-3.2-1.2-5-1.2-2.5 0-4.8.8-6.5 2.2C16.8 18.5 16 21 16 24c0 1.5.3 3 .8 4.2.5-.5 1.2-1 2-1.2 2-1 3.5-3 5-5.5 1-1.5 2.5-3.5 4.5-4.5.8-.4 1.2-.8 1.7-1.2z" fill="var(--color-accent)" opacity="0.65" />
-          {/* Right top lobe */}
-          <path d="M34 15.8c1.5-.8 3.2-1.2 5-1.2 2.5 0 4.8.8 6.5 2.2C47.2 18.5 48 21 48 24c0 1.5-.3 3-.8 4.2-.5-.5-1.2-1-2-1.2-2-1-3.5-3-5-5.5-1-1.5-2.5-3.5-4.5-4.5-.8-.4-1.2-.8-1.7-1.2z" fill="var(--color-accent)" opacity="0.65" />
-          {/* Left front bump */}
-          <path d="M18 27c-1.5.5-2.8 1.5-3.5 3-.8 1.8-.5 3.5.5 5 1.5 2 3.5 3.5 5.5 5 1.5 1 3 2.5 4.2 4 .8 1 1.8 2 2.8 3v-8c-1.5-1-3-2.5-4.5-4-2-2-3.5-4-5-8z" fill="var(--color-accent)" opacity="0.5" />
-          {/* Right front bump */}
-          <path d="M46 27c1.5.5 2.8 1.5 3.5 3 .8 1.8.5 3.5-.5 5-1.5 2-3.5 3.5-5.5 5-1.5 1-3 2.5-4.2 4-.8 1-1.8 2-2.8 3v-8c1.5-1 3-2.5 4.5-4 2-2 3.5-4 5-8z" fill="var(--color-accent)" opacity="0.5" />
+        <svg className="thoughts-fab-brain" viewBox="0 0 100 100" width="34" height="34" xmlns="http://www.w3.org/2000/svg">
+          {/* Dark outline behind everything */}
+          <path d="M50 88c-2 0-3-1-4-3l-2-4c-2-2-4-3-6-4-5-2-9-5-12-9-4-5-6-11-5-17 0-3 1-6 3-8-2-3-2-7-1-10 2-4 5-7 9-8 1-1 3-2 5-2 2-4 5-7 9-8 3-1 5 0 5 0s2-1 5 0c4 1 7 4 9 8 2 0 4 1 5 2 4 1 7 4 9 8 1 3 1 7-1 10 2 2 3 5 3 8 1 6-1 12-5 17-3 4-7 7-12 9-2 1-4 2-6 4l-2 4c-1 2-2 3-4 3z" fill="var(--color-accent)" opacity="0.3" stroke="var(--color-accent)" strokeWidth="2" />
+          {/* Main brain fill */}
+          <path d="M50 84c-1.5 0-2.5-1-3.5-2.5l-2-3.5c-2-2.5-4.5-3.5-7-4.5-4.5-2-8-4.5-11-8.5-3.5-4.5-5-9.5-4.5-15 .2-3 1.2-5.5 3-7.5-1.5-2.5-2-6-.5-9 1.5-3.5 4.5-6 8-7 1-.5 2.5-1.5 4.5-1.5 2-3.5 5-6 8.5-7 2-.5 3.5-.2 4.5.2 1-.4 2.5-.7 4.5-.2 3.5 1 6.5 3.5 8.5 7 2 0 3.5 1 4.5 1.5 3.5 1 6.5 3.5 8 7 1.5 3 1 6.5-.5 9 1.8 2 2.8 4.5 3 7.5.5 5.5-1 10.5-4.5 15-3 4-6.5 6.5-11 8.5-2.5 1-5 2-7 4.5l-2 3.5c-1 1.5-2 2.5-3.5 2.5z" fill="var(--color-accent)" opacity="0.85" />
+          {/* Left top lobe highlight */}
+          <path d="M35 22c-3 1-5.5 3.5-6.5 6.5-.5 2 0 4 1 5.5 1-1 2-2.5 4-3.5 2.5-1.5 4-4 5.5-6.5.5-1 1-1.5 1.5-2-2-.5-3.5-.5-5.5 0z" fill="var(--color-accent)" opacity="0.6" />
+          {/* Right top lobe highlight */}
+          <path d="M65 22c3 1 5.5 3.5 6.5 6.5.5 2 0 4-1 5.5-1-1-2-2.5-4-3.5-2.5-1.5-4-4-5.5-6.5-.5-1-1-1.5-1.5-2 2-.5 3.5-.5 5.5 0z" fill="var(--color-accent)" opacity="0.6" />
+          {/* Left lower lobe highlight */}
+          <path d="M26 42c-2 1-3.5 3-3.5 5.5 0 3 1.5 6 4 8.5 2 2 4.5 3.5 7 4.5l1.5.8c-1.5-2-3.5-4-6-6.5-2.5-3-3.5-6-3-8.5.1-1.5.4-3 1-4.3z" fill="var(--color-accent)" opacity="0.55" />
+          {/* Right lower lobe highlight */}
+          <path d="M74 42c2 1 3.5 3 3.5 5.5 0 3-1.5 6-4 8.5-2 2-4.5 3.5-7 4.5l-1.5.8c1.5-2 3.5-4 6-6.5 2.5-3 3.5-6 3-8.5-.1-1.5-.4-3-1-4.3z" fill="var(--color-accent)" opacity="0.55" />
           {/* Central fissure */}
-          <line x1="32" y1="10" x2="32" y2="54" stroke="var(--color-background)" strokeWidth="2.5" opacity="0.7" />
-          {/* Fold lines - left */}
-          <path d="M14 24c3-1 6-1.5 9-3.5" stroke="var(--color-background)" strokeWidth="1.5" strokeLinecap="round" opacity="0.4" />
-          <path d="M13 32c3.5-1.5 7-2 10-5" stroke="var(--color-background)" strokeWidth="1.5" strokeLinecap="round" opacity="0.35" />
-          <path d="M17 39c2.5-1 5-2.5 7-5" stroke="var(--color-background)" strokeWidth="1.5" strokeLinecap="round" opacity="0.3" />
-          {/* Fold lines - right */}
-          <path d="M50 24c-3-1-6-1.5-9-3.5" stroke="var(--color-background)" strokeWidth="1.5" strokeLinecap="round" opacity="0.4" />
-          <path d="M51 32c-3.5-1.5-7-2-10-5" stroke="var(--color-background)" strokeWidth="1.5" strokeLinecap="round" opacity="0.35" />
-          <path d="M47 39c-2.5-1-5-2.5-7-5" stroke="var(--color-background)" strokeWidth="1.5" strokeLinecap="round" opacity="0.3" />
+          <path d="M50 16C49 20 48 28 48.5 36c.3 5 1 10 1.5 14v18" stroke="var(--color-background)" strokeWidth="2" strokeLinecap="round" opacity="0.6" fill="none" />
+          {/* Fold curves - left side */}
+          <path d="M28 30c4 0 8-1 12-4" stroke="var(--color-background)" strokeWidth="1.5" strokeLinecap="round" opacity="0.4" fill="none" />
+          <path d="M24 42c5-1 10-3 14-7" stroke="var(--color-background)" strokeWidth="1.5" strokeLinecap="round" opacity="0.35" fill="none" />
+          <path d="M28 54c4-1 8-4 12-8" stroke="var(--color-background)" strokeWidth="1.5" strokeLinecap="round" opacity="0.3" fill="none" />
+          {/* Fold curves - right side */}
+          <path d="M72 30c-4 0-8-1-12-4" stroke="var(--color-background)" strokeWidth="1.5" strokeLinecap="round" opacity="0.4" fill="none" />
+          <path d="M76 42c-5-1-10-3-14-7" stroke="var(--color-background)" strokeWidth="1.5" strokeLinecap="round" opacity="0.35" fill="none" />
+          <path d="M72 54c-4-1-8-4-12-8" stroke="var(--color-background)" strokeWidth="1.5" strokeLinecap="round" opacity="0.3" fill="none" />
         </svg>
       </button>
     </>
