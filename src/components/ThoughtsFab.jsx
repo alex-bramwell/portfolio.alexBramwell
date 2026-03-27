@@ -85,17 +85,19 @@ export default function ThoughtsFab({ onOpenArticle }) {
         onClick={() => setIsOpen((v) => !v)}
         aria-label="Open articles menu"
       >
-        <svg className="thoughts-fab-brain" viewBox="0 0 32 32" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-          {/* Left hemisphere */}
-          <path d="M16 4c-3 0-5.5 1-7 3-1.5 2-2 4.5-1.5 7 .3 1.5-.2 3-1.2 4-.8.8-1.3 2-1.3 3.2 0 2.5 2 4.8 5 4.8h1.5" />
-          <path d="M10.5 11c-1 .5-1.8 1.5-1.8 3" />
-          <path d="M12 8c-.8.5-1.5 1.5-1.5 2.5" />
-          {/* Right hemisphere */}
-          <path d="M16 4c3 0 5.5 1 7 3 1.5 2 2 4.5 1.5 7-.3 1.5.2 3 1.2 4 .8.8 1.3 2 1.3 3.2 0 2.5-2 4.8-5 4.8H20.5" />
-          <path d="M21.5 11c1 .5 1.8 1.5 1.8 3" />
-          <path d="M20 8c.8.5 1.5 1.5 1.5 2.5" />
-          {/* Center line */}
-          <line x1="16" y1="4" x2="16" y2="28" strokeDasharray="2 2" opacity="0.4" />
+        <svg className="thoughts-fab-brain" viewBox="0 0 32 32" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+          {/* Outer brain shape - top-down view */}
+          <path d="M16 3C10 3 5 7.5 5 13c0 3 1.2 5.5 3 7.5C10 23 12.5 25 14 27c.6.7 1.2 1.5 2 2 .8-.5 1.4-1.3 2-2 1.5-2 4-4 6-6.5 1.8-2 3-4.5 3-7.5 0-5.5-5-10-11-10z" />
+          {/* Central fissure */}
+          <path d="M16 5v22" strokeDasharray="2 1.5" opacity="0.5" />
+          {/* Left hemisphere folds */}
+          <path d="M14 7c-3 1-5 3.5-5.5 6.5" opacity="0.6" />
+          <path d="M13 11c-2 .8-3.5 2.5-4 5" opacity="0.5" />
+          <path d="M12 16c-1.5 1-2.5 2.5-3 4" opacity="0.4" />
+          {/* Right hemisphere folds */}
+          <path d="M18 7c3 1 5 3.5 5.5 6.5" opacity="0.6" />
+          <path d="M19 11c2 .8 3.5 2.5 4 5" opacity="0.5" />
+          <path d="M20 16c1.5 1 2.5 2.5 3 4" opacity="0.4" />
         </svg>
       </button>
     </>

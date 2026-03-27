@@ -33,7 +33,7 @@ export default function App() {
       <BackgroundCanvas />
       <main className="page-wrapper">
         <Navbar isScrolled={isNavigationScrolled} onOpenContact={() => setIsContactOpen(true)} />
-        <Hero />
+        <Hero onOpenArticle={(id) => setOpenArticleId(id)} />
         <hr className="full-width-rule" />
         <About />
         <hr className="full-width-rule" />

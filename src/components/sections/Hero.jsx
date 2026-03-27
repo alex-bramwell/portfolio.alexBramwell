@@ -17,7 +17,7 @@ function AnimatedStat({ endValue, suffix, descriptor }) {
   );
 }
 
-export default function Hero() {
+export default function Hero({ onOpenArticle }) {
   const currentRoleText = useTypewriter(ROLE_PHRASES, 65, 2200);
   const sectionRef = useRef(null);
   const { isReduced } = useTheme();
@@ -58,6 +58,11 @@ export default function Hero() {
           ".hero-action-button-row",
           { opacity: 0, y: 20, duration: 0.5 },
           "-=0.3"
+        )
+        .from(
+          ".hero-featured-article",
+          { opacity: 0, y: 14, duration: 0.4 },
+          "-=0.2"
         )
         .from(
           ".hero-stats-row",
@@ -129,6 +134,11 @@ export default function Hero() {
               <MagneticButton href="#contact" className="button-outlined">Get in touch</MagneticButton>
               <MagneticButton href="/portfolio.alexBramwell/alex-bramwell-cv.pdf" className="button-outlined" target="_blank" rel="noopener">Download CV &darr;</MagneticButton>
             </div>
+            <button className="hero-featured-article" onClick={() => onOpenArticle("the-split-brain-problem")}>
+              <span className="hero-featured-article-badge">New article</span>
+              <span className="hero-featured-article-title">The split-brain problem</span>
+              <span className="hero-featured-article-arrow">&rarr;</span>
+            </button>
           </div>
 
           <div className="hero-right-panel">
