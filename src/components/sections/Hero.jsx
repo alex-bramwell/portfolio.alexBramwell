@@ -143,12 +143,12 @@ export default function Hero({ onOpenArticle }) {
 
           <div className="hero-right-panel">
             <div className="hero-stats-row">
-              <AnimatedStat endValue={7} suffix="+" descriptor={"Years in\nSaaS"} />
+              <AnimatedStat endValue={7} suffix="+" descriptor={"Years in\nproduct"} />
               <div className="hero-stat-item">
                 <div className="hero-stat-number">Design ↔ Code</div>
                 <div className="hero-stat-descriptor" style={{ whiteSpace: "pre-line" }}>{"Full\npipeline"}</div>
               </div>
-              <AnimatedStat endValue={18} suffix="" descriptor={"Screen spec\ndelivered"} />
+              <AnimatedStat endValue={0} suffix="" descriptor={"Handoff\ngaps"} />
             </div>
             <div className="hero-code-snippet-block">
               <div><span className="code-keyword">const</span> <span className="code-property">engineer</span> = {"{"}</div>
