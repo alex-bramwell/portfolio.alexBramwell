@@ -28,6 +28,14 @@ const ARTICLES = [
     tags: ["Engineering", "AI Workflow", "Specifications"],
     readTime: "7 min read",
   },
+  {
+    id: "the-split-brain-problem",
+    number: "04",
+    title: "The split-brain problem",
+    subtitle: "What nobody tells you about being both the designer and the developer",
+    tags: ["Career", "Design + Code", "Personal"],
+    readTime: "5 min read",
+  },
 ];
 
 export default function Thinking({ onOpenArticle }) {
@@ -82,7 +90,7 @@ export default function Thinking({ onOpenArticle }) {
         {/* Article grid */}
         <div className="thinking-article-grid">
           {rest.map((article, i) => (
-            <ScrollReveal key={article.id} direction={i === 0 ? "left" : "right"}>
+            <ScrollReveal key={article.id} direction={i === 0 ? "left" : i === 2 ? "right" : "up"} stagger={i}>
               <button
                 className="thinking-article-card"
                 onClick={() => onOpenArticle(article.id)}

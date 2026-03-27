@@ -196,6 +196,83 @@ function PipelineIllustration() {
   );
 }
 
+function SplitBrainIllustration() {
+  const svgRef = useRef(null);
+  const { isReduced } = useTheme();
+
+  useEffect(() => {
+    if (isReduced || !svgRef.current) return;
+    const ctx = gsap.context(() => {
+      // Draw the dividing line
+      gsap.fromTo(".sb-divide", { scaleY: 0 }, {
+        scaleY: 1, duration: 0.8, ease: "power2.out", delay: 0.3,
+      });
+      // Left side (design) floats in
+      gsap.fromTo(".sb-left", { opacity: 0, x: -20 }, {
+        opacity: 1, x: 0, duration: 0.6, stagger: 0.1, delay: 0.5, ease: "power2.out",
+      });
+      // Right side (code) floats in
+      gsap.fromTo(".sb-right", { opacity: 0, x: 20 }, {
+        opacity: 1, x: 0, duration: 0.6, stagger: 0.1, delay: 0.5, ease: "power2.out",
+      });
+      // Arrows crossing between sides
+      gsap.fromTo(".sb-cross", { strokeDashoffset: 80, opacity: 0 }, {
+        strokeDashoffset: 0, opacity: 0.5, duration: 0.8, stagger: 0.15, delay: 1.2, ease: "power2.out",
+      });
+      // Pulsing question mark in the center
+      gsap.fromTo(".sb-center", { scale: 0, opacity: 0 }, {
+        scale: 1, opacity: 1, duration: 0.5, delay: 1.6, ease: "back.out(2)",
+      });
+      gsap.to(".sb-center", {
+        scale: 1.15, opacity: 0.6, duration: 1.5, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 2.0,
+      });
+    }, svgRef);
+    return () => ctx.revert();
+  }, [isReduced]);
+
+  return (
+    <svg ref={svgRef} className="article-illustration" viewBox="0 0 400 280" fill="none">
+      {/* Dividing line */}
+      <line className="sb-divide" x1="200" y1="20" x2="200" y2="260" stroke="var(--color-border)" strokeWidth="1" style={{ transformOrigin: "200px 140px" }} />
+      {/* Left: Design */}
+      <text className="sb-left" x="100" y="45" textAnchor="middle" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)" fontWeight="600" letterSpacing="2">DESIGN</text>
+      <rect className="sb-left" x="40" y="65" width="120" height="16" rx="3" fill="var(--color-accent-border)" opacity="0.4" />
+      <text className="sb-left" x="100" y="77" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">colour theory</text>
+      <rect className="sb-left" x="40" y="95" width="120" height="16" rx="3" fill="var(--color-accent-border)" opacity="0.3" />
+      <text className="sb-left" x="100" y="107" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">typography</text>
+      <rect className="sb-left" x="40" y="125" width="120" height="16" rx="3" fill="var(--color-accent-border)" opacity="0.4" />
+      <text className="sb-left" x="100" y="137" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">spatial reasoning</text>
+      <rect className="sb-left" x="40" y="155" width="120" height="16" rx="3" fill="var(--color-accent-border)" opacity="0.3" />
+      <text className="sb-left" x="100" y="167" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">user empathy</text>
+      <rect className="sb-left" x="40" y="185" width="120" height="16" rx="3" fill="var(--color-accent-border)" opacity="0.4" />
+      <text className="sb-left" x="100" y="197" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">visual hierarchy</text>
+      <rect className="sb-left" x="40" y="215" width="120" height="16" rx="3" fill="var(--color-accent-border)" opacity="0.3" />
+      <text className="sb-left" x="100" y="227" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">composition</text>
+      {/* Right: Code */}
+      <text className="sb-right" x="300" y="45" textAnchor="middle" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)" fontWeight="600" letterSpacing="2">CODE</text>
+      <rect className="sb-right" x="240" y="65" width="120" height="16" rx="3" fill="var(--color-border)" opacity="0.5" />
+      <text className="sb-right" x="300" y="77" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">React hooks</text>
+      <rect className="sb-right" x="240" y="95" width="120" height="16" rx="3" fill="var(--color-border)" opacity="0.4" />
+      <text className="sb-right" x="300" y="107" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">SCSS specificity</text>
+      <rect className="sb-right" x="240" y="125" width="120" height="16" rx="3" fill="var(--color-border)" opacity="0.5" />
+      <text className="sb-right" x="300" y="137" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">async patterns</text>
+      <rect className="sb-right" x="240" y="155" width="120" height="16" rx="3" fill="var(--color-border)" opacity="0.4" />
+      <text className="sb-right" x="300" y="167" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">git workflows</text>
+      <rect className="sb-right" x="240" y="185" width="120" height="16" rx="3" fill="var(--color-border)" opacity="0.5" />
+      <text className="sb-right" x="300" y="197" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">API contracts</text>
+      <rect className="sb-right" x="240" y="215" width="120" height="16" rx="3" fill="var(--color-border)" opacity="0.4" />
+      <text className="sb-right" x="300" y="227" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">type systems</text>
+      {/* Crossing arrows */}
+      <path className="sb-cross" d="M160 80 Q200 100 240 90" stroke="var(--color-accent)" strokeWidth="1" strokeDasharray="80" fill="none" />
+      <path className="sb-cross" d="M240 140 Q200 160 160 150" stroke="var(--color-accent)" strokeWidth="1" strokeDasharray="80" fill="none" />
+      <path className="sb-cross" d="M160 200 Q200 220 240 210" stroke="var(--color-accent)" strokeWidth="1" strokeDasharray="80" fill="none" />
+      {/* Center question mark */}
+      <circle className="sb-center" cx="200" cy="250" r="12" fill="var(--color-accent)" opacity="0.15" style={{ transformOrigin: "200px 250px" }} />
+      <text className="sb-center" x="200" y="255" textAnchor="middle" fill="var(--color-accent)" fontSize="14" fontFamily="var(--font-display)" fontWeight="800" style={{ transformOrigin: "200px 250px" }}>?!</text>
+    </svg>
+  );
+}
+
 /* ===== ARTICLE CONTENT ===== */
 
 const ARTICLES = {
@@ -340,6 +417,58 @@ The people who thrive in this workflow are those who understand both sides: desi
       },
     ],
   },
+  "the-split-brain-problem": {
+    title: "The split-brain problem",
+    subtitle: "What nobody tells you about being both the designer and the developer",
+    date: "March 2026",
+    readTime: "5 min read",
+    illustration: SplitBrainIllustration,
+    disclaimer: "Disclaimer: I went to art school, not CS school. I have a BA in Graphic Design from the University of Lincoln. Everything I know about code, I learned on the job, from documentation, and from getting things wrong repeatedly. This article is written from that perspective.",
+    sections: [
+      {
+        heading: "Two brains, one head",
+        body: `There is a particular kind of frustration that comes from working across design and code. It is not that either discipline is too hard on its own. It is that they demand different modes of thinking, and switching between them has a cost that nobody warns you about.
+
+When I am designing, I am thinking spatially. I am thinking about hierarchy, rhythm, contrast, whitespace. I am making decisions that are intuitive, pattern-based, and visual. The reasoning happens fast and it happens in a register that is hard to articulate. You know a layout is wrong before you can explain why.
+
+When I am coding, I am thinking sequentially. I am thinking about state, data flow, side effects, edge cases. The reasoning is logical, explicit, and verbal. You can trace every decision back to a concrete reason.
+
+These are not the same muscle. Using one does not exercise the other. And the context switch between them is more expensive than most people realise.`,
+      },
+      {
+        heading: "The reference sheet problem",
+        body: `Here is something I have accepted after seven years: I will never retain code syntax the way a full-time developer does. Not because I lack the ability, but because I am not spending eight hours a day in a single language. My brain is time-sharing between Figma and VS Code, between component APIs and colour systems, between user flows and data models.
+
+The result is that code, for me, operates more like a reference sheet than a memorised vocabulary. I know what a useEffect does. I know when I need a useCallback. But I will look up the exact syntax every single time, because the space in my head where that muscle memory would live is occupied by typography rules and spacing scales.
+
+This is not a weakness. It is a trade-off. The developer who writes React in their sleep has made a different trade-off: they probably cannot look at a Figma frame and immediately see that the vertical rhythm is off by 4px, or that the font weight on a secondary label is fighting the hierarchy.
+
+Both skills are real. Both take years to develop. The difference is that one is treated as "technical" and the other is treated as "soft," which is a distinction that has done more damage to product quality than any single architectural decision.`,
+      },
+      {
+        heading: "The imposter on both sides",
+        body: `When you sit between two disciplines, you are always slightly underqualified for the room you are in. In a design review, you are the person who keeps mentioning implementation constraints. In a code review, you are the person whose variable naming is slightly off-convention.
+
+I have been in meetings where a senior developer dismissed a design concern as "just aesthetics." I have been in meetings where a designer dismissed a technical constraint as "not my problem." Both of those responses come from the same place: a lack of fluency in the other domain.
+
+The value of the in-between person is not that they are the best designer or the best developer. It is that they can translate. They can sit in a design review and say "this layout will require a CSS grid subgrid that does not work in Safari" before anyone has written a line of code. They can sit in a sprint planning session and say "this component needs three visual states, not one" before the developer has built a thing that needs to be rebuilt.
+
+That translation work is invisible. It prevents problems that never happen, which means nobody thanks you for it. But the products that result from it are measurably better, because the gap between what was designed and what was built is smaller.`,
+      },
+      {
+        heading: "Learning in public, with gaps",
+        body: `I came to code from art school. I did not have data structures or algorithms. I did not have computer science fundamentals. I had colour theory, typographic history, life drawing, and a dissertation on visual semiotics.
+
+Everything I know about JavaScript, I learned by building things that needed to exist. A client needed a responsive email template. A product needed a component library. A feature needed real-time data from an API. Each problem taught me exactly enough to solve it, and no more.
+
+This means my knowledge has gaps. There are CS concepts I understand by analogy rather than by definition. There are patterns I use correctly but could not whiteboard from scratch. I have accepted this. The gaps are the cost of breadth, and the breadth is the thing that makes me useful.
+
+What I have found is that the gaps matter less than the ability to close them quickly. If you can read documentation, identify the right abstraction, and ship working code that is accessible, performant, and maintainable, then the route you took to get there is less important than the result.
+
+The industry is slowly coming around to this. The rise of AI coding tools has made the "reference sheet" approach to syntax even more viable. The scarce skill is not memorising array methods. It is knowing what to build and why. And that is a design skill as much as an engineering one.`,
+      },
+    ],
+  },
 };
 
 /* ===== MODAL COMPONENT ===== */
@@ -458,6 +587,13 @@ export default function ArticleModal({ articleId, isOpen, onClose }) {
           <div className="am-illustration-wrapper">
             <Illustration />
           </div>
+
+          {/* Disclaimer */}
+          {article.disclaimer && (
+            <div className="am-disclaimer">
+              <p>{article.disclaimer}</p>
+            </div>
+          )}
 
           {/* Body sections */}
           <div className="am-body">
