@@ -3,7 +3,7 @@ import gsap from "gsap";
 import { useTheme } from "../context/ThemeContext";
 import "./ThemeToggle.scss";
 
-export default function ThemeToggle() {
+export default function ThemeToggle({ compact = false }) {
   const { theme, toggleTheme, isReduced } = useTheme();
   const buttonRef = useRef(null);
   const isLight = theme === "light";
@@ -27,7 +27,7 @@ export default function ThemeToggle() {
   return (
     <button
       ref={buttonRef}
-      className="theme-toggle-button"
+      className={`theme-toggle-button ${compact ? "theme-toggle-compact" : ""}`}
       onClick={toggleTheme}
       aria-label={`Switch to ${isLight ? "dark" : "light"} mode`}
     >
@@ -47,7 +47,7 @@ export default function ThemeToggle() {
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
         </svg>
       </span>
-      <span className="theme-toggle-label">{isLight ? "Light" : "Dark"}</span>
+      {!compact && <span className="theme-toggle-label">{isLight ? "Light" : "Dark"}</span>}
     </button>
   );
 }

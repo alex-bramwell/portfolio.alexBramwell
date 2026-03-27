@@ -1,6 +1,10 @@
+import { useRef, useEffect } from "react";
+import gsap from "gsap";
 import ScrollReveal from "../ScrollReveal";
 import SplitHeading from "../SplitHeading";
 import MagneticButton from "../MagneticButton";
+import { useLighthouse } from "../../hooks/useLighthouse";
+import { useTheme } from "../../context/ThemeContext";
 import "./DesignSystem.scss";
 
 const TOKEN_GROUPS = [
@@ -74,6 +78,106 @@ const COMPONENTS = [
   { name: "SkillChip", desc: "Tag variants with hover states" },
   { name: "ContactModal", desc: "Form with 3D entrance + particles" },
 ];
+
+const LIGHTHOUSE_CATEGORIES = [
+  { key: "performance", label: "Performance" },
+  { key: "accessibility", label: "Accessibility" },
+  { key: "bestPractices", label: "Best Practices" },
+  { key: "seo", label: "SEO" },
+];
+
+function scoreColor(score) {
+  if (score >= 90) return "var(--color-lighthouse-green, #0cce6b)";
+  if (score >= 50) return "var(--color-lighthouse-orange, #ffa400)";
+  return "var(--color-lighthouse-red, #ff4e42)";
+}
+
+function LighthouseStrip() {
+  const { scores, status, isLive, triggerRef } = useLighthouse();
+  const ringsRef = useRef(null);
+  const { isReduced } = useTheme();
+
+  // Animate ring fill when scores arrive
+  useEffect(() => {
+    if (status !== "done" || !ringsRef.current || isReduced) return;
+    const circles = ringsRef.current.querySelectorAll(".ds-lh-progress");
+    const texts = ringsRef.current.querySelectorAll(".ds-lh-score-text");
+
+    circles.forEach((circle, i) => {
+      const cat = LIGHTHOUSE_CATEGORIES[i];
+      const score = scores[cat.key];
+      const target = (score / 100) * 226.2;
+
+      gsap.fromTo(circle,
+        { strokeDasharray: "0 226.2" },
+        { strokeDasharray: `${target} 226.2`, duration: 1.2, ease: "power2.out", delay: i * 0.15 }
+      );
+    });
+
+    texts.forEach((text, i) => {
+      const cat = LIGHTHOUSE_CATEGORIES[i];
+      const endVal = scores[cat.key];
+      const counter = { val: 0 };
+
+      gsap.to(counter, {
+        val: endVal,
+        duration: 1.2,
+        ease: "power2.out",
+        delay: i * 0.15,
+        onUpdate: () => { text.textContent = Math.round(counter.val); },
+      });
+    });
+  }, [status, scores, isReduced]);
+
+  return (
+    <div className="ds-lighthouse-strip" ref={triggerRef}>
+      <div className="ds-lighthouse-header">
+        <h3 className="ds-lighthouse-title">Lighthouse</h3>
+        {status === "loading" && <span className="ds-lighthouse-badge ds-lh-loading">Running audit...</span>}
+        {status === "done" && isLive && <span className="ds-lighthouse-badge ds-lh-live">Live</span>}
+        {status === "done" && !isLive && <span className="ds-lighthouse-badge ds-lh-cached">Baseline</span>}
+      </div>
+      <div className="ds-lighthouse-scores" ref={ringsRef}>
+        {LIGHTHOUSE_CATEGORIES.map((cat) => {
+          const score = scores ? scores[cat.key] : null;
+          const isLoading = status === "loading" || status === "idle";
+          const color = score !== null ? scoreColor(score) : "var(--color-border)";
+
+          return (
+            <div key={cat.key} className="ds-lighthouse-item">
+              <svg className="ds-lighthouse-ring" viewBox="0 0 80 80" width="68" height="68">
+                <circle cx="40" cy="40" r="36" fill="none" stroke="var(--color-border)" strokeWidth="4" />
+                {score !== null && (
+                  <circle
+                    className="ds-lh-progress"
+                    cx="40" cy="40" r="36"
+                    fill="none"
+                    stroke={color}
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                    strokeDasharray={isReduced ? `${(score / 100) * 226.2} 226.2` : "0 226.2"}
+                    strokeDashoffset="0"
+                    transform="rotate(-90 40 40)"
+                  />
+                )}
+                {isLoading ? (
+                  <text x="40" y="44" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="12" fontFamily="var(--font-mono)">...</text>
+                ) : score !== null ? (
+                  <text className="ds-lh-score-text" x="40" y="44" textAnchor="middle" fill={color} fontSize="18" fontWeight="800" fontFamily="var(--font-display)">
+                    {isReduced ? score : 0}
+                  </text>
+                ) : (
+                  <text x="40" y="44" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="11" fontFamily="var(--font-mono)">n/a</text>
+                )}
+              </svg>
+              <span className="ds-lighthouse-label">{cat.label}</span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 export default function DesignSystem() {
   return (
@@ -199,6 +303,8 @@ export default function DesignSystem() {
               <span className="ds-type-preview ds-type-mono">JetBrains Mono</span>
             </div>
           </div>
+
+          <LighthouseStrip />
 
           <div className="ds-perf-strip">
             <div className="ds-perf-item">

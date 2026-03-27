@@ -1,12 +1,12 @@
 import { useTheme } from "../context/ThemeContext";
 import "./MotionToggle.scss";
 
-export default function MotionToggle() {
+export default function MotionToggle({ compact = false }) {
   const { isReduced, toggleMotion } = useTheme();
 
   return (
     <button
-      className={`motion-toggle-button ${isReduced ? "motion-reduced" : ""}`}
+      className={`motion-toggle-button ${isReduced ? "motion-reduced" : ""} ${compact ? "motion-toggle-compact" : ""}`}
       onClick={toggleMotion}
       aria-label={`${isReduced ? "Enable" : "Disable"} animations`}
       title={isReduced ? "Animations off - click to enable" : "Animations on - click to disable"}
@@ -36,7 +36,7 @@ export default function MotionToggle() {
           </>
         )}
       </svg>
-      <span className="motion-toggle-label">{isReduced ? "Off" : "On"}</span>
+      {!compact && <span className="motion-toggle-label">{isReduced ? "Off" : "On"}</span>}
     </button>
   );
 }

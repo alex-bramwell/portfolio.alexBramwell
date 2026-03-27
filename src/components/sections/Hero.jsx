@@ -50,6 +50,11 @@ export default function Hero() {
           "-=0.3"
         )
         .from(
+          ".hero-seeking-line",
+          { opacity: 0, y: 14, duration: 0.4 },
+          "-=0.25"
+        )
+        .from(
           ".hero-action-button-row",
           { opacity: 0, y: 20, duration: 0.5 },
           "-=0.3"
@@ -115,6 +120,9 @@ export default function Hero() {
               7+ years designing and shipping production SaaS interfaces. I own the full pipeline,
               Figma wireframes through to deployed React components, with deep expertise in
               design systems, WCAG accessibility, and mobile-first UX.
+            </p>
+            <p className="hero-seeking-line">
+              Looking for a UX Engineer or Design Systems role at a product company where design and engineering share the same table.
             </p>
             <div className="hero-action-button-row">
               <MagneticButton href="#projects" className="button-filled">View my work &rarr;</MagneticButton>

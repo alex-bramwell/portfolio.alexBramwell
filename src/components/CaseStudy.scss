@@ -201,6 +201,32 @@
   margin-bottom: 48px;
 }
 
+// ===== TEAM CONTEXT =====
+.cs-team-context {
+  padding: 28px clamp(24px, 5vw, 80px);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.cs-team-context-text {
+  max-width: 900px;
+  margin: 0 auto;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  padding-left: 20px;
+  border-left: 2px solid var(--color-accent-border);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.cs-team-context-icon {
+  color: var(--color-accent);
+  font-size: 10px;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
 // ===== PROCESS TIMELINE =====
 .cs-process-timeline {
   position: relative;

@@ -158,7 +158,19 @@
   color: var(--color-text-secondary);
   line-height: 1.8;
   max-width: 440px;
+  margin-bottom: 12px;
+}
+
+.hero-seeking-line {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-accent);
+  letter-spacing: 0.3px;
+  max-width: 440px;
+  line-height: 1.6;
   margin-bottom: 40px;
+  padding-left: 12px;
+  border-left: 2px solid var(--color-accent-border);
 }
 
 .hero-action-button-row {
@@ -257,6 +269,7 @@
   .hero-main-heading,
   .hero-role-typewriter-line,
   .hero-description-paragraph,
+  .hero-seeking-line,
   .hero-action-button-row {
     animation: heroFadeUp 0.5s ease both;
   }
@@ -264,6 +277,7 @@
   .hero-main-heading        { animation-delay: 0.05s; }
   .hero-role-typewriter-line { animation-delay: 0.1s; }
   .hero-description-paragraph { animation-delay: 0.15s; }
+  .hero-seeking-line          { animation-delay: 0.18s; }
   .hero-action-button-row    { animation-delay: 0.2s; }
 
   .hero-stats-row,
