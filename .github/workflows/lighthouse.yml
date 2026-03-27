@@ -1,0 +1,74 @@
+name: Lighthouse Audit
+
+on:
+  # Run after the deploy workflow completes
+  workflow_run:
+    workflows: ["Deploy to GitHub Pages"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli
+
+      - name: Run Lighthouse audit
+        run: |
+          lhci collect \
+            --url="https://alex-bramwell.github.io/portfolio.alexBramwell/" \
+            --numberOfRuns=3 \
+            --settings.preset=desktop \
+            --settings.chromeFlags="--headless --no-sandbox"
+
+      - name: Extract scores and write JSON
+        run: |
+          node -e "
+          const fs = require('fs');
+          const dir = '.lighthouseci';
+          const files = fs.readdirSync(dir).filter(f => f.endsWith('.json') && f.startsWith('lhr-'));
+          if (!files.length) { console.error('No LHR files found'); process.exit(1); }
+
+          // Average scores across runs
+          const totals = { performance: 0, accessibility: 0, bestPractices: 0, seo: 0 };
+          for (const file of files) {
+            const lhr = JSON.parse(fs.readFileSync(dir + '/' + file, 'utf8'));
+            const cats = lhr.categories;
+            totals.performance += (cats.performance?.score ?? 0) * 100;
+            totals.accessibility += (cats.accessibility?.score ?? 0) * 100;
+            totals.bestPractices += (cats['best-practices']?.score ?? 0) * 100;
+            totals.seo += (cats.seo?.score ?? 0) * 100;
+          }
+
+          const n = files.length;
+          const scores = {
+            performance: Math.round(totals.performance / n),
+            accessibility: Math.round(totals.accessibility / n),
+            bestPractices: Math.round(totals.bestPractices / n),
+            seo: Math.round(totals.seo / n),
+            timestamp: new Date().toISOString(),
+          };
+
+          fs.writeFileSync('public/lighthouse.json', JSON.stringify(scores, null, 2));
+          console.log('Lighthouse scores:', scores);
+          "
+
+      - name: Commit updated scores
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/lighthouse.json
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "Update Lighthouse scores"
+          git push

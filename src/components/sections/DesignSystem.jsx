@@ -92,8 +92,14 @@ function scoreColor(score) {
   return "var(--color-lighthouse-red, #ff4e42)";
 }
 
+function formatTimestamp(ts) {
+  if (!ts) return null;
+  const d = new Date(ts);
+  return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+}
+
 function LighthouseStrip() {
-  const { scores, status, isLive, triggerRef } = useLighthouse();
+  const { scores, status, triggerRef } = useLighthouse();
   const ringsRef = useRef(null);
   const { isReduced } = useTheme();
 
@@ -129,13 +135,14 @@ function LighthouseStrip() {
     });
   }, [status, scores, isReduced]);
 
+  const dateLabel = scores?.timestamp ? formatTimestamp(scores.timestamp) : null;
+
   return (
     <div className="ds-lighthouse-strip" ref={triggerRef}>
       <div className="ds-lighthouse-header">
         <h3 className="ds-lighthouse-title">Lighthouse</h3>
-        {status === "loading" && <span className="ds-lighthouse-badge ds-lh-loading">Running audit...</span>}
-        {status === "done" && isLive && <span className="ds-lighthouse-badge ds-lh-live">Live</span>}
-        {status === "done" && !isLive && <span className="ds-lighthouse-badge ds-lh-cached">Baseline</span>}
+        {status === "loading" && <span className="ds-lighthouse-badge ds-lh-loading">Loading...</span>}
+        {status === "done" && dateLabel && <span className="ds-lighthouse-badge ds-lh-date">Audited {dateLabel}</span>}
       </div>
       <div className="ds-lighthouse-scores" ref={ringsRef}>
         {LIGHTHOUSE_CATEGORIES.map((cat) => {
