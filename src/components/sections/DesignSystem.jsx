@@ -144,6 +144,12 @@ function LighthouseStrip() {
         {status === "loading" && <span className="ds-lighthouse-badge ds-lh-loading">Loading...</span>}
         {status === "done" && dateLabel && <span className="ds-lighthouse-badge ds-lh-date">Audited {dateLabel}</span>}
       </div>
+      <p className="ds-lighthouse-explainer">
+        These scores are not hardcoded. A GitHub Actions workflow runs a real
+        Lighthouse audit against this site after every deploy, averages three
+        runs, and commits the results to a static JSON file that this component
+        loads at runtime.
+      </p>
       <div className="ds-lighthouse-scores" ref={ringsRef}>
         {LIGHTHOUSE_CATEGORIES.map((cat) => {
           const score = scores ? scores[cat.key] : null;

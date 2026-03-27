@@ -400,6 +400,14 @@
   50%      { opacity: 0.4; }
 }
 
+.ds-lighthouse-explainer {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  margin-bottom: 24px;
+  max-width: 560px;
+}
+
 .ds-lighthouse-scores {
   display: flex;
   justify-content: space-around;
