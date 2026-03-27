@@ -423,7 +423,7 @@ The people who thrive in this workflow are those who understand both sides: desi
     date: "March 2026",
     readTime: "5 min read",
     illustration: SplitBrainIllustration,
-    disclaimer: "Disclaimer: I went to art school, not CS school. I have a BA in Graphic Design from the University of Lincoln. Everything I know about code, I learned on the job, from documentation, and from getting things wrong repeatedly. This article is written from that perspective.",
+    disclaimer: "Disclaimer: I went to art school, not CS school. Everything I know about code, I learned on the job, from documentation, and from getting things wrong repeatedly. This article is written from that perspective.",
     sections: [
       {
         heading: "Two brains, one head",

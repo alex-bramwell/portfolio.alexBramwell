@@ -4,6 +4,7 @@ import BackgroundCanvas from "./components/BackgroundCanvas";
 import ContactModal from "./components/ContactModal";
 import CaseStudy from "./components/CaseStudy";
 import ArticleModal from "./components/ArticleModal";
+import ThoughtsFab from "./components/ThoughtsFab";
 import Navbar from "./components/sections/Navbar";
 import Hero from "./components/sections/Hero";
 import About from "./components/sections/About";
@@ -53,6 +54,7 @@ export default function App() {
       <ContactModal isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />
       <CaseStudy isOpen={isCaseStudyOpen} onClose={() => setIsCaseStudyOpen(false)} />
       <ArticleModal articleId={openArticleId} isOpen={!!openArticleId} onClose={() => setOpenArticleId(null)} />
+      <ThoughtsFab onOpenArticle={(id) => setOpenArticleId(id)} />
     </ThemeProvider>
   );
 }
