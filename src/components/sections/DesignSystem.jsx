@@ -309,12 +309,12 @@ export default function DesignSystem() {
             className="ds-storybook-card"
           >
             <div className="ds-storybook-card-icon">
-              <svg viewBox="0 0 24 24" width="28" height="28" fill="none">
-                <path d="M8 24c2.2 0 4-1.8 4-4v-4H8c-2.2 0-4 1.8-4 4s1.8 4 4 4z" fill="var(--color-accent)" opacity="0.6" />
-                <path d="M4 12c0-2.2 1.8-4 4-4h4v8H8c-2.2 0-4-1.8-4-4z" fill="var(--color-accent)" opacity="0.75" />
-                <path d="M4 4c0-2.2 1.8-4 4-4h4v8H8C5.8 8 4 6.2 4 4z" fill="var(--color-accent)" opacity="0.9" />
-                <path d="M12 0h4c2.2 0 4 1.8 4 4s-1.8 4-4 4h-4V0z" fill="var(--color-accent)" opacity="0.5" />
-                <path d="M20 12c0 2.2-1.8 4-4 4s-4-1.8-4-4 1.8-4 4-4 4 1.8 4 4z" fill="var(--color-accent)" opacity="0.4" />
+              <svg viewBox="0 0 38 57" width="18" height="27" fill="none">
+                <path d="M19 28.5a9.5 9.5 0 1 1 19 0 9.5 9.5 0 0 1-19 0z" fill="var(--color-background)" />
+                <path d="M0 47.5A9.5 9.5 0 0 1 9.5 38H19v9.5a9.5 9.5 0 0 1-19 0z" fill="var(--color-background)" />
+                <path d="M19 0v19h9.5a9.5 9.5 0 0 0 0-19H19z" fill="var(--color-background)" />
+                <path d="M0 9.5A9.5 9.5 0 0 0 9.5 19H19V0H9.5A9.5 9.5 0 0 0 0 9.5z" fill="var(--color-background)" />
+                <path d="M0 28.5A9.5 9.5 0 0 0 9.5 38H19V19H9.5A9.5 9.5 0 0 0 0 28.5z" fill="var(--color-background)" />
               </svg>
             </div>
             <div className="ds-storybook-card-content">
