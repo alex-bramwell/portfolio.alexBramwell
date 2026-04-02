@@ -8,9 +8,9 @@ gsap.registerPlugin(ScrollTrigger);
 
 /* ===== CODE BLOCK HELPERS ===== */
 
-const CODE_START = /^(?:\/\/|const |let |var |function |import |export |return |if \(|else |class |<[a-zA-Z\/!]|\{|\}|@mixin|@include|@use|@media|@keyframes|\$[\w-]+:|\.[\w-]+\s*\{|&[:\-]|:[a-z][\w-]*\s*\{|document\.|fetch\(|btn\.|window\.|ul\.|Bad:|Good:|- Use|styles\/)/;
+const CODE_START = /^(?:\/\/|const |let |var |function |import |export |return |if \(|else |class |type |interface |enum |\|  |<[a-zA-Z\/!]|\{|\}|@mixin|@include|@use|@media|@keyframes|\$[\w-]+:|\.[\w-]+\s*\{|&[:\-]|:[a-z][\w-]*\s*\{|document\.|fetch\(|btn\.|window\.|ul\.|Bad:|Good:|- Use|styles\/)/;
 
-const CODE_LINE = /^(?:\/\/|const |let |var |function |import |export |return |if \(|else |class |<[a-zA-Z\/!]|\{|\}|@mixin|@include|@use|@media|@keyframes|\$[\w-]+[:\s]|\.[\w-]+\s*\{|&[:\-]|:[a-z][\w-]*\s*\{|document\.|fetch\(|btn\.|window\.|ul\.|[\w-]+\s*:\s*.+;|[\w-]+\s*\{|[*]\s*[,{]|<\/?\w+|aria-[\w-]+(?:=)|outline|display|padding|margin|border|background|font-|color:|width|height|position|inset|align-|justify-|flex|grid|gap|transition|animation|overflow|opacity|transform|text-|letter-|line-|max-|min-|cursor|pointer|z-index)/;
+const CODE_LINE = /^(?:\/\/|const |let |var |function |import |export |return |if \(|else |class |type |interface |enum |\|  |<[a-zA-Z\/!]|\{|\}|@mixin|@include|@use|@media|@keyframes|\$[\w-]+[:\s]|\.[\w-]+\s*\{|&[:\-]|:[a-z][\w-]*\s*\{|document\.|fetch\(|btn\.|window\.|ul\.|[\w-]+\s*:\s*.+;|[\w-]+\s*\{|[*]\s*[,{]|<\/?\w+|aria-[\w-]+(?:=)|outline|display|padding|margin|border|background|font-|color:|width|height|position|inset|align-|justify-|flex|grid|gap|transition|animation|overflow|opacity|transform|text-|letter-|line-|max-|min-|cursor|pointer|z-index)/;
 
 function isCodeBlock(text) {
   const trimmed = text.trim();
@@ -44,7 +44,7 @@ function highlightSyntax(code) {
 
     // Tokenise
     const parts = [];
-    const regex = /(\b(?:const|let|var|function|return|import|export|if|else|from|new|true|false|null|undefined|default|async|await)\b|"[^"]*"|'[^']*'|`[^`]*`|\b\d+(?:\.\d+)?(?:px|%|em|rem|vh|vw|ms|s)?\b|\/\/.*$|\{|\}|\(|\)|=>|&&|\|\||@mixin|@include|@use|@media|@content|@keyframes|\$[\w-]+|--[\w-]+|var\(|rgba?\(|#[\da-fA-F]{3,8}\b|&[:\w-]*|\.[\w-]+(?=\s*\{)|:[a-z][\w-]*(?=\s*\{)|<\/?[\w-]+|aria-[\w-]+(?:="[^"]*")?|\b(?:display|padding|margin|border|border-radius|background|font-size|font-family|font-weight|color|width|height|max-width|min-width|position|inset|top|right|bottom|left|align-items|justify-content|flex|grid|gap|transition|animation|animation-duration|transition-duration|overflow|opacity|transform|text-align|text-transform|letter-spacing|line-height|cursor|pointer-events|z-index|outline|outline-offset|overscroll-behavior|white-space|box-sizing|content|vertical-align)(?=\s*:))/g;
+    const regex = /(\b(?:const|let|var|function|return|import|export|if|else|from|new|true|false|null|undefined|default|async|await|type|interface|enum|extends|implements|readonly|keyof|typeof|as|is|infer|class|abstract|private|public|protected|static)\b|\b(?:string|number|boolean|any|void|never|unknown|object|bigint)\b(?!\s*[.(])|"[^"]*"|'[^']*'|`[^`]*`|\b\d+(?:\.\d+)?(?:px|%|em|rem|vh|vw|ms|s)?\b|\/\/.*$|\{|\}|\(|\)|=>|&&|\|\||<|>|\|(?!\|)|@mixin|@include|@use|@media|@content|@keyframes|\$[\w-]+|--[\w-]+|var\(|rgba?\(|#[\da-fA-F]{3,8}\b|&[:\w-]*|\.[\w-]+(?=\s*\{)|:[a-z][\w-]*(?=\s*\{)|<\/?[\w-]+|aria-[\w-]+(?:="[^"]*")?|\b(?:display|padding|margin|border|border-radius|background|font-size|font-family|font-weight|color|width|height|max-width|min-width|position|inset|top|right|bottom|left|align-items|justify-content|flex|grid|gap|transition|animation|animation-duration|transition-duration|overflow|opacity|transform|text-align|text-transform|letter-spacing|line-height|cursor|pointer-events|z-index|outline|outline-offset|overscroll-behavior|white-space|box-sizing|content|vertical-align)(?=\s*:))/g;
 
     let lastIndex = 0;
     let match;
@@ -54,8 +54,10 @@ function highlightSyntax(code) {
       }
       const val = match[0];
       let type = "plain";
-      if (/^(?:const|let|var|function|return|import|export|if|else|from|new|default|async|await)$/.test(val)) {
+      if (/^(?:const|let|var|function|return|import|export|if|else|from|new|default|async|await|type|interface|enum|extends|implements|readonly|keyof|typeof|as|is|infer|class|abstract|private|public|protected|static)$/.test(val)) {
         type = "keyword";
+      } else if (/^(?:string|number|boolean|any|void|never|unknown|object|bigint)$/.test(val)) {
+        type = "type";
       } else if (/^(?:true|false|null|undefined)$/.test(val)) {
         type = "literal";
       } else if (/^["'`]/.test(val)) {
@@ -610,6 +612,193 @@ function A11yIllustration() {
     </svg>
   );
 }
+
+function TypeScriptIllustration() {
+  const svgRef = useRef(null);
+  const { isReduced } = useTheme();
+
+  useEffect(() => {
+    if (isReduced || !svgRef.current) return;
+    const ctx = gsap.context(() => {
+      gsap.fromTo(".ts-box", { strokeDashoffset: 400, opacity: 0 }, {
+        strokeDashoffset: 0, opacity: 1, duration: 0.8, stagger: 0.2, delay: 0.2, ease: "power2.out",
+      });
+      gsap.fromTo(".ts-label", { opacity: 0, y: 8 }, {
+        opacity: 1, y: 0, duration: 0.4, stagger: 0.1, delay: 0.6, ease: "power2.out",
+      });
+      gsap.fromTo(".ts-line", { scaleX: 0 }, {
+        scaleX: 1, duration: 0.4, stagger: 0.06, delay: 0.8, ease: "power2.out",
+      });
+      gsap.fromTo(".ts-badge", { scale: 0, opacity: 0 }, {
+        scale: 1, opacity: 1, duration: 0.5, stagger: 0.15, delay: 1.0, ease: "back.out(2)",
+      });
+      gsap.to(".ts-shield", {
+        scale: 1.08, opacity: 0.7, duration: 2, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 1.5,
+      });
+    }, svgRef);
+    return () => ctx.revert();
+  }, [isReduced]);
+
+  return (
+    <svg ref={svgRef} className="article-illustration" viewBox="0 0 400 280" fill="none">
+      {/* Central shield icon */}
+      <path className="ts-shield" d="M200 40 L250 65 L250 140 Q250 200 200 230 Q150 200 150 140 L150 65 Z" stroke="var(--color-accent)" strokeWidth="1.5" fill="none" style={{ transformOrigin: "200px 135px" }} />
+      <text className="ts-label" x="200" y="125" textAnchor="middle" fill="var(--color-accent)" fontSize="28" fontFamily="var(--font-mono)" fontWeight="700">TS</text>
+      <text className="ts-label" x="200" y="150" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">TYPE SAFE</text>
+      {/* Left: JS code */}
+      <rect className="ts-box" x="15" y="60" width="100" height="130" rx="4" stroke="var(--color-border)" strokeWidth="1" strokeDasharray="400" fill="none" />
+      <text className="ts-label" x="65" y="82" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)" fontWeight="600">JAVASCRIPT</text>
+      <rect className="ts-line" x="30" y="98" width="70" height="2" rx="1" fill="var(--color-text-disabled)" opacity="0.3" style={{ transformOrigin: "30px 99px" }} />
+      <rect className="ts-line" x="30" y="112" width="55" height="2" rx="1" fill="var(--color-text-disabled)" opacity="0.25" style={{ transformOrigin: "30px 113px" }} />
+      <rect className="ts-line" x="30" y="126" width="65" height="2" rx="1" fill="var(--color-text-disabled)" opacity="0.3" style={{ transformOrigin: "30px 127px" }} />
+      <rect className="ts-line" x="30" y="140" width="50" height="2" rx="1" fill="var(--color-text-disabled)" opacity="0.25" style={{ transformOrigin: "30px 141px" }} />
+      <text className="ts-label" x="65" y="172" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="7" fontFamily="var(--font-mono)">no type info</text>
+      {/* Right: TS code */}
+      <rect className="ts-box" x="285" y="60" width="100" height="130" rx="4" stroke="var(--color-accent-border)" strokeWidth="1" strokeDasharray="400" fill="none" />
+      <text className="ts-label" x="335" y="82" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)" fontWeight="600">TYPESCRIPT</text>
+      <rect className="ts-line" x="300" y="98" width="70" height="2" rx="1" fill="var(--color-accent-border)" opacity="0.4" style={{ transformOrigin: "300px 99px" }} />
+      <rect className="ts-badge" x="372" y="94" width="8" height="8" rx="4" fill="var(--color-accent)" opacity="0.6" style={{ transformOrigin: "376px 98px" }} />
+      <rect className="ts-line" x="300" y="112" width="55" height="2" rx="1" fill="var(--color-accent-border)" opacity="0.35" style={{ transformOrigin: "300px 113px" }} />
+      <rect className="ts-badge" x="357" y="108" width="8" height="8" rx="4" fill="var(--color-accent)" opacity="0.6" style={{ transformOrigin: "361px 112px" }} />
+      <rect className="ts-line" x="300" y="126" width="65" height="2" rx="1" fill="var(--color-accent-border)" opacity="0.4" style={{ transformOrigin: "300px 127px" }} />
+      <rect className="ts-badge" x="367" y="122" width="8" height="8" rx="4" fill="var(--color-accent)" opacity="0.6" style={{ transformOrigin: "371px 126px" }} />
+      <rect className="ts-line" x="300" y="140" width="50" height="2" rx="1" fill="var(--color-accent-border)" opacity="0.35" style={{ transformOrigin: "300px 141px" }} />
+      <text className="ts-label" x="335" y="172" textAnchor="middle" fill="var(--color-accent)" fontSize="7" fontFamily="var(--font-mono)">typed + safe</text>
+      {/* Bottom label */}
+      <text className="ts-label" x="200" y="265" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)" letterSpacing="2">CATCH ERRORS BEFORE THEY SHIP</text>
+    </svg>
+  );
+}
+
+/* ---- Inline TypeScript diagrams ---- */
+
+const TsDiagramAnnotations = (
+  <svg viewBox="0 0 560 200" fill="none">
+    {/* Variable annotation */}
+    <text x="40" y="35" fill="var(--color-text-secondary)" fontSize="13" fontFamily="var(--font-mono)">
+      <tspan fill="#c792ea">const</tspan> username<tspan fill="#89ddff">:</tspan> <tspan fill="#ffcb6b">string</tspan> <tspan fill="#89ddff">=</tspan> <tspan fill="#c3e88d">"Alex"</tspan>
+    </text>
+    {/* Arrow from :string */}
+    <line x1="268" y1="40" x2="268" y2="70" stroke="var(--color-accent)" strokeWidth="1" strokeDasharray="4" />
+    <rect x="198" y="72" width="140" height="28" rx="4" fill="var(--color-accent-dim)" stroke="var(--color-accent-border)" strokeWidth="1" />
+    <text x="268" y="91" textAnchor="middle" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)">type annotation</text>
+    {/* Function annotation */}
+    <text x="40" y="145" fill="var(--color-text-secondary)" fontSize="13" fontFamily="var(--font-mono)">
+      <tspan fill="#c792ea">function</tspan> greet<tspan fill="#89ddff">(</tspan>name<tspan fill="#89ddff">:</tspan> <tspan fill="#ffcb6b">string</tspan><tspan fill="#89ddff">):</tspan> <tspan fill="#ffcb6b">string</tspan>
+    </text>
+    {/* Arrow from param type */}
+    <line x1="270" y1="150" x2="270" y2="175" stroke="var(--color-accent)" strokeWidth="1" strokeDasharray="4" />
+    <rect x="210" y="177" width="120" height="22" rx="4" fill="var(--color-accent-dim)" stroke="var(--color-accent-border)" strokeWidth="1" />
+    <text x="270" y="193" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)">parameter type</text>
+    {/* Arrow from return type */}
+    <line x1="417" y1="150" x2="417" y2="175" stroke="var(--color-accent)" strokeWidth="1" strokeDasharray="4" />
+    <rect x="357" y="177" width="120" height="22" rx="4" fill="var(--color-accent-dim)" stroke="var(--color-accent-border)" strokeWidth="1" />
+    <text x="417" y="193" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)">return type</text>
+  </svg>
+);
+
+const TsDiagramInterface = (
+  <svg viewBox="0 0 560 250" fill="none">
+    {/* Interface box */}
+    <rect x="30" y="10" width="220" height="170" rx="6" stroke="var(--color-accent)" strokeWidth="1.5" fill="none" />
+    <text x="140" y="38" textAnchor="middle" fill="var(--color-accent)" fontSize="12" fontFamily="var(--font-mono)" fontWeight="600">interface User</text>
+    <line x1="50" y1="48" x2="230" y2="48" stroke="var(--color-border)" strokeWidth="1" />
+    <text x="60" y="72" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">name<tspan fill="#89ddff">:</tspan> <tspan fill="#ffcb6b">string</tspan></text>
+    <text x="60" y="96" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">age<tspan fill="#89ddff">:</tspan> <tspan fill="#ffcb6b">number</tspan></text>
+    <text x="60" y="120" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">email<tspan fill="#89ddff">:</tspan> <tspan fill="#ffcb6b">string</tspan></text>
+    <text x="60" y="144" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">admin<tspan fill="#89ddff">?:</tspan> <tspan fill="#ffcb6b">boolean</tspan></text>
+    <text x="60" y="168" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">? = optional</text>
+    {/* Arrow to object */}
+    <line x1="260" y1="95" x2="310" y2="95" stroke="var(--color-accent)" strokeWidth="1.5" />
+    <polygon points="310,90 320,95 310,100" fill="var(--color-accent)" />
+    <text x="290" y="82" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">shape</text>
+    {/* Object that matches */}
+    <rect x="325" y="30" width="210" height="130" rx="6" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
+    <text x="430" y="55" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">{"{"} name: "Alex",</text>
+    <text x="430" y="78" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">age: 39,</text>
+    <text x="430" y="101" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">email: "a@b.com",</text>
+    <text x="430" y="124" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">admin: true {"}"}</text>
+    {/* Check mark */}
+    <text x="430" y="148" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)">matches the shape</text>
+    {/* Bottom note */}
+    <text x="280" y="225" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">An interface describes the shape an object must have.</text>
+    <text x="280" y="242" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">TypeScript checks every object against its interface at compile time.</text>
+  </svg>
+);
+
+const TsDiagramUnion = (
+  <svg viewBox="0 0 560 180" fill="none">
+    {/* Left circle - string */}
+    <ellipse cx="200" cy="90" rx="110" ry="65" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" opacity="0.5" />
+    <text x="155" y="93" textAnchor="middle" fill="var(--color-accent)" fontSize="14" fontFamily="var(--font-mono)" fontWeight="600">string</text>
+    <text x="155" y="112" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">"hello"  "world"</text>
+    {/* Right circle - number */}
+    <ellipse cx="360" cy="90" rx="110" ry="65" stroke="#f78c6c" strokeWidth="1.5" fill="rgba(247, 140, 108, 0.08)" opacity="0.5" />
+    <text x="405" y="93" textAnchor="middle" fill="#f78c6c" fontSize="14" fontFamily="var(--font-mono)" fontWeight="600">number</text>
+    <text x="405" y="112" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">42  3.14  0</text>
+    {/* Union pipe in overlap */}
+    <text x="280" y="85" textAnchor="middle" fill="var(--color-text-primary)" fontSize="22" fontFamily="var(--font-mono)" fontWeight="700">|</text>
+    <text x="280" y="110" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="10" fontFamily="var(--font-mono)">or</text>
+    {/* Label */}
+    <text x="280" y="170" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">string | number means the value can be either type</text>
+  </svg>
+);
+
+const TsDiagramGenerics = (
+  <svg viewBox="0 0 560 220" fill="none">
+    {/* Generic box template */}
+    <rect x="160" y="10" width="240" height="50" rx="6" stroke="var(--color-accent)" strokeWidth="1.5" fill="none" />
+    <text x="280" y="42" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="13" fontFamily="var(--font-mono)">
+      Box<tspan fill="#89ddff">&lt;</tspan><tspan fill="#ffcb6b">T</tspan><tspan fill="#89ddff">&gt;</tspan>  =  {"{"} value<tspan fill="#89ddff">:</tspan> <tspan fill="#ffcb6b">T</tspan> {"}"}
+    </text>
+    {/* T placeholder label */}
+    <line x1="280" y1="60" x2="280" y2="80" stroke="var(--color-accent-border)" strokeWidth="1" strokeDasharray="4" />
+    <text x="280" y="94" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">T is a placeholder for any type</text>
+    {/* Left: string version */}
+    <rect x="40" y="120" width="200" height="45" rx="6" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
+    <text x="140" y="148" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="12" fontFamily="var(--font-mono)">
+      Box<tspan fill="#89ddff">&lt;</tspan><tspan fill="#ffcb6b">string</tspan><tspan fill="#89ddff">&gt;</tspan>
+    </text>
+    <line x1="205" y1="118" x2="240" y2="62" stroke="var(--color-accent-border)" strokeWidth="1" strokeDasharray="4" />
+    <text x="140" y="182" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">value must be a string</text>
+    {/* Right: number version */}
+    <rect x="320" y="120" width="200" height="45" rx="6" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
+    <text x="420" y="148" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="12" fontFamily="var(--font-mono)">
+      Box<tspan fill="#89ddff">&lt;</tspan><tspan fill="#ffcb6b">number</tspan><tspan fill="#89ddff">&gt;</tspan>
+    </text>
+    <line x1="355" y1="118" x2="320" y2="62" stroke="var(--color-accent-border)" strokeWidth="1" strokeDasharray="4" />
+    <text x="420" y="182" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">value must be a number</text>
+    {/* Bottom note */}
+    <text x="280" y="212" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">One definition, reused for any type. That is the power of generics.</text>
+  </svg>
+);
+
+const TsDiagramNarrowing = (
+  <svg viewBox="0 0 560 220" fill="none">
+    {/* Top: wide type */}
+    <rect x="130" y="10" width="300" height="40" rx="6" stroke="var(--color-border)" strokeWidth="1.5" fill="none" />
+    <text x="280" y="36" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="12" fontFamily="var(--font-mono)">value<tspan fill="#89ddff">:</tspan> <tspan fill="#ffcb6b">string</tspan> <tspan fill="#89ddff">|</tspan> <tspan fill="#ffcb6b">number</tspan></text>
+    {/* Funnel lines */}
+    <line x1="200" y1="50" x2="160" y2="80" stroke="var(--color-border)" strokeWidth="1" />
+    <line x1="360" y1="50" x2="400" y2="80" stroke="var(--color-border)" strokeWidth="1" />
+    {/* If check */}
+    <rect x="140" y="80" width="280" height="35" rx="4" fill="var(--color-accent-dim)" stroke="var(--color-accent-border)" strokeWidth="1" />
+    <text x="280" y="103" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">
+      <tspan fill="#c792ea">if</tspan> (<tspan fill="#c792ea">typeof</tspan> value <tspan fill="#89ddff">===</tspan> <tspan fill="#c3e88d">"string"</tspan>)
+    </text>
+    {/* Two branches */}
+    <line x1="220" y1="115" x2="140" y2="145" stroke="var(--color-accent)" strokeWidth="1.5" />
+    <line x1="340" y1="115" x2="420" y2="145" stroke="var(--color-border)" strokeWidth="1.5" />
+    {/* Left: narrowed to string */}
+    <rect x="50" y="148" width="180" height="35" rx="6" stroke="var(--color-accent)" strokeWidth="1.5" fill="none" />
+    <text x="140" y="171" textAnchor="middle" fill="var(--color-accent)" fontSize="12" fontFamily="var(--font-mono)">value<tspan fill="#89ddff">:</tspan> <tspan fill="#ffcb6b">string</tspan></text>
+    <text x="140" y="200" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">narrowed - safe to use .toUpperCase()</text>
+    {/* Right: narrowed to number */}
+    <rect x="330" y="148" width="180" height="35" rx="6" stroke="var(--color-border)" strokeWidth="1" fill="none" />
+    <text x="420" y="171" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="12" fontFamily="var(--font-mono)">value<tspan fill="#89ddff">:</tspan> <tspan fill="#ffcb6b">number</tspan></text>
+    <text x="420" y="200" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">narrowed - safe to use .toFixed()</text>
+  </svg>
+);
 
 /* ===== ARTICLE CONTENT ===== */
 
@@ -1334,6 +1523,150 @@ Start with semantic HTML, check your contrast, make sure everything works with a
       },
     ],
   },
+  "typescript-basics": {
+    title: "TypeScript basics",
+    subtitle: "A plain-English guide to TypeScript, with diagrams",
+    date: "April 2026",
+    readTime: "8 min read",
+    illustration: TypeScriptIllustration,
+    sections: [
+      {
+        heading: "What TypeScript actually is",
+        body: `TypeScript is JavaScript with one extra feature: types. You write your code the same way, but you add labels that describe what kind of data each variable, function parameter, and return value should hold.
+
+These labels do not run in the browser. TypeScript compiles down to plain JavaScript before your code ships. The labels exist purely to help you (and your editor) catch mistakes early.
+
+Think of it like writing a recipe. JavaScript lets you write "add some of the liquid." TypeScript makes you write "add 200ml of milk." Both recipes work, but the second one is much harder to get wrong.`,
+      },
+      {
+        heading: "Type annotations",
+        diagram: TsDiagramAnnotations,
+        body: `A type annotation is a label you add after a variable name or parameter using a colon.
+
+const username: string = "Alex";
+const age: number = 39;
+const isAdmin: boolean = true;
+
+For functions, you annotate both the parameters and the return value:
+
+function greet(name: string): string {
+  return "Hello, " + name;
+}
+
+If you call greet(42), TypeScript shows an error before you run the code. The number 42 is not a string, so it does not match the annotation. You see the mistake immediately in your editor, not after a user reports a bug.
+
+You do not always need to write annotations. TypeScript can often figure out the type on its own. This is called type inference:
+
+const city = "Nottingham";
+
+TypeScript knows city is a string because you assigned a string to it. You only need explicit annotations when TypeScript cannot infer the type, or when you want to be clear about your intent.`,
+      },
+      {
+        heading: "Interfaces: describing shapes",
+        diagram: TsDiagramInterface,
+        body: `An interface describes the shape of an object. It lists the property names and their types.
+
+interface User {
+  name: string;
+  age: number;
+  email: string;
+  admin?: boolean;
+}
+
+The question mark after admin means it is optional. A User object does not have to include it.
+
+Now when you write a function that accepts a User, TypeScript ensures every object you pass has the right shape:
+
+function sendEmail(user: User) {
+  console.log("Sending to " + user.email);
+}
+
+If you pass an object missing the email property, TypeScript flags it immediately. If you misspell a property name, it flags that too.
+
+Interfaces are one of the most useful features in TypeScript. They act as a contract: "any object claiming to be a User must have these properties with these types." It is like a form with required fields. If you leave one blank, the form tells you before you submit.`,
+      },
+      {
+        heading: "Union types: this or that",
+        diagram: TsDiagramUnion,
+        body: `A union type says "this value can be one of several types." You write it with a pipe character.
+
+type Id = string | number;
+
+This means an Id can be either a string like "abc-123" or a number like 42. Both are valid.
+
+Unions are useful when real-world data is not always the same type. An API might return a user ID as a number, but a session token as a string. A form input might hold a string or null if the user has not typed anything yet:
+
+type FormValue = string | null;
+
+You can also use unions with literal values to create a fixed set of options:
+
+type Status = "loading" | "success" | "error";
+
+Now any variable with the type Status can only be one of those three exact strings. If you misspell one, TypeScript catches it.`,
+      },
+      {
+        heading: "Generics: reusable types",
+        diagram: TsDiagramGenerics,
+        body: `Generics let you write a type or function that works with any type, while still being type-safe. The angle brackets hold a placeholder, usually called T, that gets replaced with a real type when you use it.
+
+The simplest example is a box that can hold any type of value:
+
+type Box<T> = {
+  value: T;
+};
+
+const stringBox: Box<string> = { value: "hello" };
+const numberBox: Box<number> = { value: 42 };
+
+Both boxes are type-safe: stringBox.value is always a string, numberBox.value is always a number. But you only wrote the Box type once.
+
+Generics are everywhere in real code. Arrays use them:
+
+const names: Array<string> = ["Alex", "Sam"];
+
+Promises use them:
+
+const response: Promise<User> = fetchUser(1);
+
+You do not need to write your own generics to benefit from them. Just understanding the angle bracket syntax lets you read most TypeScript code. When you see Array<string>, read it as "an array of strings." When you see Promise<User>, read it as "a promise that will eventually give you a User."`,
+      },
+      {
+        heading: "Type narrowing",
+        diagram: TsDiagramNarrowing,
+        body: `When a value could be more than one type (a union), you need to check which type it actually is before using type-specific methods. This is called narrowing.
+
+function format(value: string | number): string {
+  if (typeof value === "string") {
+    return value.toUpperCase();
+  }
+  return value.toFixed(2);
+}
+
+Inside the if block, TypeScript knows value is a string, so .toUpperCase() is safe. In the else branch, it knows value is a number, so .toFixed(2) is safe. TypeScript tracks the checks you write and narrows the type automatically.
+
+Common narrowing patterns:
+
+typeof checks for primitive types (string, number, boolean).
+"property" in object checks whether an object has a specific property.
+instanceof checks whether something is an instance of a class.
+Equality checks like value === null narrow out null.
+
+Narrowing is how TypeScript stays helpful without getting in your way. You write normal JavaScript checks, and TypeScript uses them to understand your code better. The types get more specific as your logic gets more specific.`,
+      },
+      {
+        heading: "Why it matters",
+        body: `TypeScript does not change what your code does. It changes how confidently you can write it.
+
+Without types, renaming a property means searching every file to update it manually. With types, the compiler shows you every place that breaks. Without types, a function might receive the wrong data and fail silently at runtime. With types, the mistake shows up in your editor before you save the file.
+
+For teams, TypeScript acts as living documentation. An interface tells a new developer exactly what shape an API response has, without needing to read the backend code or check a wiki that might be outdated.
+
+The learning curve is gentle. You can add TypeScript to an existing JavaScript project one file at a time. Start by renaming .js files to .ts and adding a few type annotations. The compiler will guide you from there.
+
+The concepts in this article, annotations, interfaces, unions, generics, and narrowing, cover about 90% of what you will use day to day. Everything else builds on these foundations.`,
+      },
+    ],
+  },
 };
 
 /* ===== MODAL COMPONENT ===== */
@@ -1465,6 +1798,11 @@ export default function ArticleModal({ articleId, isOpen, onClose }) {
             {article.sections.map((section, i) => (
               <section key={i} className="am-section" style={isReduced ? undefined : { opacity: 0 }}>
                 <h2 className="am-section-heading">{section.heading}</h2>
+                {section.diagram && (
+                  <div className="am-section-diagram">
+                    {section.diagram}
+                  </div>
+                )}
                 {renderBody(section.body)}
               </section>
             ))}

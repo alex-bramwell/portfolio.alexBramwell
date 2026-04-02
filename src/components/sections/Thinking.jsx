@@ -68,6 +68,14 @@ const ARTICLES = [
     tags: ["Accessibility", "WCAG", "HTML"],
     readTime: "6 min read",
   },
+  {
+    id: "typescript-basics",
+    number: "09",
+    title: "TypeScript basics",
+    subtitle: "A plain-English guide to TypeScript, with diagrams",
+    tags: ["TypeScript", "JavaScript", "Beginner"],
+    readTime: "8 min read",
+  },
 ];
 
 export default function Thinking({ onOpenArticle }) {

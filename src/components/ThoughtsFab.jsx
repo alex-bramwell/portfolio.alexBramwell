@@ -12,6 +12,7 @@ const ARTICLES = [
   { id: "react-concepts", title: "React basics explained" },
   { id: "scss-in-practice", title: "SCSS made simple" },
   { id: "web-accessibility", title: "Web accessibility basics" },
+  { id: "typescript-basics", title: "TypeScript basics" },
 ];
 
 export default function ThoughtsFab({ onOpenArticle }) {
