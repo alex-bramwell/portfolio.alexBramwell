@@ -6,6 +6,115 @@ import "./ArticleModal.scss";
 
 gsap.registerPlugin(ScrollTrigger);
 
+/* ===== CODE BLOCK HELPERS ===== */
+
+const CODE_START = /^(?:\/\/|const |let |var |function |import |export |return |if |else |class |<[a-zA-Z\/!]|\{|@mixin|@include|@use|@media|\$[\w-]+:|\.[\w-]+\s*\{|&[:\-]|document\.|fetch\(|btn\.|window\.|ul\.|Bad:|Good:|- Use|styles\/)/;
+
+function isCodeBlock(text) {
+  const lines = text.split("\n");
+  const codeLikeLines = lines.filter((l) => CODE_START.test(l.trim()));
+  return codeLikeLines.length >= lines.length * 0.4 && lines.length >= 2;
+}
+
+function highlightSyntax(code) {
+  const lines = code.split("\n");
+  return lines.map((line, i) => {
+    const tokens = [];
+    let remaining = line;
+
+    // Comment lines
+    if (/^\s*\/\//.test(remaining)) {
+      return <div key={i} className="am-code-line"><span className="am-syn-comment">{line}</span></div>;
+    }
+
+    // Tokenise
+    const parts = [];
+    const regex = /(\b(?:const|let|var|function|return|import|export|if|else|from|new|true|false|null|undefined|default|async|await)\b|"[^"]*"|'[^']*'|`[^`]*`|\b\d+(?:\.\d+)?(?:px|%|em|rem|vh|vw|ms|s)?\b|\/\/.*$|\{|\}|\(|\)|=>|&&|\|\||@mixin|@include|@use|@media|@content|@keyframes|\$[\w-]+|--[\w-]+|var\(|#[\da-fA-F]{3,8}\b|&[:\w-]*|\.[\w-]+(?=\s*\{)|<\/?[\w-]+|aria-[\w-]+(?:="[^"]*")?)/g;
+
+    let lastIndex = 0;
+    let match;
+    while ((match = regex.exec(remaining)) !== null) {
+      if (match.index > lastIndex) {
+        parts.push({ type: "plain", value: remaining.slice(lastIndex, match.index) });
+      }
+      const val = match[0];
+      let type = "plain";
+      if (/^(?:const|let|var|function|return|import|export|if|else|from|new|default|async|await)$/.test(val)) {
+        type = "keyword";
+      } else if (/^(?:true|false|null|undefined)$/.test(val)) {
+        type = "literal";
+      } else if (/^["'`]/.test(val)) {
+        type = "string";
+      } else if (/^\d/.test(val) || /^#[\da-fA-F]/.test(val)) {
+        type = "number";
+      } else if (/^\/\//.test(val)) {
+        type = "comment";
+      } else if (/^[@]/.test(val)) {
+        type = "keyword";
+      } else if (/^\$/.test(val)) {
+        type = "variable";
+      } else if (/^--/.test(val)) {
+        type = "variable";
+      } else if (/^var\($/.test(val)) {
+        type = "function";
+      } else if (/^&/.test(val)) {
+        type = "selector";
+      } else if (/^\.[\w-]+$/.test(val)) {
+        type = "selector";
+      } else if (/^<\/?[\w-]+$/.test(val)) {
+        type = "tag";
+      } else if (/^aria-/.test(val)) {
+        type = "attribute";
+      } else if (/^[{}()=>]/.test(val) || val === "&&" || val === "||") {
+        type = "punctuation";
+      }
+      parts.push({ type, value: val });
+      lastIndex = regex.lastIndex;
+    }
+    if (lastIndex < remaining.length) {
+      parts.push({ type: "plain", value: remaining.slice(lastIndex) });
+    }
+
+    return (
+      <div key={i} className="am-code-line">
+        {parts.map((p, k) => (
+          <span key={k} className={p.type !== "plain" ? `am-syn-${p.type}` : undefined}>{p.value}</span>
+        ))}
+      </div>
+    );
+  });
+}
+
+function renderBody(body) {
+  const blocks = body.split("\n\n");
+  const result = [];
+  let i = 0;
+
+  while (i < blocks.length) {
+    if (isCodeBlock(blocks[i])) {
+      // Collect consecutive code blocks
+      let codeLines = [];
+      while (i < blocks.length && isCodeBlock(blocks[i])) {
+        if (codeLines.length > 0) codeLines.push("");
+        codeLines.push(blocks[i]);
+        i++;
+      }
+      const code = codeLines.join("\n");
+      result.push(
+        <div key={`code-${i}`} className="am-code-block">
+          <pre><code>{highlightSyntax(code)}</code></pre>
+        </div>
+      );
+    } else {
+      result.push(
+        <p key={`p-${i}`} className="am-section-paragraph">{blocks[i]}</p>
+      );
+      i++;
+    }
+  }
+  return result;
+}
+
 /* ===== ANIMATED ILLUSTRATIONS ===== */
 
 function OutcomeIllustration() {
@@ -1337,9 +1446,7 @@ export default function ArticleModal({ articleId, isOpen, onClose }) {
             {article.sections.map((section, i) => (
               <section key={i} className="am-section" style={isReduced ? undefined : { opacity: 0 }}>
                 <h2 className="am-section-heading">{section.heading}</h2>
-                {section.body.split("\n\n").map((paragraph, j) => (
-                  <p key={j} className="am-section-paragraph">{paragraph}</p>
-                ))}
+                {renderBody(section.body)}
               </section>
             ))}
           </div>
