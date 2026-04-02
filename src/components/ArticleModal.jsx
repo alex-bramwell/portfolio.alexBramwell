@@ -8,12 +8,27 @@ gsap.registerPlugin(ScrollTrigger);
 
 /* ===== CODE BLOCK HELPERS ===== */
 
-const CODE_START = /^(?:\/\/|const |let |var |function |import |export |return |if |else |class |<[a-zA-Z\/!]|\{|@mixin|@include|@use|@media|\$[\w-]+:|\.[\w-]+\s*\{|&[:\-]|document\.|fetch\(|btn\.|window\.|ul\.|Bad:|Good:|- Use|styles\/)/;
+const CODE_START = /^(?:\/\/|const |let |var |function |import |export |return |if \(|else |class |<[a-zA-Z\/!]|\{|\}|@mixin|@include|@use|@media|@keyframes|\$[\w-]+:|\.[\w-]+\s*\{|&[:\-]|:[a-z][\w-]*\s*\{|document\.|fetch\(|btn\.|window\.|ul\.|Bad:|Good:|- Use|styles\/)/;
+
+const CODE_LINE = /^(?:\/\/|const |let |var |function |import |export |return |if \(|else |class |<[a-zA-Z\/!]|\{|\}|@mixin|@include|@use|@media|@keyframes|\$[\w-]+[:\s]|\.[\w-]+\s*\{|&[:\-]|:[a-z][\w-]*\s*\{|document\.|fetch\(|btn\.|window\.|ul\.|[\w-]+\s*:\s*.+;|[\w-]+\s*\{|[*]\s*[,{]|<\/?\w+|aria-[\w-]+(?:=)|outline|display|padding|margin|border|background|font-|color:|width|height|position|inset|align-|justify-|flex|grid|gap|transition|animation|overflow|opacity|transform|text-|letter-|line-|max-|min-|cursor|pointer|z-index)/;
 
 function isCodeBlock(text) {
-  const lines = text.split("\n");
-  const codeLikeLines = lines.filter((l) => CODE_START.test(l.trim()));
-  return codeLikeLines.length >= lines.length * 0.4 && lines.length >= 2;
+  const trimmed = text.trim();
+  const lines = trimmed.split("\n");
+  // Single-line: must look entirely like code (HTML tag, or selector/property with braces/semicolons)
+  if (lines.length === 1) {
+    return /^<[\w/].*>$/.test(trimmed) || (/^[.#@$:&{}\[\]*]/.test(trimmed) && /[{};]$/.test(trimmed));
+  }
+  // Multi-line: count lines that look like code (including indented lines which are continuation)
+  const codeLines = lines.filter((l) => {
+    const t = l.trim();
+    if (t === "") return true; // blank lines inside code blocks
+    if (/^\s{2,}/.test(l)) return true; // indented continuation
+    return CODE_LINE.test(t);
+  });
+  // Need a solid proportion of code-like lines AND at least one definite code-start line
+  const definiteCodeLines = lines.filter((l) => CODE_LINE.test(l.trim()));
+  return definiteCodeLines.length >= 1 && codeLines.length >= lines.length * 0.5;
 }
 
 function highlightSyntax(code) {
@@ -29,7 +44,7 @@ function highlightSyntax(code) {
 
     // Tokenise
     const parts = [];
-    const regex = /(\b(?:const|let|var|function|return|import|export|if|else|from|new|true|false|null|undefined|default|async|await)\b|"[^"]*"|'[^']*'|`[^`]*`|\b\d+(?:\.\d+)?(?:px|%|em|rem|vh|vw|ms|s)?\b|\/\/.*$|\{|\}|\(|\)|=>|&&|\|\||@mixin|@include|@use|@media|@content|@keyframes|\$[\w-]+|--[\w-]+|var\(|#[\da-fA-F]{3,8}\b|&[:\w-]*|\.[\w-]+(?=\s*\{)|<\/?[\w-]+|aria-[\w-]+(?:="[^"]*")?)/g;
+    const regex = /(\b(?:const|let|var|function|return|import|export|if|else|from|new|true|false|null|undefined|default|async|await)\b|"[^"]*"|'[^']*'|`[^`]*`|\b\d+(?:\.\d+)?(?:px|%|em|rem|vh|vw|ms|s)?\b|\/\/.*$|\{|\}|\(|\)|=>|&&|\|\||@mixin|@include|@use|@media|@content|@keyframes|\$[\w-]+|--[\w-]+|var\(|rgba?\(|#[\da-fA-F]{3,8}\b|&[:\w-]*|\.[\w-]+(?=\s*\{)|:[a-z][\w-]*(?=\s*\{)|<\/?[\w-]+|aria-[\w-]+(?:="[^"]*")?|\b(?:display|padding|margin|border|border-radius|background|font-size|font-family|font-weight|color|width|height|max-width|min-width|position|inset|top|right|bottom|left|align-items|justify-content|flex|grid|gap|transition|animation|animation-duration|transition-duration|overflow|opacity|transform|text-align|text-transform|letter-spacing|line-height|cursor|pointer-events|z-index|outline|outline-offset|overscroll-behavior|white-space|box-sizing|content|vertical-align)(?=\s*:))/g;
 
     let lastIndex = 0;
     let match;
@@ -55,8 +70,12 @@ function highlightSyntax(code) {
         type = "variable";
       } else if (/^--/.test(val)) {
         type = "variable";
-      } else if (/^var\($/.test(val)) {
+      } else if (/^(?:var|rgba?)\($/.test(val)) {
         type = "function";
+      } else if (/^:[a-z]/.test(val)) {
+        type = "selector";
+      } else if (/^(?:display|padding|margin|border|border-radius|background|font-size|font-family|font-weight|color|width|height|max-width|min-width|position|inset|top|right|bottom|left|align-items|justify-content|flex|grid|gap|transition|animation|animation-duration|transition-duration|overflow|opacity|transform|text-align|text-transform|letter-spacing|line-height|cursor|pointer-events|z-index|outline|outline-offset|overscroll-behavior|white-space|box-sizing|content|vertical-align)$/.test(val)) {
+        type = "property";
       } else if (/^&/.test(val)) {
         type = "selector";
       } else if (/^\.[\w-]+$/.test(val)) {

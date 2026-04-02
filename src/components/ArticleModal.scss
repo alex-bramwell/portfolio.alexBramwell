@@ -250,6 +250,10 @@
   color: #89ddff;
 }
 
+.am-syn-property {
+  color: #f07178;
+}
+
 // Light theme overrides
 [data-theme="light"] {
   .am-code-block {
@@ -268,6 +272,7 @@
   .am-syn-tag { color: #c62828; }
   .am-syn-attribute { color: #f57f17; }
   .am-syn-punctuation { color: #0277bd; }
+  .am-syn-property { color: #c62828; }
 }
 
 // ===== REDUCED MOTION FALLBACK =====
