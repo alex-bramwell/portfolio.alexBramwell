@@ -8,6 +8,10 @@ const ARTICLES = [
   { id: "outcome-oriented-design", title: "Outcome-oriented design" },
   { id: "spec-driven-development", title: "Spec-driven development" },
   { id: "the-split-brain-problem", title: "The split-brain problem" },
+  { id: "javascript-to-react", title: "JavaScript to React" },
+  { id: "react-concepts", title: "React basics explained" },
+  { id: "scss-in-practice", title: "SCSS made simple" },
+  { id: "web-accessibility", title: "Web accessibility basics" },
 ];
 
 export default function ThoughtsFab({ onOpenArticle }) {

@@ -273,6 +273,216 @@ function SplitBrainIllustration() {
   );
 }
 
+function JsToReactIllustration() {
+  const svgRef = useRef(null);
+  const { isReduced } = useTheme();
+
+  useEffect(() => {
+    if (isReduced || !svgRef.current) return;
+    const ctx = gsap.context(() => {
+      gsap.fromTo(".jtr-box", { strokeDashoffset: 400, opacity: 0 }, {
+        strokeDashoffset: 0, opacity: 1, duration: 0.8, stagger: 0.3, delay: 0.2, ease: "power2.out",
+      });
+      gsap.fromTo(".jtr-label", { opacity: 0, y: 8 }, {
+        opacity: 1, y: 0, duration: 0.4, stagger: 0.15, delay: 0.5, ease: "power2.out",
+      });
+      gsap.fromTo(".jtr-arrow", { strokeDashoffset: 60, opacity: 0 }, {
+        strokeDashoffset: 0, opacity: 1, duration: 0.6, delay: 1.0, ease: "power2.out",
+      });
+      gsap.fromTo(".jtr-line", { scaleX: 0, opacity: 0 }, {
+        scaleX: 1, opacity: 1, duration: 0.3, stagger: 0.06, delay: 0.8, ease: "power2.out",
+      });
+    }, svgRef);
+    return () => ctx.revert();
+  }, [isReduced]);
+
+  return (
+    <svg ref={svgRef} className="article-illustration" viewBox="0 0 400 280" fill="none">
+      {/* JS side */}
+      <rect className="jtr-box" x="30" y="40" width="140" height="200" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" strokeDasharray="400" fill="none" />
+      <text className="jtr-label" x="100" y="65" textAnchor="middle" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)" fontWeight="600">JAVASCRIPT</text>
+      <rect className="jtr-line" x="50" y="85" width="100" height="2" rx="1" fill="var(--color-text-secondary)" opacity="0.4" style={{ transformOrigin: "50px 86px" }} />
+      <text className="jtr-label" x="100" y="110" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">document.querySelector</text>
+      <rect className="jtr-line" x="50" y="120" width="80" height="2" rx="1" fill="var(--color-text-secondary)" opacity="0.3" style={{ transformOrigin: "50px 121px" }} />
+      <text className="jtr-label" x="100" y="145" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">addEventListener</text>
+      <rect className="jtr-line" x="50" y="155" width="90" height="2" rx="1" fill="var(--color-text-secondary)" opacity="0.3" style={{ transformOrigin: "50px 156px" }} />
+      <text className="jtr-label" x="100" y="180" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">innerHTML</text>
+      <rect className="jtr-line" x="50" y="190" width="70" height="2" rx="1" fill="var(--color-text-secondary)" opacity="0.3" style={{ transformOrigin: "50px 191px" }} />
+      <text className="jtr-label" x="100" y="215" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">fetch()</text>
+      {/* Arrow */}
+      <line className="jtr-arrow" x1="185" y1="140" x2="215" y2="140" stroke="var(--color-accent)" strokeWidth="1.5" strokeDasharray="60" />
+      <polygon className="jtr-arrow" points="215,135 225,140 215,145" fill="var(--color-accent)" opacity="0.8" />
+      {/* React side */}
+      <rect className="jtr-box" x="230" y="40" width="140" height="200" rx="4" stroke="var(--color-accent-border)" strokeWidth="1.5" strokeDasharray="400" fill="none" />
+      <text className="jtr-label" x="300" y="65" textAnchor="middle" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)" fontWeight="600">REACT</text>
+      <rect className="jtr-line" x="250" y="85" width="100" height="2" rx="1" fill="var(--color-accent-border)" opacity="0.4" style={{ transformOrigin: "250px 86px" }} />
+      <text className="jtr-label" x="300" y="110" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">useRef</text>
+      <rect className="jtr-line" x="250" y="120" width="80" height="2" rx="1" fill="var(--color-accent-border)" opacity="0.3" style={{ transformOrigin: "250px 121px" }} />
+      <text className="jtr-label" x="300" y="145" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">onClick</text>
+      <rect className="jtr-line" x="250" y="155" width="90" height="2" rx="1" fill="var(--color-accent-border)" opacity="0.3" style={{ transformOrigin: "250px 156px" }} />
+      <text className="jtr-label" x="300" y="180" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">JSX</text>
+      <rect className="jtr-line" x="250" y="190" width="70" height="2" rx="1" fill="var(--color-accent-border)" opacity="0.3" style={{ transformOrigin: "250px 191px" }} />
+      <text className="jtr-label" x="300" y="215" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">useEffect</text>
+    </svg>
+  );
+}
+
+function ReactConceptsIllustration() {
+  const svgRef = useRef(null);
+  const { isReduced } = useTheme();
+
+  useEffect(() => {
+    if (isReduced || !svgRef.current) return;
+    const ctx = gsap.context(() => {
+      gsap.fromTo(".rc-node", { scale: 0, opacity: 0 }, {
+        scale: 1, opacity: 1, duration: 0.5, stagger: 0.12, delay: 0.2, ease: "back.out(2)",
+      });
+      gsap.fromTo(".rc-branch", { strokeDashoffset: 80, opacity: 0 }, {
+        strokeDashoffset: 0, opacity: 0.6, duration: 0.5, stagger: 0.1, delay: 0.6, ease: "power2.out",
+      });
+      gsap.fromTo(".rc-label", { opacity: 0 }, {
+        opacity: 1, duration: 0.4, stagger: 0.1, delay: 1.0, ease: "power2.out",
+      });
+      gsap.to(".rc-pulse", {
+        scale: 1.4, opacity: 0, duration: 1.5, repeat: -1, ease: "sine.out", delay: 1.5,
+      });
+    }, svgRef);
+    return () => ctx.revert();
+  }, [isReduced]);
+
+  return (
+    <svg ref={svgRef} className="article-illustration" viewBox="0 0 400 280" fill="none">
+      {/* Root component */}
+      <circle className="rc-node" cx="200" cy="50" r="20" stroke="var(--color-accent)" strokeWidth="1.5" fill="none" style={{ transformOrigin: "200px 50px" }} />
+      <text className="rc-label" x="200" y="54" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)" fontWeight="600">App</text>
+      {/* Branches */}
+      <line className="rc-branch" x1="200" y1="70" x2="100" y2="120" stroke="var(--color-accent)" strokeWidth="1" strokeDasharray="80" />
+      <line className="rc-branch" x1="200" y1="70" x2="200" y2="120" stroke="var(--color-accent)" strokeWidth="1" strokeDasharray="80" />
+      <line className="rc-branch" x1="200" y1="70" x2="300" y2="120" stroke="var(--color-accent)" strokeWidth="1" strokeDasharray="80" />
+      {/* Child components */}
+      <circle className="rc-node" cx="100" cy="140" r="16" stroke="var(--color-accent-border)" strokeWidth="1" fill="none" style={{ transformOrigin: "100px 140px" }} />
+      <text className="rc-label" x="100" y="144" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="8" fontFamily="var(--font-mono)">Header</text>
+      <circle className="rc-node" cx="200" cy="140" r="16" stroke="var(--color-accent-border)" strokeWidth="1" fill="none" style={{ transformOrigin: "200px 140px" }} />
+      <text className="rc-label" x="200" y="144" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="8" fontFamily="var(--font-mono)">Main</text>
+      <circle className="rc-node" cx="300" cy="140" r="16" stroke="var(--color-accent-border)" strokeWidth="1" fill="none" style={{ transformOrigin: "300px 140px" }} />
+      <text className="rc-label" x="300" y="144" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="8" fontFamily="var(--font-mono)">Footer</text>
+      {/* Deeper children */}
+      <line className="rc-branch" x1="200" y1="156" x2="160" y2="200" stroke="var(--color-border)" strokeWidth="1" strokeDasharray="80" />
+      <line className="rc-branch" x1="200" y1="156" x2="240" y2="200" stroke="var(--color-border)" strokeWidth="1" strokeDasharray="80" />
+      <circle className="rc-node" cx="160" cy="216" r="14" stroke="var(--color-border)" strokeWidth="1" fill="none" style={{ transformOrigin: "160px 216px" }} />
+      <text className="rc-label" x="160" y="220" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="7" fontFamily="var(--font-mono)">Card</text>
+      <circle className="rc-node" cx="240" cy="216" r="14" stroke="var(--color-border)" strokeWidth="1" fill="none" style={{ transformOrigin: "240px 216px" }} />
+      <text className="rc-label" x="240" y="220" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="7" fontFamily="var(--font-mono)">List</text>
+      {/* State pulse on root */}
+      <circle className="rc-pulse" cx="200" cy="50" r="20" stroke="var(--color-accent)" strokeWidth="0.5" fill="none" style={{ transformOrigin: "200px 50px" }} />
+      {/* Labels */}
+      <text className="rc-label" x="50" y="260" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)" letterSpacing="2">COMPONENT TREE</text>
+    </svg>
+  );
+}
+
+function ScssIllustration() {
+  const svgRef = useRef(null);
+  const { isReduced } = useTheme();
+
+  useEffect(() => {
+    if (isReduced || !svgRef.current) return;
+    const ctx = gsap.context(() => {
+      gsap.fromTo(".scss-block", { strokeDashoffset: 300, opacity: 0 }, {
+        strokeDashoffset: 0, opacity: 1, duration: 0.8, stagger: 0.2, delay: 0.2, ease: "power2.out",
+      });
+      gsap.fromTo(".scss-label", { opacity: 0, y: 6 }, {
+        opacity: 1, y: 0, duration: 0.4, stagger: 0.1, delay: 0.6, ease: "power2.out",
+      });
+      gsap.fromTo(".scss-line", { scaleX: 0, opacity: 0 }, {
+        scaleX: 1, opacity: 1, duration: 0.3, stagger: 0.06, delay: 0.8, ease: "power2.out",
+      });
+      gsap.fromTo(".scss-arrow", { strokeDashoffset: 100, opacity: 0 }, {
+        strokeDashoffset: 0, opacity: 0.5, duration: 0.6, delay: 1.2, ease: "power2.out",
+      });
+    }, svgRef);
+    return () => ctx.revert();
+  }, [isReduced]);
+
+  return (
+    <svg ref={svgRef} className="article-illustration" viewBox="0 0 400 280" fill="none">
+      {/* Variables block */}
+      <rect className="scss-block" x="30" y="30" width="140" height="100" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" strokeDasharray="300" fill="none" />
+      <text className="scss-label" x="100" y="52" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)" fontWeight="600">$variables</text>
+      <text className="scss-label" x="100" y="75" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="8" fontFamily="var(--font-mono)">$color-accent: #dfff47</text>
+      <text className="scss-label" x="100" y="90" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="8" fontFamily="var(--font-mono)">$font-size-lg: 18px</text>
+      <rect className="scss-line" x="50" y="105" width="100" height="2" rx="1" fill="var(--color-accent-border)" opacity="0.3" style={{ transformOrigin: "50px 106px" }} />
+      {/* Nesting block */}
+      <rect className="scss-block" x="230" y="30" width="140" height="100" rx="4" stroke="var(--color-accent-border)" strokeWidth="1.5" strokeDasharray="300" fill="none" />
+      <text className="scss-label" x="300" y="52" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)" fontWeight="600">.card {"{"}</text>
+      <text className="scss-label" x="300" y="73" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="8" fontFamily="var(--font-mono)">{"  "}&amp;-title {"{"} ... {"}"}</text>
+      <text className="scss-label" x="300" y="88" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="8" fontFamily="var(--font-mono)">{"  "}&amp;-body {"{"} ... {"}"}</text>
+      <text className="scss-label" x="300" y="103" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="8" fontFamily="var(--font-mono)">{"  "}&amp;:hover {"{"} ... {"}"}</text>
+      {/* Mixin block */}
+      <rect className="scss-block" x="130" y="160" width="140" height="90" rx="4" stroke="var(--color-border)" strokeWidth="1.5" strokeDasharray="300" fill="none" />
+      <text className="scss-label" x="200" y="182" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)" fontWeight="600">@mixin</text>
+      <text className="scss-label" x="200" y="205" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="8" fontFamily="var(--font-mono)">breakpoint($size)</text>
+      <text className="scss-label" x="200" y="220" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="8" fontFamily="var(--font-mono)">@media (max-width: $size)</text>
+      {/* Connecting arrows */}
+      <path className="scss-arrow" d="M100 130 Q100 155 150 170" stroke="var(--color-accent)" strokeWidth="1" strokeDasharray="100" fill="none" />
+      <path className="scss-arrow" d="M300 130 Q300 155 250 170" stroke="var(--color-accent)" strokeWidth="1" strokeDasharray="100" fill="none" />
+      <text className="scss-label" x="200" y="270" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)" letterSpacing="2">SCSS FEATURES</text>
+    </svg>
+  );
+}
+
+function A11yIllustration() {
+  const svgRef = useRef(null);
+  const { isReduced } = useTheme();
+
+  useEffect(() => {
+    if (isReduced || !svgRef.current) return;
+    const ctx = gsap.context(() => {
+      gsap.fromTo(".a11y-ring", { scale: 0, opacity: 0 }, {
+        scale: 1, opacity: 1, duration: 0.8, stagger: 0.15, delay: 0.2, ease: "elastic.out(1, 0.6)",
+      });
+      gsap.fromTo(".a11y-icon", { opacity: 0, y: 10 }, {
+        opacity: 1, y: 0, duration: 0.5, stagger: 0.12, delay: 0.8, ease: "power2.out",
+      });
+      gsap.fromTo(".a11y-label", { opacity: 0 }, {
+        opacity: 1, duration: 0.4, stagger: 0.1, delay: 1.2, ease: "power2.out",
+      });
+      gsap.to(".a11y-center", {
+        scale: 1.15, opacity: 0.7, duration: 1.8, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 1.5,
+      });
+    }, svgRef);
+    return () => ctx.revert();
+  }, [isReduced]);
+
+  return (
+    <svg ref={svgRef} className="article-illustration" viewBox="0 0 400 280" fill="none">
+      {/* Accessibility symbol - person in circle */}
+      <circle className="a11y-ring" cx="200" cy="140" r="100" stroke="var(--color-accent-border)" strokeWidth="1" fill="none" style={{ transformOrigin: "200px 140px" }} />
+      <circle className="a11y-ring" cx="200" cy="140" r="65" stroke="var(--color-accent)" strokeWidth="1.5" fill="none" style={{ transformOrigin: "200px 140px" }} />
+      {/* Simple person icon */}
+      <circle className="a11y-center" cx="200" cy="110" r="10" fill="var(--color-accent)" opacity="0.8" style={{ transformOrigin: "200px 110px" }} />
+      <line className="a11y-center" x1="200" y1="120" x2="200" y2="155" stroke="var(--color-accent)" strokeWidth="2" style={{ transformOrigin: "200px 137px" }} />
+      <line className="a11y-center" x1="180" y1="135" x2="220" y2="135" stroke="var(--color-accent)" strokeWidth="2" style={{ transformOrigin: "200px 135px" }} />
+      <line className="a11y-center" x1="200" y1="155" x2="185" y2="175" stroke="var(--color-accent)" strokeWidth="2" />
+      <line className="a11y-center" x1="200" y1="155" x2="215" y2="175" stroke="var(--color-accent)" strokeWidth="2" />
+      {/* Surrounding labels */}
+      <text className="a11y-icon" x="90" y="60" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">SEMANTIC</text>
+      <text className="a11y-label" x="90" y="73" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)">HTML</text>
+      <text className="a11y-icon" x="310" y="60" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">ARIA</text>
+      <text className="a11y-label" x="310" y="73" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)">ROLES</text>
+      <text className="a11y-icon" x="80" y="230" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">FOCUS</text>
+      <text className="a11y-label" x="80" y="243" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)">MANAGEMENT</text>
+      <text className="a11y-icon" x="320" y="230" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">COLOUR</text>
+      <text className="a11y-label" x="320" y="243" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)">CONTRAST</text>
+      {/* Small dots connecting labels to ring */}
+      <circle className="a11y-icon" cx="115" cy="85" r="3" fill="var(--color-accent)" opacity="0.5" />
+      <circle className="a11y-icon" cx="285" cy="85" r="3" fill="var(--color-accent)" opacity="0.5" />
+      <circle className="a11y-icon" cx="115" cy="200" r="3" fill="var(--color-accent)" opacity="0.5" />
+      <circle className="a11y-icon" cx="285" cy="200" r="3" fill="var(--color-accent)" opacity="0.5" />
+    </svg>
+  );
+}
+
 /* ===== ARTICLE CONTENT ===== */
 
 const ARTICLES = {
@@ -466,6 +676,533 @@ This means my knowledge has gaps. There are CS concepts I understand by analogy 
 What I have found is that the gaps matter less than the ability to close them quickly. If you can read documentation, identify the right abstraction, and ship working code that is accessible, performant, and maintainable, then the route you took to get there is less important than the result.
 
 The industry is slowly coming around to this. The rise of AI coding tools has made the "reference sheet" approach to syntax even more viable. The scarce skill is not memorising array methods. It is knowing what to build and why. And that is a design skill as much as an engineering one.`,
+      },
+    ],
+  },
+  "javascript-to-react": {
+    title: "JavaScript to React",
+    subtitle: "Simple side-by-side examples showing how plain JS becomes React code",
+    date: "April 2026",
+    readTime: "6 min read",
+    illustration: JsToReactIllustration,
+    sections: [
+      {
+        heading: "Why this matters",
+        body: `React is not a different language. It is JavaScript with a few extra patterns on top. If you already know how to write a function, use an array method, or handle a click event in plain JS, you are closer to React than you think.
+
+This article walks through everyday JavaScript tasks and shows what they look like in React. No jargon, no deep theory. Just "here is how you did it before, and here is how you do it now."`,
+      },
+      {
+        heading: "Selecting and updating elements",
+        body: `In plain JavaScript, you grab an element with document.querySelector and change its content with textContent or innerHTML.
+
+// Vanilla JS
+const heading = document.querySelector("#title");
+heading.textContent = "Hello";
+
+In React, you do not touch the DOM directly. Instead, you store the value in state and let React update the page for you.
+
+// React
+const [title, setTitle] = useState("Hello");
+return <h1>{title}</h1>;
+
+The key difference: in vanilla JS, you tell the browser what to change. In React, you describe what the page should look like, and React figures out what to change. This is called declarative rendering.`,
+      },
+      {
+        heading: "Handling events",
+        body: `In vanilla JS, you add an event listener to an element after the page loads.
+
+// Vanilla JS
+const btn = document.querySelector("#myBtn");
+btn.addEventListener("click", function () {
+  alert("Clicked!");
+});
+
+In React, you attach the handler directly in your JSX using camelCase event names like onClick.
+
+// React
+function MyButton() {
+  function handleClick() {
+    alert("Clicked!");
+  }
+  return <button onClick={handleClick}>Click me</button>;
+}
+
+No need to query the DOM, no need to worry about when the element exists. The handler is right there next to the element it belongs to.`,
+      },
+      {
+        heading: "Looping through a list",
+        body: `In vanilla JS, you might loop through an array and build HTML strings or create elements one by one.
+
+// Vanilla JS
+const fruits = ["Apple", "Banana", "Cherry"];
+const ul = document.querySelector("#list");
+fruits.forEach(function (fruit) {
+  const li = document.createElement("li");
+  li.textContent = fruit;
+  ul.appendChild(li);
+});
+
+In React, you use the .map() array method inside your JSX. Each item needs a unique key prop so React can track it.
+
+// React
+const fruits = ["Apple", "Banana", "Cherry"];
+return (
+  <ul>
+    {fruits.map((fruit) => (
+      <li key={fruit}>{fruit}</li>
+    ))}
+  </ul>
+);
+
+The .map() pattern is one of the most common things you will write in React. It replaces manual DOM creation entirely.`,
+      },
+      {
+        heading: "Fetching data",
+        body: `In vanilla JS, you call fetch() and update the DOM when the data arrives.
+
+// Vanilla JS
+fetch("/api/users")
+  .then((res) => res.json())
+  .then((data) => {
+    document.querySelector("#count").textContent = data.length;
+  });
+
+In React, you do the same fetch inside a useEffect hook, and store the result in state.
+
+// React
+const [users, setUsers] = useState([]);
+
+useEffect(() => {
+  fetch("/api/users")
+    .then((res) => res.json())
+    .then((data) => setUsers(data));
+}, []);
+
+return <p>{users.length} users</p>;
+
+The useEffect hook tells React "run this code once after the component appears." The empty array [] at the end means it only runs once, not on every re-render.`,
+      },
+      {
+        heading: "Showing and hiding things",
+        body: `In vanilla JS, you toggle a class or change the display style.
+
+// Vanilla JS
+const panel = document.querySelector("#panel");
+btn.addEventListener("click", function () {
+  panel.classList.toggle("hidden");
+});
+
+In React, you use a piece of state to decide whether to render the element at all.
+
+// React
+const [isOpen, setIsOpen] = useState(false);
+
+return (
+  <>
+    <button onClick={() => setIsOpen(!isOpen)}>Toggle</button>
+    {isOpen && <div className="panel">Content here</div>}
+  </>
+);
+
+The expression {isOpen && <div>...</div>} means "only render this div if isOpen is true." This is called conditional rendering, and it is one of the most useful patterns in React.
+
+The jump from vanilla JS to React is smaller than it looks. The core skills transfer directly: functions, arrays, objects, and events. React just gives you a tidier way to organise them.`,
+      },
+    ],
+  },
+  "react-concepts": {
+    title: "React basics explained",
+    subtitle: "The most common React concepts with plain-English explanations and examples",
+    date: "April 2026",
+    readTime: "7 min read",
+    illustration: ReactConceptsIllustration,
+    sections: [
+      {
+        heading: "Components: the building blocks",
+        body: `A React component is just a function that returns some HTML (written as JSX). That is it. You write a function, it returns what should appear on the screen.
+
+function Greeting() {
+  return <h1>Hello, world</h1>;
+}
+
+You use it like an HTML tag: <Greeting />. You can use it as many times as you like.
+
+The whole idea of React is to break your page into small, reusable pieces. A navbar is a component. A button is a component. A single card in a list is a component. Each one manages its own little piece of the page.`,
+      },
+      {
+        heading: "Props: passing data down",
+        body: `Props are how you pass information from a parent component to a child component. Think of them like function arguments.
+
+function Greeting({ name }) {
+  return <h1>Hello, {name}</h1>;
+}
+
+// Usage
+<Greeting name="Alex" />
+
+The parent decides what data to pass. The child receives it and uses it. Props flow in one direction only: from parent to child. This makes it easy to understand where data comes from.
+
+You can pass anything as a prop: strings, numbers, arrays, objects, even other components. If a component needs data it does not own, it gets it through props.`,
+      },
+      {
+        heading: "State: data that changes",
+        body: `State is data that lives inside a component and can change over time. When state changes, React automatically re-renders the component to show the new value.
+
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={() => setCount(count + 1)}>Add one</button>
+    </div>
+  );
+}
+
+useState gives you two things: the current value (count) and a function to update it (setCount). You never change state directly. You always use the setter function.
+
+The rule is simple: if something on the screen needs to change in response to user action, it should be state.`,
+      },
+      {
+        heading: "useEffect: doing things after render",
+        body: `useEffect lets you run code after your component renders. This is where you put things like fetching data, setting up timers, or updating the document title.
+
+useEffect(() => {
+  document.title = "You clicked " + count + " times";
+}, [count]);
+
+The array at the end (called the dependency array) tells React when to re-run the effect. If you pass [count], it re-runs every time count changes. If you pass an empty array [], it only runs once when the component first appears.
+
+A common pattern is fetching data when a component loads:
+
+useEffect(() => {
+  fetch("/api/data")
+    .then((res) => res.json())
+    .then((data) => setItems(data));
+}, []);
+
+Think of useEffect as "after this component renders, also do this."`,
+      },
+      {
+        heading: "Conditional rendering",
+        body: `Sometimes you want to show different things based on a condition. React gives you a few simple patterns for this.
+
+The && operator renders something only when a condition is true:
+
+{isLoggedIn && <p>Welcome back!</p>}
+
+The ternary operator picks between two options:
+
+{isLoggedIn ? <Dashboard /> : <LoginForm />}
+
+You can also return early from a component:
+
+function UserProfile({ user }) {
+  if (!user) return <p>Loading...</p>;
+  return <h1>{user.name}</h1>;
+}
+
+These patterns replace the if/else and classList.toggle you would use in vanilla JavaScript. The idea is the same, just expressed differently.`,
+      },
+      {
+        heading: "Lists and keys",
+        body: `Rendering a list in React means mapping over an array and returning JSX for each item.
+
+const todos = ["Buy milk", "Walk the dog", "Write code"];
+
+return (
+  <ul>
+    {todos.map((todo, index) => (
+      <li key={index}>{todo}</li>
+    ))}
+  </ul>
+);
+
+The key prop helps React keep track of which item is which. When the list changes, React uses keys to figure out which items were added, removed, or moved. Without keys, React has to guess, and it can get things wrong.
+
+The best key is a unique ID from your data (like a database ID). Using the array index works for simple, static lists, but can cause bugs if the list gets reordered.
+
+These concepts - components, props, state, effects, conditionals, and lists - cover about 90% of what you will do in React day to day. Master these and the rest follows naturally.`,
+      },
+    ],
+  },
+  "scss-in-practice": {
+    title: "SCSS made simple",
+    subtitle: "A beginner-friendly look at variables, nesting, and mixins with real examples",
+    date: "April 2026",
+    readTime: "6 min read",
+    illustration: ScssIllustration,
+    sections: [
+      {
+        heading: "What SCSS adds to CSS",
+        body: `SCSS (Sassy CSS) is CSS with superpowers. It compiles down to regular CSS, so browsers never see it. But while you are writing it, you get features that make stylesheets easier to organise and maintain.
+
+The three biggest features are variables, nesting, and mixins. If you know CSS already, you can start using SCSS in minutes. Everything you already know still works. SCSS just adds new tools on top.`,
+      },
+      {
+        heading: "Variables: name your values",
+        body: `Instead of repeating the same colour code or font size everywhere, you store it in a variable and reference it by name.
+
+// Define once
+$color-accent: #dfff47;
+$font-size-body: 16px;
+$spacing-medium: 24px;
+
+// Use anywhere
+.button {
+  background: $color-accent;
+  font-size: $font-size-body;
+  padding: $spacing-medium;
+}
+
+Now if your accent colour changes, you update it in one place. Every element that uses it updates automatically.
+
+SCSS variables start with a dollar sign ($). They can hold colours, sizes, font names, or any CSS value. Think of them as labels you stick on values so you do not have to remember hex codes.`,
+      },
+      {
+        heading: "Nesting: write less, see more",
+        body: `In plain CSS, you write the full selector every time.
+
+.card { border: 1px solid grey; }
+.card .card-title { font-size: 20px; }
+.card .card-title:hover { color: blue; }
+
+In SCSS, you nest child selectors inside their parent. The structure of your SCSS mirrors the structure of your HTML.
+
+.card {
+  border: 1px solid grey;
+
+  .card-title {
+    font-size: 20px;
+
+    &:hover {
+      color: blue;
+    }
+  }
+}
+
+The & symbol means "the current selector." So &:hover inside .card-title becomes .card-title:hover in the compiled CSS.
+
+One warning: do not nest too deeply. Two or three levels is plenty. Deeply nested SCSS produces long, brittle CSS selectors that are hard to override.`,
+      },
+      {
+        heading: "Mixins: reusable blocks of styles",
+        body: `A mixin is a reusable chunk of CSS that you can include anywhere. It is like a function for your styles.
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero {
+  @include flex-center;
+  height: 100vh;
+}
+
+.modal-overlay {
+  @include flex-center;
+  position: fixed;
+  inset: 0;
+}
+
+Mixins can also accept arguments, just like a function.
+
+@mixin respond-to($breakpoint) {
+  @media (max-width: $breakpoint) {
+    @content;
+  }
+}
+
+.sidebar {
+  width: 300px;
+
+  @include respond-to(768px) {
+    width: 100%;
+  }
+}
+
+The @content keyword passes whatever styles you write inside the @include block into the mixin. This is incredibly useful for responsive breakpoints.`,
+      },
+      {
+        heading: "Partials and imports",
+        body: `SCSS lets you split your styles across multiple files and combine them at build time. Files that start with an underscore are called partials.
+
+// _variables.scss
+$color-bg: #0b0b0b;
+$color-text: #ffffff;
+
+// _base.scss
+body {
+  background: $color-bg;
+  color: $color-text;
+}
+
+// main.scss
+@use "variables";
+@use "base";
+
+The @use rule imports a partial and makes its variables available. This keeps your codebase organised: variables in one file, reset styles in another, component styles in their own files.
+
+A typical SCSS folder might look like this:
+
+styles/
+  _variables.scss   (design tokens)
+  _base.scss        (reset and root styles)
+  _shared.scss      (reusable utility classes)
+  main.scss         (imports everything)
+
+Each component can also have its own .scss file sitting next to the .jsx file. This is called co-location, and it makes it easy to find the styles for any component.`,
+      },
+      {
+        heading: "Putting it together",
+        body: `Here is a real-world example combining all four features.
+
+// _variables.scss
+$color-accent: #dfff47;
+$breakpoint-mobile: 600px;
+
+// _mixins.scss
+@mixin respond-to($bp) {
+  @media (max-width: $bp) { @content; }
+}
+
+// Card.scss
+.card {
+  padding: 24px;
+  border: 1px solid rgba($color-accent, 0.2);
+  border-radius: 8px;
+
+  &-title {
+    font-size: 20px;
+    color: $color-accent;
+  }
+
+  &-body {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  @include respond-to($breakpoint-mobile) {
+    padding: 16px;
+  }
+}
+
+Variables keep your values consistent. Nesting keeps selectors organised. Mixins avoid repetition. Partials keep files small. Together, they make CSS manageable even on large projects.`,
+      },
+    ],
+  },
+  "web-accessibility": {
+    title: "Web accessibility basics",
+    subtitle: "A practical guide to building websites that everyone can use",
+    date: "April 2026",
+    readTime: "6 min read",
+    illustration: A11yIllustration,
+    sections: [
+      {
+        heading: "What accessibility means",
+        body: `Web accessibility means making sure your website works for everyone, including people who use screen readers, navigate with a keyboard, have low vision, or experience motion sensitivity.
+
+It is not a separate feature you bolt on at the end. It is a set of practices you follow while building. Most of it comes down to using HTML correctly and being thoughtful about how things look, move, and respond to input.
+
+The standard is WCAG (Web Content Accessibility Guidelines). Level AA is the most commonly expected standard. It covers things like colour contrast, keyboard navigation, and text alternatives for images.`,
+      },
+      {
+        heading: "Semantic HTML: the foundation",
+        body: `The single biggest thing you can do for accessibility is use the right HTML elements. Screen readers and assistive tools understand HTML semantics. A <button> is announced as a button. A <nav> is announced as navigation. A <div> is announced as nothing.
+
+Bad:
+<div class="btn" onclick="submit()">Submit</div>
+
+Good:
+<button type="submit">Submit</button>
+
+The <button> gives you keyboard support (Enter and Space to activate), focus management, and a correct screen reader announcement for free. The <div> gives you none of that.
+
+Other examples:
+- Use <a> for links, not clickable divs
+- Use <h1> through <h6> in order for headings
+- Use <ul> and <li> for lists
+- Use <label> elements connected to form inputs
+- Use <main>, <nav>, <header>, <footer> for page landmarks
+
+If you use semantic HTML, you get most accessibility features without writing any extra code.`,
+      },
+      {
+        heading: "Colour contrast and text",
+        body: `People with low vision or colour blindness need enough contrast between text and its background to read comfortably.
+
+WCAG AA requires a contrast ratio of at least 4.5:1 for normal text and 3:1 for large text (18px bold or 24px regular).
+
+You can check contrast ratios with browser dev tools, or tools like the WebAIM Contrast Checker. Chrome DevTools shows the ratio right in the colour picker.
+
+A few practical rules:
+
+Do not use colour alone to communicate meaning. A red border on an invalid form field is not enough if someone cannot see red. Add a text message too.
+
+Make sure links are distinguishable from surrounding text. An underline or bold weight works. Colour alone does not.
+
+Avoid light grey text on white backgrounds. It looks clean but fails contrast requirements. If in doubt, check the ratio.`,
+      },
+      {
+        heading: "Keyboard navigation",
+        body: `Many users navigate with a keyboard instead of a mouse. This includes people using screen readers, people with motor disabilities, and power users who prefer keyboard shortcuts.
+
+Every interactive element on your page should be reachable and usable with the keyboard alone. The Tab key moves focus forward, Shift+Tab moves it back, Enter activates buttons and links, Space toggles checkboxes and buttons, and Escape closes modals and popups.
+
+The most common keyboard accessibility mistakes:
+
+Using div or span instead of button or a. Native HTML elements are keyboard-accessible by default. Custom elements are not.
+
+Removing the focus outline. The blue or black ring that appears when you Tab to an element is there for a reason. If you remove it with outline: none, provide a visible alternative.
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+Focus trapping in modals. When a modal is open, Tab should cycle through the modal's content, not disappear behind it. When the modal closes, focus should return to the element that opened it.`,
+      },
+      {
+        heading: "ARIA: when HTML is not enough",
+        body: `ARIA (Accessible Rich Internet Applications) attributes add extra information to elements when native HTML does not cover your use case.
+
+The most useful ARIA attributes:
+
+aria-label gives an element a text label when there is no visible text. Useful for icon-only buttons.
+<button aria-label="Close menu"><svg>...</svg></button>
+
+aria-hidden="true" hides decorative elements from screen readers. Glow effects, background animations, and purely visual flourishes should use this.
+
+aria-expanded tells screen readers whether a dropdown or collapsible section is open or closed.
+<button aria-expanded="false">Menu</button>
+
+aria-live="polite" announces dynamic content changes. If a notification appears without a page reload, this tells screen readers to read it out.
+
+The golden rule of ARIA: do not use it if native HTML can do the job. A <button> is better than <div role="button">. ARIA is a supplement, not a replacement.`,
+      },
+      {
+        heading: "Motion and animation",
+        body: `Some users experience motion sickness, vertigo, or distraction from animations. The prefers-reduced-motion media query lets you respect their system settings.
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+In practice, this means providing a way to turn off or tone down animations. This site has a motion toggle in the navigation that switches between full animations and reduced alternatives.
+
+For JavaScript animations (like GSAP), check the preference and skip the animation:
+
+const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+if (isReduced) return;
+
+Accessibility is not about removing features. It is about giving everyone an equivalent experience. A motion-sensitive user should still understand the page structure and content, even if the entrance animations do not play.
+
+Start with semantic HTML, check your contrast, make sure everything works with a keyboard, and use ARIA where needed. These four things solve the vast majority of accessibility issues.`,
       },
     ],
   },

@@ -36,6 +36,38 @@ const ARTICLES = [
     tags: ["Career", "Design + Code", "Personal"],
     readTime: "5 min read",
   },
+  {
+    id: "javascript-to-react",
+    number: "05",
+    title: "JavaScript to React",
+    subtitle: "Simple side-by-side examples showing how plain JS becomes React code",
+    tags: ["JavaScript", "React", "Beginner"],
+    readTime: "6 min read",
+  },
+  {
+    id: "react-concepts",
+    number: "06",
+    title: "React basics explained",
+    subtitle: "The most common React concepts with plain-English explanations and examples",
+    tags: ["React", "Hooks", "Components"],
+    readTime: "7 min read",
+  },
+  {
+    id: "scss-in-practice",
+    number: "07",
+    title: "SCSS made simple",
+    subtitle: "A beginner-friendly look at variables, nesting, and mixins with real examples",
+    tags: ["SCSS", "CSS", "Styling"],
+    readTime: "6 min read",
+  },
+  {
+    id: "web-accessibility",
+    number: "08",
+    title: "Web accessibility basics",
+    subtitle: "A practical guide to building websites that everyone can use",
+    tags: ["Accessibility", "WCAG", "HTML"],
+    readTime: "6 min read",
+  },
 ];
 
 export default function Thinking({ onOpenArticle }) {
@@ -54,9 +86,9 @@ export default function Thinking({ onOpenArticle }) {
             How I <em>think</em>
           </SplitHeading>
           <p className="section-supporting-text">
-            Building products is not just about shipping features. These articles
-            explore how AI is reshaping the way designers and engineers collaborate,
-            and what it means for people who sit at that intersection.
+            Articles on the tools, techniques, and ideas I work with daily.
+            From AI-driven workflows to beginner-friendly guides on React, SCSS,
+            and accessibility.
           </p>
         </ScrollReveal>
 
@@ -90,7 +122,7 @@ export default function Thinking({ onOpenArticle }) {
         {/* Article grid */}
         <div className="thinking-article-grid">
           {rest.map((article, i) => (
-            <ScrollReveal key={article.id} direction={i === 0 ? "left" : i === 2 ? "right" : "up"} stagger={i}>
+            <ScrollReveal key={article.id} direction={i % 3 === 0 ? "left" : i % 3 === 2 ? "right" : "up"} stagger={i}>
               <button
                 className="thinking-article-card"
                 onClick={() => onOpenArticle(article.id)}
