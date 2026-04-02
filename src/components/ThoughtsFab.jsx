@@ -13,6 +13,7 @@ const ARTICLES = [
   { id: "scss-in-practice", title: "SCSS made simple" },
   { id: "web-accessibility", title: "Web accessibility basics" },
   { id: "typescript-basics", title: "TypeScript basics" },
+  { id: "javascript-essentials", title: "JavaScript essentials" },
 ];
 
 export default function ThoughtsFab({ onOpenArticle }) {
