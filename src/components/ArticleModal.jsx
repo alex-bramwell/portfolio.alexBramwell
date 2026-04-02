@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useTheme } from "../context/ThemeContext";
@@ -106,13 +106,48 @@ function highlightSyntax(code) {
   });
 }
 
-function renderBody(body) {
+function CodeToggle({ js, ts, id }) {
+  const [showTs, setShowTs] = useState(false);
+  const code = showTs ? ts : js;
+
+  return (
+    <div className={`am-code-block am-code-toggle ${showTs ? "am-code-toggle-ts" : ""}`}>
+      <button
+        className="am-code-toggle-btn"
+        onClick={() => setShowTs(!showTs)}
+        aria-label={showTs ? "Show JavaScript" : "Show TypeScript"}
+        title={showTs ? "Switch to JavaScript" : "Switch to TypeScript"}
+      >
+        {showTs ? (
+          <span className="am-code-toggle-label am-code-toggle-label-ts">TS</span>
+        ) : (
+          <span className="am-code-toggle-label am-code-toggle-label-js">JS</span>
+        )}
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+          <path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4" />
+        </svg>
+      </button>
+      <pre><code>{highlightSyntax(code)}</code></pre>
+    </div>
+  );
+}
+
+function renderBody(body, codeToggles) {
   const blocks = body.split("\n\n");
   const result = [];
   let i = 0;
 
   while (i < blocks.length) {
-    if (isCodeBlock(blocks[i])) {
+    // Check for toggle placeholder
+    const toggleMatch = blocks[i].match(/^\{\{toggle:(\d+)\}\}$/);
+    if (toggleMatch && codeToggles) {
+      const idx = parseInt(toggleMatch[1], 10);
+      const toggle = codeToggles[idx];
+      if (toggle) {
+        result.push(<CodeToggle key={`toggle-${i}`} js={toggle.js} ts={toggle.ts} id={idx} />);
+      }
+      i++;
+    } else if (isCodeBlock(blocks[i])) {
       // Collect consecutive code blocks
       let codeLines = [];
       while (i < blocks.length && isCodeBlock(blocks[i])) {
@@ -799,6 +834,60 @@ const TsDiagramNarrowing = (
     <text x="420" y="200" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">narrowed - safe to use .toFixed()</text>
   </svg>
 );
+
+function JavaScriptIllustration() {
+  const svgRef = useRef(null);
+  const { isReduced } = useTheme();
+
+  useEffect(() => {
+    if (isReduced || !svgRef.current) return;
+    const ctx = gsap.context(() => {
+      gsap.fromTo(".jsi-bracket", { opacity: 0, scale: 0.5 }, {
+        opacity: 1, scale: 1, duration: 0.6, stagger: 0.15, delay: 0.2, ease: "back.out(2)",
+      });
+      gsap.fromTo(".jsi-line", { scaleX: 0 }, {
+        scaleX: 1, duration: 0.4, stagger: 0.08, delay: 0.5, ease: "power2.out",
+      });
+      gsap.fromTo(".jsi-label", { opacity: 0, y: 8 }, {
+        opacity: 1, y: 0, duration: 0.4, stagger: 0.1, delay: 0.8, ease: "power2.out",
+      });
+      gsap.to(".jsi-cursor", {
+        opacity: 0, duration: 0.5, repeat: -1, yoyo: true, ease: "steps(1)", delay: 1.2,
+      });
+    }, svgRef);
+    return () => ctx.revert();
+  }, [isReduced]);
+
+  return (
+    <svg ref={svgRef} className="article-illustration" viewBox="0 0 400 280" fill="none">
+      {/* Central JS badge */}
+      <rect x="150" y="20" width="100" height="50" rx="6" fill="#f7df1e" opacity="0.15" stroke="#f7df1e" strokeWidth="1.5" />
+      <text className="jsi-bracket" x="200" y="52" textAnchor="middle" fill="#f7df1e" fontSize="22" fontFamily="var(--font-mono)" fontWeight="800" style={{ transformOrigin: "200px 45px" }}>JS</text>
+      {/* Code editor frame */}
+      <rect className="jsi-bracket" x="60" y="90" width="280" height="160" rx="6" stroke="var(--color-border)" strokeWidth="1" fill="none" style={{ transformOrigin: "200px 170px" }} />
+      {/* Title bar dots */}
+      <circle className="jsi-label" cx="80" cy="105" r="4" fill="#ff5f56" opacity="0.6" />
+      <circle className="jsi-label" cx="95" cy="105" r="4" fill="#ffbd2e" opacity="0.6" />
+      <circle className="jsi-label" cx="110" cy="105" r="4" fill="#27ca3f" opacity="0.6" />
+      <line x1="60" y1="115" x2="340" y2="115" stroke="var(--color-border)" strokeWidth="1" />
+      {/* Code lines */}
+      <text className="jsi-label" x="80" y="138" fill="#c792ea" fontSize="11" fontFamily="var(--font-mono)">const</text>
+      <rect className="jsi-line" x="118" y="128" width="80" height="2" rx="1" fill="var(--color-text-secondary)" opacity="0.4" style={{ transformOrigin: "118px 129px" }} />
+      <text className="jsi-label" x="80" y="158" fill="#c792ea" fontSize="11" fontFamily="var(--font-mono)">function</text>
+      <rect className="jsi-line" x="140" y="148" width="100" height="2" rx="1" fill="var(--color-accent-border)" opacity="0.4" style={{ transformOrigin: "140px 149px" }} />
+      <rect className="jsi-line" x="95" y="168" width="60" height="2" rx="1" fill="var(--color-text-secondary)" opacity="0.3" style={{ transformOrigin: "95px 169px" }} />
+      <text className="jsi-label" x="80" y="190" fill="#89ddff" fontSize="11" fontFamily="var(--font-mono)">{"}"}</text>
+      <rect className="jsi-line" x="80" y="200" width="120" height="2" rx="1" fill="var(--color-text-secondary)" opacity="0.3" style={{ transformOrigin: "80px 201px" }} />
+      <rect className="jsi-line" x="80" y="215" width="90" height="2" rx="1" fill="var(--color-accent-border)" opacity="0.3" style={{ transformOrigin: "80px 216px" }} />
+      {/* Blinking cursor */}
+      <rect className="jsi-cursor" x="175" y="210" width="2" height="14" fill="var(--color-accent)" />
+      {/* Bottom labels */}
+      <text className="jsi-label" x="115" y="268" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)">VARIABLES</text>
+      <text className="jsi-label" x="200" y="268" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)">FUNCTIONS</text>
+      <text className="jsi-label" x="285" y="268" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)">OBJECTS</text>
+    </svg>
+  );
+}
 
 /* ===== ARTICLE CONTENT ===== */
 
@@ -1667,6 +1756,207 @@ The concepts in this article, annotations, interfaces, unions, generics, and nar
       },
     ],
   },
+  "javascript-essentials": {
+    title: "JavaScript essentials",
+    subtitle: "The core building blocks of JavaScript, with a TypeScript toggle on every example",
+    date: "April 2026",
+    readTime: "8 min read",
+    illustration: JavaScriptIllustration,
+    sections: [
+      {
+        heading: "Variables and data types",
+        body: `Variables are containers that hold a value. JavaScript has three ways to create them: let for values that change, const for values that stay the same, and var which is the old way (best avoided).
+
+{{toggle:0}}
+
+JavaScript has a handful of basic data types. The most common are strings (text), numbers, booleans (true or false), null (intentionally empty), and undefined (not yet assigned).
+
+{{toggle:1}}
+
+You do not need to tell JavaScript what type a variable is. It figures it out from the value you assign. TypeScript adds that ability, and you can see how by toggling the examples above.`,
+        codeToggles: [
+          {
+            js: `let score = 0;\nscore = 10;\n\nconst name = "Alex";\n// name = "Sam";  // Error: can't reassign a const`,
+            ts: `let score: number = 0;\nscore = 10;\n\nconst name: string = "Alex";\n// name = "Sam";  // Error: can't reassign a const`,
+          },
+          {
+            js: `const username = "Alex";       // string\nconst age = 39;                // number\nconst isAdmin = true;          // boolean\nconst middleName = null;       // null\nlet address;                   // undefined`,
+            ts: `const username: string = "Alex";\nconst age: number = 39;\nconst isAdmin: boolean = true;\nconst middleName: string | null = null;\nlet address: string | undefined;`,
+          },
+        ],
+      },
+      {
+        heading: "Functions",
+        body: `A function is a reusable block of code. You give it a name, define what inputs it accepts (called parameters), and write the code that runs when you call it.
+
+{{toggle:0}}
+
+Functions can return a value using the return keyword. Whatever comes after return is sent back to wherever the function was called.
+
+{{toggle:1}}
+
+Arrow functions are a shorter way to write the same thing. They are especially common in React.
+
+{{toggle:2}}
+
+The key difference you will notice in the TypeScript versions is that every parameter and return value has a type label. This means if you accidentally pass a number where a string is expected, your editor catches it before you run the code.`,
+        codeToggles: [
+          {
+            js: `function greet(name) {\n  return "Hello, " + name;\n}\n\ngreet("Alex");  // "Hello, Alex"`,
+            ts: `function greet(name: string): string {\n  return "Hello, " + name;\n}\n\ngreet("Alex");  // "Hello, Alex"`,
+          },
+          {
+            js: `function add(a, b) {\n  return a + b;\n}\n\nconst total = add(5, 3);  // 8`,
+            ts: `function add(a: number, b: number): number {\n  return a + b;\n}\n\nconst total: number = add(5, 3);  // 8`,
+          },
+          {
+            js: `const double = (n) => n * 2;\n\nconst greet = (name) => {\n  return "Hello, " + name;\n};`,
+            ts: `const double = (n: number): number => n * 2;\n\nconst greet = (name: string): string => {\n  return "Hello, " + name;\n};`,
+          },
+        ],
+      },
+      {
+        heading: "Objects",
+        body: `Objects group related data together using key-value pairs. They are one of the most important structures in JavaScript because almost everything is built from them.
+
+{{toggle:0}}
+
+You access values using dot notation or bracket notation.
+
+{{toggle:1}}
+
+In the TypeScript version, notice the interface keyword. It describes the shape of the object: which properties it must have and what types they hold. If you try to add a property that is not in the interface, or misspell a property name, TypeScript flags it immediately.`,
+        codeToggles: [
+          {
+            js: `const user = {\n  name: "Alex",\n  age: 39,\n  role: "UX Engineer",\n};`,
+            ts: `interface User {\n  name: string;\n  age: number;\n  role: string;\n}\n\nconst user: User = {\n  name: "Alex",\n  age: 39,\n  role: "UX Engineer",\n};`,
+          },
+          {
+            js: `console.log(user.name);        // "Alex"\nconsole.log(user["role"]);     // "UX Engineer"\n\nuser.age = 40;                 // update a value`,
+            ts: `console.log(user.name);        // "Alex"\nconsole.log(user["role"]);     // "UX Engineer"\n\nuser.age = 40;                 // update a value`,
+          },
+        ],
+      },
+      {
+        heading: "Arrays and array methods",
+        body: `Arrays are ordered lists. They can hold any type of value and are the main way you work with collections of data.
+
+{{toggle:0}}
+
+JavaScript arrays come with built-in methods that let you transform, filter, and search through data without writing loops yourself.
+
+.map() creates a new array by transforming every item:
+
+{{toggle:1}}
+
+.filter() creates a new array with only the items that pass a test:
+
+{{toggle:2}}
+
+.find() returns the first item that matches:
+
+{{toggle:3}}
+
+These methods are everywhere in modern JavaScript and React. Learning them well pays off quickly.`,
+        codeToggles: [
+          {
+            js: `const colours = ["red", "green", "blue"];\n\nconsole.log(colours[0]);     // "red"\nconsole.log(colours.length); // 3\n\ncolours.push("yellow");      // add to the end`,
+            ts: `const colours: string[] = ["red", "green", "blue"];\n\nconsole.log(colours[0]);     // "red"\nconsole.log(colours.length); // 3\n\ncolours.push("yellow");      // add to the end`,
+          },
+          {
+            js: `const numbers = [1, 2, 3, 4];\nconst doubled = numbers.map((n) => n * 2);\n// [2, 4, 6, 8]`,
+            ts: `const numbers: number[] = [1, 2, 3, 4];\nconst doubled: number[] = numbers.map((n) => n * 2);\n// [2, 4, 6, 8]`,
+          },
+          {
+            js: `const words = ["hello", "hi", "hey", "howdy"];\nconst short = words.filter((w) => w.length <= 3);\n// ["hi", "hey"]`,
+            ts: `const words: string[] = ["hello", "hi", "hey", "howdy"];\nconst short: string[] = words.filter((w) => w.length <= 3);\n// ["hi", "hey"]`,
+          },
+          {
+            js: `const people = [\n  { name: "Alex", age: 39 },\n  { name: "Sam", age: 28 },\n];\n\nconst sam = people.find((p) => p.name === "Sam");\n// { name: "Sam", age: 28 }`,
+            ts: `interface Person {\n  name: string;\n  age: number;\n}\n\nconst people: Person[] = [\n  { name: "Alex", age: 39 },\n  { name: "Sam", age: 28 },\n];\n\nconst sam: Person | undefined = people.find((p) => p.name === "Sam");`,
+          },
+        ],
+      },
+      {
+        heading: "Conditionals and logic",
+        body: `Conditionals let your code make decisions. The most common form is if/else.
+
+{{toggle:0}}
+
+The ternary operator is a one-line shorthand for simple if/else checks. It is used heavily in React for conditional rendering.
+
+{{toggle:1}}
+
+You can also check multiple conditions with else if, or use switch for matching against specific values. But if/else and ternaries cover the vast majority of real-world cases.`,
+        codeToggles: [
+          {
+            js: `const age = 39;\n\nif (age >= 18) {\n  console.log("Adult");\n} else {\n  console.log("Minor");\n}`,
+            ts: `const age: number = 39;\n\nif (age >= 18) {\n  console.log("Adult");\n} else {\n  console.log("Minor");\n}`,
+          },
+          {
+            js: `const age = 39;\nconst label = age >= 18 ? "Adult" : "Minor";\n// "Adult"`,
+            ts: `const age: number = 39;\nconst label: string = age >= 18 ? "Adult" : "Minor";\n// "Adult"`,
+          },
+        ],
+      },
+      {
+        heading: "Destructuring and spread",
+        body: `Destructuring lets you unpack values from objects and arrays into separate variables. It is a shorthand that makes code cleaner.
+
+{{toggle:0}}
+
+Array destructuring works the same way but uses position instead of names:
+
+{{toggle:1}}
+
+The spread operator (...) copies the contents of an array or object into a new one. It is useful for creating copies without mutating the original.
+
+{{toggle:2}}
+
+Destructuring and spread show up constantly in React. Props are destructured in function parameters, state updates use spread to copy objects, and arrays are spread into new arrays when adding items.`,
+        codeToggles: [
+          {
+            js: `const user = { name: "Alex", age: 39, role: "Engineer" };\n\n// Without destructuring\nconst name = user.name;\nconst role = user.role;\n\n// With destructuring\nconst { name, role } = user;`,
+            ts: `interface User {\n  name: string;\n  age: number;\n  role: string;\n}\n\nconst user: User = { name: "Alex", age: 39, role: "Engineer" };\n\nconst { name, role }: { name: string; role: string } = user;`,
+          },
+          {
+            js: `const colours = ["red", "green", "blue"];\nconst [first, second] = colours;\n// first = "red", second = "green"`,
+            ts: `const colours: string[] = ["red", "green", "blue"];\nconst [first, second]: string[] = colours;\n// first = "red", second = "green"`,
+          },
+          {
+            js: `const original = { name: "Alex", age: 39 };\nconst updated = { ...original, age: 40 };\n// { name: "Alex", age: 40 }\n\nconst list = [1, 2, 3];\nconst extended = [...list, 4, 5];\n// [1, 2, 3, 4, 5]`,
+            ts: `const original = { name: "Alex", age: 39 };\nconst updated = { ...original, age: 40 };\n// { name: "Alex", age: 40 }\n\nconst list: number[] = [1, 2, 3];\nconst extended: number[] = [...list, 4, 5];\n// [1, 2, 3, 4, 5]`,
+          },
+        ],
+      },
+      {
+        heading: "Async: promises and fetch",
+        body: `JavaScript is single-threaded, meaning it does one thing at a time. But some tasks, like fetching data from an API, take time. Promises and async/await let you handle these without blocking everything else.
+
+A promise represents a value that does not exist yet but will in the future. The fetch API returns a promise:
+
+{{toggle:0}}
+
+The async/await syntax is a cleaner way to write the same thing:
+
+{{toggle:1}}
+
+In the TypeScript versions, notice that the fetch response and the resulting data both have types. This means your editor can autocomplete properties on the user object and warn you if you access something that does not exist.
+
+These are the core building blocks of JavaScript. Every framework, library, and tool you encounter is built from these fundamentals: variables, functions, objects, arrays, conditionals, destructuring, and async patterns. Understand these and the rest follows.`,
+        codeToggles: [
+          {
+            js: `fetch("/api/user")\n  .then((response) => response.json())\n  .then((data) => {\n    console.log(data.name);\n  })\n  .catch((error) => {\n    console.log("Something went wrong");\n  });`,
+            ts: `interface User {\n  name: string;\n  email: string;\n}\n\nfetch("/api/user")\n  .then((response: Response) => response.json())\n  .then((data: User) => {\n    console.log(data.name);\n  })\n  .catch((error: Error) => {\n    console.log("Something went wrong");\n  });`,
+          },
+          {
+            js: `async function getUser() {\n  const response = await fetch("/api/user");\n  const data = await response.json();\n  console.log(data.name);\n}`,
+            ts: `interface User {\n  name: string;\n  email: string;\n}\n\nasync function getUser(): Promise<User> {\n  const response: Response = await fetch("/api/user");\n  const data: User = await response.json();\n  console.log(data.name);\n  return data;\n}`,
+          },
+        ],
+      },
+    ],
+  },
 };
 
 /* ===== MODAL COMPONENT ===== */
@@ -1803,7 +2093,7 @@ export default function ArticleModal({ articleId, isOpen, onClose }) {
                     {section.diagram}
                   </div>
                 )}
-                {renderBody(section.body)}
+                {renderBody(section.body, section.codeToggles)}
               </section>
             ))}
           </div>
