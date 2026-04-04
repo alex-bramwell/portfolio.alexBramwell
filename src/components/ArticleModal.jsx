@@ -132,7 +132,7 @@ function CodeToggle({ js, ts, id }) {
   );
 }
 
-function InteractiveDiagram({ diagram }) {
+function InteractiveDiagram({ diagram: Diagram }) {
   const [isOpen, setIsOpen] = useState(false);
   const contentRef = useRef(null);
   const { isReduced } = useTheme();
@@ -142,10 +142,6 @@ function InteractiveDiagram({ diagram }) {
     const ctx = gsap.context(() => {
       gsap.fromTo(contentRef.current, { height: 0, opacity: 0 }, {
         height: "auto", opacity: 1, duration: 0.4, ease: "power2.out",
-      });
-      // Animate diagram elements after container opens
-      gsap.fromTo(".idg-anim", { opacity: 0, y: 8 }, {
-        opacity: 1, y: 0, duration: 0.35, stagger: 0.07, delay: 0.25, ease: "power2.out",
       });
     }, contentRef);
     return () => ctx.revert();
@@ -174,11 +170,58 @@ function InteractiveDiagram({ diagram }) {
       </button>
       {isOpen && (
         <div className="am-interactive-content" ref={contentRef} style={isReduced ? undefined : { height: 0, opacity: 0 }}>
-          {diagram}
+          <AnimatedDiagram playing={isOpen} isReduced={isReduced}>{Diagram}</AnimatedDiagram>
         </div>
       )}
     </div>
   );
+}
+
+function AnimatedDiagram({ playing, isReduced, children }) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (!playing || !ref.current || isReduced) return;
+    const el = ref.current;
+
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
+
+      // Stage 1: title/label at top
+      tl.fromTo(el.querySelectorAll(".idg-title"), { opacity: 0 }, {
+        opacity: 1, duration: 0.3,
+      });
+
+      // Stage 2: input elements slide in from left
+      tl.fromTo(el.querySelectorAll(".idg-input"), { opacity: 0, x: -15 }, {
+        opacity: 1, x: 0, duration: 0.4, stagger: 0.08,
+      }, "-=0.1");
+
+      // Stage 3: arrows/connectors draw in
+      tl.fromTo(el.querySelectorAll(".idg-arrow"), { opacity: 0, scaleX: 0 }, {
+        opacity: 1, scaleX: 1, duration: 0.3, stagger: 0.06,
+      }, "-=0.15");
+
+      // Stage 4: processing/transform labels pop
+      tl.fromTo(el.querySelectorAll(".idg-process"), { opacity: 0, scale: 0.5 }, {
+        opacity: 1, scale: 1, duration: 0.35, stagger: 0.06, ease: "back.out(2)",
+      }, "-=0.1");
+
+      // Stage 5: output elements scale up from center
+      tl.fromTo(el.querySelectorAll(".idg-output"), { opacity: 0, scale: 0.7, y: 5 }, {
+        opacity: 1, scale: 1, y: 0, duration: 0.4, stagger: 0.08, ease: "back.out(1.5)",
+      }, "-=0.15");
+
+      // Stage 6: footnote/explanation fades in last
+      tl.fromTo(el.querySelectorAll(".idg-note"), { opacity: 0, y: 6 }, {
+        opacity: 1, y: 0, duration: 0.4, stagger: 0.06,
+      }, "-=0.1");
+    }, ref);
+
+    return () => ctx.revert();
+  }, [playing, isReduced]);
+
+  return <div ref={ref}>{children}</div>;
 }
 
 function renderBody(body, codeToggles, interactives) {
@@ -898,66 +941,66 @@ const TsDiagramNarrowing = (
 const InteractiveMapDiagram = (
   <svg viewBox="0 0 520 140" fill="none">
     {/* Input array */}
-    <text className="idg-anim" x="10" y="18" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">.map(n =&gt; n * 2)</text>
+    <text className="idg-title" x="10" y="18" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">.map(n =&gt; n * 2)</text>
     {[1, 2, 3, 4].map((n, idx) => (
       <g key={n}>
-        <rect className="idg-anim" x={10 + idx * 65} y="30" width="52" height="36" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
-        <text className="idg-anim" x={36 + idx * 65} y="54" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="16" fontFamily="var(--font-mono)">{n}</text>
+        <rect className="idg-input" x={10 + idx * 65} y="30" width="52" height="36" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
+        <text className="idg-input" x={36 + idx * 65} y="54" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="16" fontFamily="var(--font-mono)">{n}</text>
       </g>
     ))}
     {/* Arrows */}
     {[0, 1, 2, 3].map((idx) => (
       <g key={`arrow-${idx}`}>
-        <line className="idg-anim" x1={36 + idx * 65} y1="70" x2={36 + idx * 65} y2="88" stroke="var(--color-accent)" strokeWidth="1.5" />
-        <polygon className="idg-anim" points={`${31 + idx * 65},85 ${36 + idx * 65},93 ${41 + idx * 65},85`} fill="var(--color-accent)" />
-        <text className="idg-anim" x={56 + idx * 65} y="82" fill="var(--color-accent)" fontSize="8" fontFamily="var(--font-mono)">x2</text>
+        <line className="idg-arrow" x1={36 + idx * 65} y1="70" x2={36 + idx * 65} y2="88" stroke="var(--color-accent)" strokeWidth="1.5" />
+        <polygon className="idg-arrow" points={`${31 + idx * 65},85 ${36 + idx * 65},93 ${41 + idx * 65},85`} fill="var(--color-accent)" />
+        <text className="idg-process" x={56 + idx * 65} y="82" fill="var(--color-accent)" fontSize="8" fontFamily="var(--font-mono)">x2</text>
       </g>
     ))}
     {/* Output array */}
     {[2, 4, 6, 8].map((n, idx) => (
       <g key={`out-${n}`}>
-        <rect className="idg-anim" x={10 + idx * 65} y="96" width="52" height="36" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
-        <text className="idg-anim" x={36 + idx * 65} y="120" textAnchor="middle" fill="var(--color-accent)" fontSize="16" fontFamily="var(--font-mono)" fontWeight="600">{n}</text>
+        <rect className="idg-output" x={10 + idx * 65} y="96" width="52" height="36" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
+        <text className="idg-output" x={36 + idx * 65} y="120" textAnchor="middle" fill="var(--color-accent)" fontSize="16" fontFamily="var(--font-mono)" fontWeight="600">{n}</text>
       </g>
     ))}
     {/* Labels */}
-    <text className="idg-anim" x="380" y="53" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">input</text>
-    <text className="idg-anim" x="380" y="119" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)">output</text>
+    <text className="idg-note" x="380" y="53" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">input</text>
+    <text className="idg-note" x="380" y="119" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)">output</text>
   </svg>
 );
 
 const InteractiveFilterDiagram = (
   <svg viewBox="0 0 520 140" fill="none">
-    <text className="idg-anim" x="10" y="18" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">.filter(w =&gt; w.length &lt;= 3)</text>
+    <text className="idg-title" x="10" y="18" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">.filter(w =&gt; w.length &lt;= 3)</text>
     {/* Input */}
     {["hello", "hi", "hey", "howdy"].map((w, idx) => {
       const keeps = w.length <= 3;
       return (
         <g key={w}>
-          <rect className="idg-anim" x={10 + idx * 120} y="30" width="105" height="36" rx="4" stroke={keeps ? "var(--color-accent)" : "var(--color-border)"} strokeWidth={keeps ? 1.5 : 1} fill="none" />
-          <text className="idg-anim" x={62 + idx * 120} y="54" textAnchor="middle" fill={keeps ? "var(--color-accent)" : "var(--color-text-disabled)"} fontSize="13" fontFamily="var(--font-mono)">{`"${w}"`}</text>
+          <rect className="idg-input" x={10 + idx * 120} y="30" width="105" height="36" rx="4" stroke={keeps ? "var(--color-accent)" : "var(--color-border)"} strokeWidth={keeps ? 1.5 : 1} fill="none" />
+          <text className="idg-input" x={62 + idx * 120} y="54" textAnchor="middle" fill={keeps ? "var(--color-accent)" : "var(--color-text-disabled)"} fontSize="13" fontFamily="var(--font-mono)">{`"${w}"`}</text>
         </g>
       );
     })}
     {/* Arrows for kept items */}
     {[1, 2].map((idx, pos) => (
       <g key={`fa-${idx}`}>
-        <line className="idg-anim" x1={62 + idx * 120} y1="70" x2={36 + pos * 120} y2="88" stroke="var(--color-accent)" strokeWidth="1.5" />
-        <polygon className="idg-anim" points={`${31 + pos * 120},85 ${36 + pos * 120},93 ${41 + pos * 120},85`} fill="var(--color-accent)" />
+        <line className="idg-arrow" x1={62 + idx * 120} y1="70" x2={36 + pos * 120} y2="88" stroke="var(--color-accent)" strokeWidth="1.5" />
+        <polygon className="idg-arrow" points={`${31 + pos * 120},85 ${36 + pos * 120},93 ${41 + pos * 120},85`} fill="var(--color-accent)" />
       </g>
     ))}
     {/* Crossed out items */}
     {[0, 3].map((idx) => (
       <g key={`fx-${idx}`}>
-        <line className="idg-anim" x1={25 + idx * 120} y1="72" x2={40 + idx * 120} y2="86" stroke="#ff5370" strokeWidth="1.5" opacity="0.6" />
-        <line className="idg-anim" x1={40 + idx * 120} y1="72" x2={25 + idx * 120} y2="86" stroke="#ff5370" strokeWidth="1.5" opacity="0.6" />
+        <line className="idg-process" x1={25 + idx * 120} y1="72" x2={40 + idx * 120} y2="86" stroke="#ff5370" strokeWidth="1.5" opacity="0.6" />
+        <line className="idg-process" x1={40 + idx * 120} y1="72" x2={25 + idx * 120} y2="86" stroke="#ff5370" strokeWidth="1.5" opacity="0.6" />
       </g>
     ))}
     {/* Output */}
     {["hi", "hey"].map((w, pos) => (
       <g key={`fo-${w}`}>
-        <rect className="idg-anim" x={10 + pos * 120} y="96" width="105" height="36" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
-        <text className="idg-anim" x={62 + pos * 120} y="120" textAnchor="middle" fill="var(--color-accent)" fontSize="13" fontFamily="var(--font-mono)" fontWeight="600">{`"${w}"`}</text>
+        <rect className="idg-output" x={10 + pos * 120} y="96" width="105" height="36" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
+        <text className="idg-output" x={62 + pos * 120} y="120" textAnchor="middle" fill="var(--color-accent)" fontSize="13" fontFamily="var(--font-mono)" fontWeight="600">{`"${w}"`}</text>
       </g>
     ))}
   </svg>
@@ -965,19 +1008,19 @@ const InteractiveFilterDiagram = (
 
 const InteractiveFindDiagram = (
   <svg viewBox="0 0 520 130" fill="none">
-    <text className="idg-anim" x="10" y="18" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">.find(p =&gt; p.name === "Sam")</text>
+    <text className="idg-title" x="10" y="18" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">.find(p =&gt; p.name === "Sam")</text>
     {/* Array items */}
     {[{ name: "Alex", found: false }, { name: "Sam", found: true }].map((p, idx) => (
       <g key={p.name}>
-        <rect className="idg-anim" x={10 + idx * 200} y="30" width="180" height="40" rx="4" stroke={p.found ? "var(--color-accent)" : "var(--color-border)"} strokeWidth={p.found ? 1.5 : 1} fill={p.found ? "var(--color-accent-dim)" : "none"} />
-        <text className="idg-anim" x={100 + idx * 200} y="56" textAnchor="middle" fill={p.found ? "var(--color-accent)" : "var(--color-text-secondary)"} fontSize="12" fontFamily="var(--font-mono)">{`{ name: "${p.name}", age: ${p.name === "Alex" ? 39 : 28} }`}</text>
-        {!p.found && <text className="idg-anim" x={100 + idx * 200} y="88" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">skip</text>}
+        <rect className="idg-input" x={10 + idx * 200} y="30" width="180" height="40" rx="4" stroke={p.found ? "var(--color-accent)" : "var(--color-border)"} strokeWidth={p.found ? 1.5 : 1} fill={p.found ? "var(--color-accent-dim)" : "none"} />
+        <text className="idg-input" x={100 + idx * 200} y="56" textAnchor="middle" fill={p.found ? "var(--color-accent)" : "var(--color-text-secondary)"} fontSize="12" fontFamily="var(--font-mono)">{`{ name: "${p.name}", age: ${p.name === "Alex" ? 39 : 28} }`}</text>
+        {!p.found && <text className="idg-process" x={100 + idx * 200} y="88" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">skip</text>}
         {p.found && (
           <>
-            <line className="idg-anim" x1={100 + idx * 200} y1="74" x2={100 + idx * 200} y2="90" stroke="var(--color-accent)" strokeWidth="1.5" />
-            <polygon className="idg-anim" points={`${95 + idx * 200},88 ${100 + idx * 200},96 ${105 + idx * 200},88`} fill="var(--color-accent)" />
-            <rect className="idg-anim" x={30 + idx * 200} y="98" width="140" height="28" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
-            <text className="idg-anim" x={100 + idx * 200} y="117" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)" fontWeight="600">found! stop here</text>
+            <line className="idg-arrow" x1={100 + idx * 200} y1="74" x2={100 + idx * 200} y2="90" stroke="var(--color-accent)" strokeWidth="1.5" />
+            <polygon className="idg-arrow" points={`${95 + idx * 200},88 ${100 + idx * 200},96 ${105 + idx * 200},88`} fill="var(--color-accent)" />
+            <rect className="idg-output" x={30 + idx * 200} y="98" width="140" height="28" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
+            <text className="idg-output" x={100 + idx * 200} y="117" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)" fontWeight="600">found! stop here</text>
           </>
         )}
       </g>
@@ -987,79 +1030,79 @@ const InteractiveFindDiagram = (
 
 const InteractiveSpreadDiagram = (
   <svg viewBox="0 0 520 140" fill="none">
-    <text className="idg-anim" x="10" y="18" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">{"{ ...original, age: 40 }"}</text>
+    <text className="idg-title" x="10" y="18" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">{"{ ...original, age: 40 }"}</text>
     {/* Original object */}
-    <rect className="idg-anim" x="10" y="30" width="180" height="65" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
-    <text className="idg-anim" x="100" y="50" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">original</text>
-    <text className="idg-anim" x="50" y="70" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">name: "Alex"</text>
-    <text className="idg-anim" x="50" y="86" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">age: 39</text>
+    <rect className="idg-input" x="10" y="30" width="180" height="65" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
+    <text className="idg-input" x="100" y="50" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">original</text>
+    <text className="idg-input" x="50" y="70" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">name: "Alex"</text>
+    <text className="idg-input" x="50" y="86" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">age: 39</text>
     {/* Spread arrows */}
-    <path className="idg-anim" d="M195 48 Q230 30 260 48" stroke="var(--color-accent)" strokeWidth="1" strokeDasharray="4" fill="none" />
-    <path className="idg-anim" d="M195 78 Q230 95 260 78" stroke="var(--color-accent)" strokeWidth="1" strokeDasharray="4" fill="none" />
-    <text className="idg-anim" x="227" y="68" textAnchor="middle" fill="var(--color-accent)" fontSize="14" fontFamily="var(--font-mono)" fontWeight="700">...</text>
+    <path className="idg-arrow" d="M195 48 Q230 30 260 48" stroke="var(--color-accent)" strokeWidth="1" strokeDasharray="4" fill="none" />
+    <path className="idg-arrow" d="M195 78 Q230 95 260 78" stroke="var(--color-accent)" strokeWidth="1" strokeDasharray="4" fill="none" />
+    <text className="idg-process" x="227" y="68" textAnchor="middle" fill="var(--color-accent)" fontSize="14" fontFamily="var(--font-mono)" fontWeight="700">...</text>
     {/* New object */}
-    <rect className="idg-anim" x="260" y="30" width="200" height="65" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
-    <text className="idg-anim" x="360" y="50" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">updated (new copy)</text>
-    <text className="idg-anim" x="290" y="70" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">name: "Alex"</text>
-    <text className="idg-anim" x="290" y="86" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)" fontWeight="600">age: 40</text>
+    <rect className="idg-output" x="260" y="30" width="200" height="65" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
+    <text className="idg-output" x="360" y="50" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">updated (new copy)</text>
+    <text className="idg-output" x="290" y="70" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">name: "Alex"</text>
+    <text className="idg-output" x="290" y="86" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)" fontWeight="600">age: 40</text>
     {/* Override label */}
-    <rect className="idg-anim" x="380" y="77" width="70" height="18" rx="3" fill="var(--color-accent-dim)" stroke="var(--color-accent-border)" strokeWidth="1" />
-    <text className="idg-anim" x="415" y="90" textAnchor="middle" fill="var(--color-accent)" fontSize="8" fontFamily="var(--font-mono)">overridden</text>
+    <rect className="idg-process" x="380" y="77" width="70" height="18" rx="3" fill="var(--color-accent-dim)" stroke="var(--color-accent-border)" strokeWidth="1" />
+    <text className="idg-process" x="415" y="90" textAnchor="middle" fill="var(--color-accent)" fontSize="8" fontFamily="var(--font-mono)">overridden</text>
     {/* Bottom note */}
-    <text className="idg-anim" x="260" y="128" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">Original stays unchanged. Spread copies then overwrites.</text>
+    <text className="idg-note" x="260" y="128" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">Original stays unchanged. Spread copies then overwrites.</text>
   </svg>
 );
 
 const InteractiveDestructureDiagram = (
   <svg viewBox="0 0 520 140" fill="none">
-    <text className="idg-anim" x="10" y="18" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">{"const { name, role } = user"}</text>
+    <text className="idg-title" x="10" y="18" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">{"const { name, role } = user"}</text>
     {/* Object */}
-    <rect className="idg-anim" x="10" y="30" width="200" height="90" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
-    <text className="idg-anim" x="110" y="50" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">user object</text>
-    <text className="idg-anim" x="35" y="70" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)">name: "Alex"</text>
-    <text className="idg-anim" x="35" y="86" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">age: 39</text>
-    <text className="idg-anim" x="35" y="102" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)">role: "Engineer"</text>
+    <rect className="idg-input" x="10" y="30" width="200" height="90" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
+    <text className="idg-input" x="110" y="50" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">user object</text>
+    <text className="idg-input" x="35" y="70" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)">name: "Alex"</text>
+    <text className="idg-input" x="35" y="86" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">age: 39</text>
+    <text className="idg-input" x="35" y="102" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)">role: "Engineer"</text>
     {/* Arrows pulling values out */}
-    <line className="idg-anim" x1="215" y1="66" x2="280" y2="50" stroke="var(--color-accent)" strokeWidth="1.5" />
-    <polygon className="idg-anim" points="277,45 287,50 277,55" fill="var(--color-accent)" />
-    <line className="idg-anim" x1="215" y1="98" x2="280" y2="100" stroke="var(--color-accent)" strokeWidth="1.5" />
-    <polygon className="idg-anim" points="277,95 287,100 277,105" fill="var(--color-accent)" />
+    <line className="idg-arrow" x1="215" y1="66" x2="280" y2="50" stroke="var(--color-accent)" strokeWidth="1.5" />
+    <polygon className="idg-arrow" points="277,45 287,50 277,55" fill="var(--color-accent)" />
+    <line className="idg-arrow" x1="215" y1="98" x2="280" y2="100" stroke="var(--color-accent)" strokeWidth="1.5" />
+    <polygon className="idg-arrow" points="277,95 287,100 277,105" fill="var(--color-accent)" />
     {/* Extracted variables */}
-    <rect className="idg-anim" x="290" y="35" width="170" height="32" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
-    <text className="idg-anim" x="375" y="56" textAnchor="middle" fill="var(--color-accent)" fontSize="12" fontFamily="var(--font-mono)" fontWeight="600">name = "Alex"</text>
-    <rect className="idg-anim" x="290" y="82" width="170" height="32" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
-    <text className="idg-anim" x="375" y="103" textAnchor="middle" fill="var(--color-accent)" fontSize="12" fontFamily="var(--font-mono)" fontWeight="600">role = "Engineer"</text>
+    <rect className="idg-output" x="290" y="35" width="170" height="32" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
+    <text className="idg-output" x="375" y="56" textAnchor="middle" fill="var(--color-accent)" fontSize="12" fontFamily="var(--font-mono)" fontWeight="600">name = "Alex"</text>
+    <rect className="idg-output" x="290" y="82" width="170" height="32" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
+    <text className="idg-output" x="375" y="103" textAnchor="middle" fill="var(--color-accent)" fontSize="12" fontFamily="var(--font-mono)" fontWeight="600">role = "Engineer"</text>
     {/* age stays behind */}
-    <text className="idg-anim" x="110" y="130" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">age not extracted (not destructured)</text>
+    <text className="idg-note" x="110" y="130" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">age not extracted (not destructured)</text>
   </svg>
 );
 
 const InteractiveFunctionDiagram = (
   <svg viewBox="0 0 520 130" fill="none">
-    <text className="idg-anim" x="10" y="18" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">function add(a, b) {"{"} return a + b {"}"}</text>
+    <text className="idg-title" x="10" y="18" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">function add(a, b) {"{"} return a + b {"}"}</text>
     {/* Input args */}
-    <rect className="idg-anim" x="10" y="35" width="60" height="35" rx="4" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
-    <text className="idg-anim" x="40" y="58" textAnchor="middle" fill="var(--color-accent)" fontSize="14" fontFamily="var(--font-mono)" fontWeight="600">5</text>
-    <text className="idg-anim" x="40" y="84" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">a</text>
-    <rect className="idg-anim" x="85" y="35" width="60" height="35" rx="4" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
-    <text className="idg-anim" x="115" y="58" textAnchor="middle" fill="var(--color-accent)" fontSize="14" fontFamily="var(--font-mono)" fontWeight="600">3</text>
-    <text className="idg-anim" x="115" y="84" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">b</text>
+    <rect className="idg-input" x="10" y="35" width="60" height="35" rx="4" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
+    <text className="idg-input" x="40" y="58" textAnchor="middle" fill="var(--color-accent)" fontSize="14" fontFamily="var(--font-mono)" fontWeight="600">5</text>
+    <text className="idg-input" x="40" y="84" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">a</text>
+    <rect className="idg-input" x="85" y="35" width="60" height="35" rx="4" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
+    <text className="idg-input" x="115" y="58" textAnchor="middle" fill="var(--color-accent)" fontSize="14" fontFamily="var(--font-mono)" fontWeight="600">3</text>
+    <text className="idg-input" x="115" y="84" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">b</text>
     {/* Arrow into function */}
-    <line className="idg-anim" x1="155" y1="52" x2="190" y2="52" stroke="var(--color-accent)" strokeWidth="1.5" />
-    <polygon className="idg-anim" points="190,47 200,52 190,57" fill="var(--color-accent)" />
+    <line className="idg-arrow" x1="155" y1="52" x2="190" y2="52" stroke="var(--color-accent)" strokeWidth="1.5" />
+    <polygon className="idg-arrow" points="190,47 200,52 190,57" fill="var(--color-accent)" />
     {/* Function box */}
-    <rect className="idg-anim" x="205" y="30" width="140" height="45" rx="6" stroke="var(--color-accent)" strokeWidth="1.5" fill="none" />
-    <text className="idg-anim" x="275" y="48" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="10" fontFamily="var(--font-mono)">add(a, b)</text>
-    <text className="idg-anim" x="275" y="65" textAnchor="middle" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)">return a + b</text>
+    <rect className="idg-process" x="205" y="30" width="140" height="45" rx="6" stroke="var(--color-accent)" strokeWidth="1.5" fill="none" />
+    <text className="idg-process" x="275" y="48" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="10" fontFamily="var(--font-mono)">add(a, b)</text>
+    <text className="idg-process" x="275" y="65" textAnchor="middle" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)">return a + b</text>
     {/* Arrow out */}
-    <line className="idg-anim" x1="350" y1="52" x2="385" y2="52" stroke="var(--color-accent)" strokeWidth="1.5" />
-    <polygon className="idg-anim" points="385,47 395,52 385,57" fill="var(--color-accent)" />
+    <line className="idg-arrow" x1="350" y1="52" x2="385" y2="52" stroke="var(--color-accent)" strokeWidth="1.5" />
+    <polygon className="idg-arrow" points="385,47 395,52 385,57" fill="var(--color-accent)" />
     {/* Output */}
-    <rect className="idg-anim" x="400" y="35" width="70" height="35" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
-    <text className="idg-anim" x="435" y="58" textAnchor="middle" fill="var(--color-accent)" fontSize="16" fontFamily="var(--font-mono)" fontWeight="700">8</text>
-    <text className="idg-anim" x="435" y="84" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">result</text>
+    <rect className="idg-output" x="400" y="35" width="70" height="35" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
+    <text className="idg-output" x="435" y="58" textAnchor="middle" fill="var(--color-accent)" fontSize="16" fontFamily="var(--font-mono)" fontWeight="700">8</text>
+    <text className="idg-output" x="435" y="84" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">result</text>
     {/* Bottom */}
-    <text className="idg-anim" x="260" y="118" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">Data flows in through parameters, out through return.</text>
+    <text className="idg-note" x="260" y="118" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">Data flows in through parameters, out through return.</text>
   </svg>
 );
 
@@ -1067,93 +1110,93 @@ const InteractiveFunctionDiagram = (
 
 const InteractiveImperativeVsDeclarative = (
   <svg viewBox="0 0 520 150" fill="none">
-    <text className="idg-anim" x="130" y="15" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">IMPERATIVE (vanilla JS)</text>
-    <text className="idg-anim" x="390" y="15" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)">DECLARATIVE (React)</text>
+    <text className="idg-title" x="130" y="15" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">IMPERATIVE (vanilla JS)</text>
+    <text className="idg-title" x="390" y="15" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)">DECLARATIVE (React)</text>
     {/* Left: imperative steps */}
     {["1. Find element", "2. Read value", "3. Change DOM"].map((step, i) => (
       <g key={step}>
-        <rect className="idg-anim" x="30" y={28 + i * 38} width="200" height="30" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
-        <text className="idg-anim" x="130" y={48 + i * 38} textAnchor="middle" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">{step}</text>
-        {i < 2 && <line className="idg-anim" x1="130" y1={58 + i * 38} x2="130" y2={66 + i * 38} stroke="var(--color-border)" strokeWidth="1" />}
+        <rect className="idg-input" x="30" y={28 + i * 38} width="200" height="30" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
+        <text className="idg-input" x="130" y={48 + i * 38} textAnchor="middle" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">{step}</text>
+        {i < 2 && <line className="idg-input" x1="130" y1={58 + i * 38} x2="130" y2={66 + i * 38} stroke="var(--color-border)" strokeWidth="1" />}
       </g>
     ))}
     {/* Right: declarative */}
-    <rect className="idg-anim" x="290" y="28" width="200" height="30" rx="4" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
-    <text className="idg-anim" x="390" y="48" textAnchor="middle" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)">1. Set state</text>
-    <line className="idg-anim" x1="390" y1="58" x2="390" y2="70" stroke="var(--color-accent)" strokeWidth="1" />
-    <rect className="idg-anim" x="290" y="72" width="200" height="50" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="none" />
-    <text className="idg-anim" x="390" y="92" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="10" fontFamily="var(--font-mono)">React updates the DOM</text>
-    <text className="idg-anim" x="390" y="110" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">automatically</text>
-    <text className="idg-anim" x="260" y="143" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">You tell the browser what to change vs. what the result should look like.</text>
+    <rect className="idg-output" x="290" y="28" width="200" height="30" rx="4" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
+    <text className="idg-output" x="390" y="48" textAnchor="middle" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)">1. Set state</text>
+    <line className="idg-output" x1="390" y1="58" x2="390" y2="70" stroke="var(--color-accent)" strokeWidth="1" />
+    <rect className="idg-output" x="290" y="72" width="200" height="50" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="none" />
+    <text className="idg-output" x="390" y="92" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="10" fontFamily="var(--font-mono)">React updates the DOM</text>
+    <text className="idg-process" x="390" y="110" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">automatically</text>
+    <text className="idg-note" x="260" y="143" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">You tell the browser what to change vs. what the result should look like.</text>
   </svg>
 );
 
 const InteractiveEventComparison = (
   <svg viewBox="0 0 520 120" fill="none">
     {/* Vanilla */}
-    <text className="idg-anim" x="130" y="15" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">VANILLA JS</text>
-    <rect className="idg-anim" x="30" y="25" width="200" height="26" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
-    <text className="idg-anim" x="130" y="43" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="10" fontFamily="var(--font-mono)">querySelector("#btn")</text>
-    <line className="idg-anim" x1="130" y1="51" x2="130" y2="60" stroke="var(--color-border)" strokeWidth="1" />
-    <rect className="idg-anim" x="30" y="62" width="200" height="26" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
-    <text className="idg-anim" x="130" y="80" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="10" fontFamily="var(--font-mono)">addEventListener("click")</text>
-    <text className="idg-anim" x="130" y="106" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">2 steps, separate from markup</text>
+    <text className="idg-title" x="130" y="15" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">VANILLA JS</text>
+    <rect className="idg-input" x="30" y="25" width="200" height="26" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
+    <text className="idg-input" x="130" y="43" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="10" fontFamily="var(--font-mono)">querySelector("#btn")</text>
+    <line className="idg-input" x1="130" y1="51" x2="130" y2="60" stroke="var(--color-border)" strokeWidth="1" />
+    <rect className="idg-input" x="30" y="62" width="200" height="26" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
+    <text className="idg-input" x="130" y="80" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="10" fontFamily="var(--font-mono)">addEventListener("click")</text>
+    <text className="idg-note" x="130" y="106" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">2 steps, separate from markup</text>
     {/* React */}
-    <text className="idg-anim" x="390" y="15" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)">REACT</text>
-    <rect className="idg-anim" x="290" y="25" width="200" height="55" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
-    <text className="idg-anim" x="390" y="48" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)">{"<button onClick={fn}>"}</text>
-    <text className="idg-anim" x="390" y="68" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">handler lives with element</text>
-    <text className="idg-anim" x="390" y="106" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">1 step, inline in JSX</text>
+    <text className="idg-title" x="390" y="15" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)">REACT</text>
+    <rect className="idg-output" x="290" y="25" width="200" height="55" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
+    <text className="idg-output" x="390" y="48" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)">{"<button onClick={fn}>"}</text>
+    <text className="idg-process" x="390" y="68" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">handler lives with element</text>
+    <text className="idg-note" x="390" y="106" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">1 step, inline in JSX</text>
   </svg>
 );
 
 const InteractiveListRendering = (
   <svg viewBox="0 0 520 140" fill="none">
-    <text className="idg-anim" x="10" y="15" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">array.map() in JSX</text>
+    <text className="idg-title" x="10" y="15" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">array.map() in JSX</text>
     {/* Source array */}
     {["Apple", "Banana", "Cherry"].map((item, i) => (
-      <rect key={item} className="idg-anim" x={10 + i * 100} y="25" width="88" height="30" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
+      <rect key={item} className="idg-input" x={10 + i * 100} y="25" width="88" height="30" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
     ))}
     {["Apple", "Banana", "Cherry"].map((item, i) => (
-      <text key={`t-${item}`} className="idg-anim" x={54 + i * 100} y="45" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">{`"${item}"`}</text>
+      <text key={`t-${item}`} className="idg-input" x={54 + i * 100} y="45" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">{`"${item}"`}</text>
     ))}
     {/* Arrows */}
     {[0, 1, 2].map((i) => (
       <g key={`a-${i}`}>
-        <line className="idg-anim" x1={54 + i * 100} y1="58" x2={54 + i * 100} y2="75" stroke="var(--color-accent)" strokeWidth="1.5" />
-        <polygon className="idg-anim" points={`${49 + i * 100},73 ${54 + i * 100},80 ${59 + i * 100},73`} fill="var(--color-accent)" />
-        <text className="idg-anim" x={74 + i * 100} y="70" fill="var(--color-accent)" fontSize="8" fontFamily="var(--font-mono)">.map()</text>
+        <line className="idg-arrow" x1={54 + i * 100} y1="58" x2={54 + i * 100} y2="75" stroke="var(--color-accent)" strokeWidth="1.5" />
+        <polygon className="idg-arrow" points={`${49 + i * 100},73 ${54 + i * 100},80 ${59 + i * 100},73`} fill="var(--color-accent)" />
+        <text className="idg-process" x={74 + i * 100} y="70" fill="var(--color-accent)" fontSize="8" fontFamily="var(--font-mono)">.map()</text>
       </g>
     ))}
     {/* Output list items */}
     {["Apple", "Banana", "Cherry"].map((item, i) => (
       <g key={`li-${item}`}>
-        <rect className="idg-anim" x={10 + i * 100} y="84" width="88" height="30" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
-        <text className="idg-anim" x={54 + i * 100} y="104" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)">{`<li>${item}</li>`}</text>
+        <rect className="idg-output" x={10 + i * 100} y="84" width="88" height="30" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
+        <text className="idg-output" x={54 + i * 100} y="104" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)">{`<li>${item}</li>`}</text>
       </g>
     ))}
-    <text className="idg-anim" x="160" y="133" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">Each array item becomes a JSX element.</text>
+    <text className="idg-note" x="160" y="133" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">Each array item becomes a JSX element.</text>
   </svg>
 );
 
 const InteractiveConditionalRender = (
   <svg viewBox="0 0 520 140" fill="none">
-    <text className="idg-anim" x="10" y="15" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">conditional rendering</text>
+    <text className="idg-title" x="10" y="15" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">conditional rendering</text>
     {/* State box */}
-    <rect className="idg-anim" x="180" y="25" width="160" height="30" rx="4" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
-    <text className="idg-anim" x="260" y="45" textAnchor="middle" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)">isOpen = true / false</text>
+    <rect className="idg-input" x="180" y="25" width="160" height="30" rx="4" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
+    <text className="idg-input" x="260" y="45" textAnchor="middle" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)">isOpen = true / false</text>
     {/* Branch lines */}
-    <line className="idg-anim" x1="220" y1="55" x2="120" y2="80" stroke="var(--color-accent)" strokeWidth="1.5" />
-    <line className="idg-anim" x1="300" y1="55" x2="400" y2="80" stroke="var(--color-border)" strokeWidth="1.5" />
-    <text className="idg-anim" x="155" y="72" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">true</text>
-    <text className="idg-anim" x="350" y="72" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">false</text>
+    <line className="idg-arrow" x1="220" y1="55" x2="120" y2="80" stroke="var(--color-accent)" strokeWidth="1.5" />
+    <line className="idg-arrow" x1="300" y1="55" x2="400" y2="80" stroke="var(--color-border)" strokeWidth="1.5" />
+    <text className="idg-process" x="155" y="72" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">true</text>
+    <text className="idg-process" x="350" y="72" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">false</text>
     {/* True branch */}
-    <rect className="idg-anim" x="30" y="84" width="180" height="35" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
-    <text className="idg-anim" x="120" y="106" textAnchor="middle" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)">{"<Panel />"} renders</text>
+    <rect className="idg-output" x="30" y="84" width="180" height="35" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
+    <text className="idg-output" x="120" y="106" textAnchor="middle" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)">{"<Panel />"} renders</text>
     {/* False branch */}
-    <rect className="idg-anim" x="310" y="84" width="180" height="35" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
-    <text className="idg-anim" x="400" y="106" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="11" fontFamily="var(--font-mono)">nothing renders</text>
-    <text className="idg-anim" x="260" y="138" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">State controls what appears on screen.</text>
+    <rect className="idg-output" x="310" y="84" width="180" height="35" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
+    <text className="idg-output" x="400" y="106" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="11" fontFamily="var(--font-mono)">nothing renders</text>
+    <text className="idg-note" x="260" y="138" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">State controls what appears on screen.</text>
   </svg>
 );
 
@@ -1161,92 +1204,92 @@ const InteractiveConditionalRender = (
 
 const InteractivePropsFlow = (
   <svg viewBox="0 0 520 150" fill="none">
-    <text className="idg-anim" x="10" y="15" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">props flow one direction: parent → child</text>
+    <text className="idg-title" x="10" y="15" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">props flow one direction: parent → child</text>
     {/* Parent */}
-    <rect className="idg-anim" x="170" y="25" width="180" height="35" rx="6" stroke="var(--color-accent)" strokeWidth="1.5" fill="none" />
-    <text className="idg-anim" x="260" y="48" textAnchor="middle" fill="var(--color-accent)" fontSize="12" fontFamily="var(--font-mono)" fontWeight="600">{"<App />"}</text>
+    <rect className="idg-input" x="170" y="25" width="180" height="35" rx="6" stroke="var(--color-accent)" strokeWidth="1.5" fill="none" />
+    <text className="idg-input" x="260" y="48" textAnchor="middle" fill="var(--color-accent)" fontSize="12" fontFamily="var(--font-mono)" fontWeight="600">{"<App />"}</text>
     {/* Props flowing down */}
-    <line className="idg-anim" x1="200" y1="60" x2="120" y2="88" stroke="var(--color-accent)" strokeWidth="1.5" />
-    <polygon className="idg-anim" points="116,84 124,92 128,83" fill="var(--color-accent)" />
-    <text className="idg-anim" x="145" y="78" fill="var(--color-accent)" fontSize="8" fontFamily="var(--font-mono)">name="Alex"</text>
-    <line className="idg-anim" x1="320" y1="60" x2="400" y2="88" stroke="var(--color-accent)" strokeWidth="1.5" />
-    <polygon className="idg-anim" points="396,84 404,92 408,83" fill="var(--color-accent)" />
-    <text className="idg-anim" x="365" y="78" fill="var(--color-accent)" fontSize="8" fontFamily="var(--font-mono)">items={"{[]}"}</text>
+    <line className="idg-arrow" x1="200" y1="60" x2="120" y2="88" stroke="var(--color-accent)" strokeWidth="1.5" />
+    <polygon className="idg-arrow" points="116,84 124,92 128,83" fill="var(--color-accent)" />
+    <text className="idg-process" x="145" y="78" fill="var(--color-accent)" fontSize="8" fontFamily="var(--font-mono)">name="Alex"</text>
+    <line className="idg-arrow" x1="320" y1="60" x2="400" y2="88" stroke="var(--color-accent)" strokeWidth="1.5" />
+    <polygon className="idg-arrow" points="396,84 404,92 408,83" fill="var(--color-accent)" />
+    <text className="idg-process" x="365" y="78" fill="var(--color-accent)" fontSize="8" fontFamily="var(--font-mono)">items={"{[]}"}</text>
     {/* Children */}
-    <rect className="idg-anim" x="40" y="92" width="160" height="35" rx="4" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
-    <text className="idg-anim" x="120" y="114" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">{"<Header name={} />"}</text>
-    <rect className="idg-anim" x="320" y="92" width="160" height="35" rx="4" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
-    <text className="idg-anim" x="400" y="114" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">{"<List items={} />"}</text>
-    <text className="idg-anim" x="260" y="148" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">Data flows down. Children cannot send props back up.</text>
+    <rect className="idg-output" x="40" y="92" width="160" height="35" rx="4" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
+    <text className="idg-output" x="120" y="114" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">{"<Header name={} />"}</text>
+    <rect className="idg-output" x="320" y="92" width="160" height="35" rx="4" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
+    <text className="idg-output" x="400" y="114" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">{"<List items={} />"}</text>
+    <text className="idg-note" x="260" y="148" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">Data flows down. Children cannot send props back up.</text>
   </svg>
 );
 
 const InteractiveStateRender = (
   <svg viewBox="0 0 520 120" fill="none">
-    <text className="idg-anim" x="10" y="15" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">state change → re-render cycle</text>
+    <text className="idg-title" x="10" y="15" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">state change → re-render cycle</text>
     {/* Cycle */}
     {[{ label: "state = 0", x: 30 }, { label: "click +1", x: 170 }, { label: "setState(1)", x: 310 }].map((s, i) => (
       <g key={s.label}>
-        <rect className="idg-anim" x={s.x} y="30" width="120" height="35" rx="4" stroke={i === 2 ? "var(--color-accent)" : "var(--color-border)"} strokeWidth={i === 2 ? 1.5 : 1} fill={i === 2 ? "var(--color-accent-dim)" : "none"} />
-        <text className="idg-anim" x={s.x + 60} y="52" textAnchor="middle" fill={i === 2 ? "var(--color-accent)" : "var(--color-text-secondary)"} fontSize="11" fontFamily="var(--font-mono)">{s.label}</text>
+        <rect className={i === 0 ? "idg-input" : i === 1 ? "idg-process" : "idg-output"} x={s.x} y="30" width="120" height="35" rx="4" stroke={i === 2 ? "var(--color-accent)" : "var(--color-border)"} strokeWidth={i === 2 ? 1.5 : 1} fill={i === 2 ? "var(--color-accent-dim)" : "none"} />
+        <text className={i === 0 ? "idg-input" : i === 1 ? "idg-process" : "idg-output"} x={s.x + 60} y="52" textAnchor="middle" fill={i === 2 ? "var(--color-accent)" : "var(--color-text-secondary)"} fontSize="11" fontFamily="var(--font-mono)">{s.label}</text>
         {i < 2 && (
           <g>
-            <line className="idg-anim" x1={s.x + 125} y1="47" x2={s.x + 162} y2="47" stroke="var(--color-accent)" strokeWidth="1.5" />
-            <polygon className="idg-anim" points={`${s.x + 160},42 ${s.x + 168},47 ${s.x + 160},52`} fill="var(--color-accent)" />
+            <line className="idg-arrow" x1={s.x + 125} y1="47" x2={s.x + 162} y2="47" stroke="var(--color-accent)" strokeWidth="1.5" />
+            <polygon className="idg-arrow" points={`${s.x + 160},42 ${s.x + 168},47 ${s.x + 160},52`} fill="var(--color-accent)" />
           </g>
         )}
       </g>
     ))}
     {/* Re-render arrow looping back */}
-    <path className="idg-anim" d="M370 68 Q400 100 260 100 Q120 100 60 68" stroke="var(--color-accent)" strokeWidth="1.5" strokeDasharray="4" fill="none" />
-    <polygon className="idg-anim" points="55,70 60,62 65,70" fill="var(--color-accent)" />
-    <text className="idg-anim" x="260" y="95" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">re-render with new state</text>
+    <path className="idg-arrow" d="M370 68 Q400 100 260 100 Q120 100 60 68" stroke="var(--color-accent)" strokeWidth="1.5" strokeDasharray="4" fill="none" />
+    <polygon className="idg-arrow" points="55,70 60,62 65,70" fill="var(--color-accent)" />
+    <text className="idg-note" x="260" y="95" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">re-render with new state</text>
   </svg>
 );
 
 const InteractiveUseEffect = (
   <svg viewBox="0 0 520 120" fill="none">
-    <text className="idg-anim" x="10" y="15" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">useEffect timing</text>
+    <text className="idg-title" x="10" y="15" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">useEffect timing</text>
     {/* Timeline */}
-    <line className="idg-anim" x1="30" y1="55" x2="490" y2="55" stroke="var(--color-border)" strokeWidth="1" />
+    <line className="idg-arrow" x1="30" y1="55" x2="490" y2="55" stroke="var(--color-border)" strokeWidth="1" />
     {[{ label: "render", x: 80 }, { label: "DOM painted", x: 220 }, { label: "effect runs", x: 370 }].map((s, i) => (
       <g key={s.label}>
-        <circle className="idg-anim" cx={s.x} cy="55" r="6" fill={i === 2 ? "var(--color-accent)" : "var(--color-text-secondary)"} />
-        <text className="idg-anim" x={s.x} y="42" textAnchor="middle" fill={i === 2 ? "var(--color-accent)" : "var(--color-text-secondary)"} fontSize="10" fontFamily="var(--font-mono)">{s.label}</text>
+        <circle className={i === 2 ? "idg-output" : "idg-input"} cx={s.x} cy="55" r="6" fill={i === 2 ? "var(--color-accent)" : "var(--color-text-secondary)"} />
+        <text className={i === 2 ? "idg-output" : "idg-input"} x={s.x} y="42" textAnchor="middle" fill={i === 2 ? "var(--color-accent)" : "var(--color-text-secondary)"} fontSize="10" fontFamily="var(--font-mono)">{s.label}</text>
       </g>
     ))}
     {/* Dependency array */}
-    <rect className="idg-anim" x="310" y="72" width="130" height="24" rx="4" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
-    <text className="idg-anim" x="375" y="88" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">[deps] control re-run</text>
-    <text className="idg-anim" x="260" y="115" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">[] = once on mount. [count] = when count changes. No array = every render.</text>
+    <rect className="idg-process" x="310" y="72" width="130" height="24" rx="4" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
+    <text className="idg-process" x="375" y="88" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">[deps] control re-run</text>
+    <text className="idg-note" x="260" y="115" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">[] = once on mount. [count] = when count changes. No array = every render.</text>
   </svg>
 );
 
 const InteractiveKeysTracking = (
   <svg viewBox="0 0 520 140" fill="none">
-    <text className="idg-anim" x="10" y="15" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">keys help React track list items</text>
+    <text className="idg-title" x="10" y="15" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">keys help React track list items</text>
     {/* Before */}
-    <text className="idg-anim" x="130" y="35" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">before</text>
+    <text className="idg-input" x="130" y="35" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">before</text>
     {["A", "B", "C"].map((k, i) => (
       <g key={`b-${k}`}>
-        <rect className="idg-anim" x={30 + i * 80} y="42" width="65" height="28" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
-        <text className="idg-anim" x={62 + i * 80} y="61" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">key={`"${k}"`}</text>
+        <rect className="idg-input" x={30 + i * 80} y="42" width="65" height="28" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
+        <text className="idg-input" x={62 + i * 80} y="61" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">key={`"${k}"`}</text>
       </g>
     ))}
     {/* Arrows showing identity preserved */}
-    <line className="idg-anim" x1="62" y1="72" x2="142" y2="88" stroke="var(--color-accent)" strokeWidth="1" strokeDasharray="4" />
-    <line className="idg-anim" x1="142" y1="72" x2="62" y2="88" stroke="var(--color-accent)" strokeWidth="1" strokeDasharray="4" />
-    <line className="idg-anim" x1="222" y1="72" x2="222" y2="88" stroke="var(--color-accent)" strokeWidth="1" strokeDasharray="4" />
+    <line className="idg-arrow" x1="62" y1="72" x2="142" y2="88" stroke="var(--color-accent)" strokeWidth="1" strokeDasharray="4" />
+    <line className="idg-arrow" x1="142" y1="72" x2="62" y2="88" stroke="var(--color-accent)" strokeWidth="1" strokeDasharray="4" />
+    <line className="idg-arrow" x1="222" y1="72" x2="222" y2="88" stroke="var(--color-accent)" strokeWidth="1" strokeDasharray="4" />
     {/* After (reordered) */}
-    <text className="idg-anim" x="130" y="102" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">after reorder</text>
+    <text className="idg-output" x="130" y="102" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">after reorder</text>
     {["B", "A", "C"].map((k, i) => (
       <g key={`a-${k}`}>
-        <rect className="idg-anim" x={30 + i * 80} y="108" width="65" height="28" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
-        <text className="idg-anim" x={62 + i * 80} y="127" textAnchor="middle" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)">key={`"${k}"`}</text>
+        <rect className="idg-output" x={30 + i * 80} y="108" width="65" height="28" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
+        <text className="idg-output" x={62 + i * 80} y="127" textAnchor="middle" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)">key={`"${k}"`}</text>
       </g>
     ))}
-    <text className="idg-anim" x="380" y="80" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">Keys let React move</text>
-    <text className="idg-anim" x="380" y="93" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">elements, not rebuild.</text>
+    <text className="idg-note" x="380" y="80" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">Keys let React move</text>
+    <text className="idg-note" x="380" y="93" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">elements, not rebuild.</text>
   </svg>
 );
 
@@ -1254,70 +1297,70 @@ const InteractiveKeysTracking = (
 
 const InteractiveNesting = (
   <svg viewBox="0 0 520 150" fill="none">
-    <text className="idg-anim" x="10" y="15" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">SCSS nesting → compiled CSS</text>
+    <text className="idg-title" x="10" y="15" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">SCSS nesting → compiled CSS</text>
     {/* SCSS side */}
-    <rect className="idg-anim" x="10" y="25" width="210" height="115" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="none" />
-    <text className="idg-anim" x="25" y="45" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)">.card {"{"}</text>
-    <rect className="idg-anim" x="30" y="52" width="170" height="35" rx="3" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
-    <text className="idg-anim" x="45" y="68" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">.card-title {"{"}</text>
-    <rect className="idg-anim" x="55" y="76" width="125" height="20" rx="3" stroke="var(--color-border)" strokeWidth="1" fill="none" />
-    <text className="idg-anim" x="70" y="90" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)">&amp;:hover {"{"} ... {"}"}</text>
-    <text className="idg-anim" x="45" y="108" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">{"}"}</text>
-    <text className="idg-anim" x="25" y="130" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)">{"}"}</text>
+    <rect className="idg-input" x="10" y="25" width="210" height="115" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="none" />
+    <text className="idg-input" x="25" y="45" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)">.card {"{"}</text>
+    <rect className="idg-input" x="30" y="52" width="170" height="35" rx="3" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
+    <text className="idg-input" x="45" y="68" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">.card-title {"{"}</text>
+    <rect className="idg-input" x="55" y="76" width="125" height="20" rx="3" stroke="var(--color-border)" strokeWidth="1" fill="none" />
+    <text className="idg-input" x="70" y="90" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)">&amp;:hover {"{"} ... {"}"}</text>
+    <text className="idg-input" x="45" y="108" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">{"}"}</text>
+    <text className="idg-input" x="25" y="130" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)">{"}"}</text>
     {/* Arrow */}
-    <line className="idg-anim" x1="230" y1="82" x2="275" y2="82" stroke="var(--color-accent)" strokeWidth="1.5" />
-    <polygon className="idg-anim" points="275,77 285,82 275,87" fill="var(--color-accent)" />
-    <text className="idg-anim" x="258" y="75" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)">compiles</text>
+    <line className="idg-arrow" x1="230" y1="82" x2="275" y2="82" stroke="var(--color-accent)" strokeWidth="1.5" />
+    <polygon className="idg-arrow" points="275,77 285,82 275,87" fill="var(--color-accent)" />
+    <text className="idg-process" x="258" y="75" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)">compiles</text>
     {/* CSS output */}
-    <rect className="idg-anim" x="290" y="25" width="220" height="115" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
-    <text className="idg-anim" x="305" y="47" fill="var(--color-text-secondary)" fontSize="10" fontFamily="var(--font-mono)">.card {"{"} ... {"}"}</text>
-    <text className="idg-anim" x="305" y="72" fill="var(--color-text-secondary)" fontSize="10" fontFamily="var(--font-mono)">.card .card-title {"{"} ... {"}"}</text>
-    <text className="idg-anim" x="305" y="97" fill="var(--color-text-secondary)" fontSize="10" fontFamily="var(--font-mono)">.card .card-title:hover {"{"} ... {"}"}</text>
-    <text className="idg-anim" x="400" y="130" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)">flat selectors in output</text>
+    <rect className="idg-output" x="290" y="25" width="220" height="115" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
+    <text className="idg-output" x="305" y="47" fill="var(--color-text-secondary)" fontSize="10" fontFamily="var(--font-mono)">.card {"{"} ... {"}"}</text>
+    <text className="idg-output" x="305" y="72" fill="var(--color-text-secondary)" fontSize="10" fontFamily="var(--font-mono)">.card .card-title {"{"} ... {"}"}</text>
+    <text className="idg-output" x="305" y="97" fill="var(--color-text-secondary)" fontSize="10" fontFamily="var(--font-mono)">.card .card-title:hover {"{"} ... {"}"}</text>
+    <text className="idg-note" x="400" y="130" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)">flat selectors in output</text>
   </svg>
 );
 
 const InteractiveMixin = (
   <svg viewBox="0 0 520 140" fill="none">
-    <text className="idg-anim" x="10" y="15" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">@mixin → @include</text>
+    <text className="idg-title" x="10" y="15" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">@mixin → @include</text>
     {/* Mixin definition */}
-    <rect className="idg-anim" x="10" y="25" width="180" height="60" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="none" />
-    <text className="idg-anim" x="100" y="45" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)" fontWeight="600">@mixin flex-center</text>
-    <text className="idg-anim" x="100" y="62" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">display: flex</text>
-    <text className="idg-anim" x="100" y="76" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">align + justify: center</text>
+    <rect className="idg-input" x="10" y="25" width="180" height="60" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="none" />
+    <text className="idg-input" x="100" y="45" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)" fontWeight="600">@mixin flex-center</text>
+    <text className="idg-input" x="100" y="62" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">display: flex</text>
+    <text className="idg-input" x="100" y="76" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">align + justify: center</text>
     {/* Arrows to two uses */}
-    <line className="idg-anim" x1="195" y1="45" x2="250" y2="35" stroke="var(--color-accent)" strokeWidth="1" />
-    <line className="idg-anim" x1="195" y1="65" x2="250" y2="95" stroke="var(--color-accent)" strokeWidth="1" />
+    <line className="idg-arrow" x1="195" y1="45" x2="250" y2="35" stroke="var(--color-accent)" strokeWidth="1" />
+    <line className="idg-arrow" x1="195" y1="65" x2="250" y2="95" stroke="var(--color-accent)" strokeWidth="1" />
     {/* Usage blocks */}
-    <rect className="idg-anim" x="255" y="20" width="210" height="38" rx="4" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
-    <text className="idg-anim" x="360" y="36" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="10" fontFamily="var(--font-mono)">.hero {"{"} @include flex-center {"}"}</text>
-    <text className="idg-anim" x="360" y="50" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)">styles injected here</text>
-    <rect className="idg-anim" x="255" y="80" width="210" height="38" rx="4" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
-    <text className="idg-anim" x="360" y="96" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="10" fontFamily="var(--font-mono)">.modal {"{"} @include flex-center {"}"}</text>
-    <text className="idg-anim" x="360" y="110" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)">same styles, no repetition</text>
-    <text className="idg-anim" x="260" y="136" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">Define once, reuse anywhere.</text>
+    <rect className="idg-output" x="255" y="20" width="210" height="38" rx="4" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
+    <text className="idg-output" x="360" y="36" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="10" fontFamily="var(--font-mono)">.hero {"{"} @include flex-center {"}"}</text>
+    <text className="idg-process" x="360" y="50" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)">styles injected here</text>
+    <rect className="idg-output" x="255" y="80" width="210" height="38" rx="4" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
+    <text className="idg-output" x="360" y="96" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="10" fontFamily="var(--font-mono)">.modal {"{"} @include flex-center {"}"}</text>
+    <text className="idg-process" x="360" y="110" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)">same styles, no repetition</text>
+    <text className="idg-note" x="260" y="136" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">Define once, reuse anywhere.</text>
   </svg>
 );
 
 const InteractivePartials = (
   <svg viewBox="0 0 520 140" fill="none">
-    <text className="idg-anim" x="10" y="15" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">partials → main.scss</text>
+    <text className="idg-title" x="10" y="15" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">partials → main.scss</text>
     {/* Partial files */}
     {[{ name: "_variables.scss", y: 25, desc: "tokens" }, { name: "_base.scss", y: 62, desc: "reset" }, { name: "_shared.scss", y: 99, desc: "utilities" }].map((f) => (
       <g key={f.name}>
-        <rect className="idg-anim" x="10" y={f.y} width="170" height="28" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
-        <text className="idg-anim" x="20" y={f.y + 18} fill="var(--color-text-secondary)" fontSize="10" fontFamily="var(--font-mono)">{f.name}</text>
-        <text className="idg-anim" x="160" y={f.y + 18} textAnchor="end" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)">{f.desc}</text>
-        <line className="idg-anim" x1="185" y1={f.y + 14} x2="280" y2="68" stroke="var(--color-accent)" strokeWidth="1" />
+        <rect className="idg-input" x="10" y={f.y} width="170" height="28" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
+        <text className="idg-input" x="20" y={f.y + 18} fill="var(--color-text-secondary)" fontSize="10" fontFamily="var(--font-mono)">{f.name}</text>
+        <text className="idg-input" x="160" y={f.y + 18} textAnchor="end" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)">{f.desc}</text>
+        <line className="idg-arrow" x1="185" y1={f.y + 14} x2="280" y2="68" stroke="var(--color-accent)" strokeWidth="1" />
       </g>
     ))}
-    <polygon className="idg-anim" points="278,63 288,68 278,73" fill="var(--color-accent)" />
+    <polygon className="idg-arrow" points="278,63 288,68 278,73" fill="var(--color-accent)" />
     {/* Main file */}
-    <rect className="idg-anim" x="290" y="40" width="180" height="58" rx="6" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
-    <text className="idg-anim" x="380" y="60" textAnchor="middle" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)" fontWeight="600">main.scss</text>
-    <text className="idg-anim" x="380" y="78" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">@use for each partial</text>
-    <text className="idg-anim" x="380" y="90" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">combines everything</text>
-    <text className="idg-anim" x="260" y="130" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">Split styles into small files, import into one entry point.</text>
+    <rect className="idg-output" x="290" y="40" width="180" height="58" rx="6" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
+    <text className="idg-output" x="380" y="60" textAnchor="middle" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)" fontWeight="600">main.scss</text>
+    <text className="idg-output" x="380" y="78" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">@use for each partial</text>
+    <text className="idg-output" x="380" y="90" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">combines everything</text>
+    <text className="idg-note" x="260" y="130" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">Split styles into small files, import into one entry point.</text>
   </svg>
 );
 
@@ -1325,57 +1368,57 @@ const InteractivePartials = (
 
 const InteractiveSemanticHtml = (
   <svg viewBox="0 0 520 130" fill="none">
-    <text className="idg-anim" x="10" y="15" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">semantic HTML vs. generic divs</text>
+    <text className="idg-title" x="10" y="15" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">semantic HTML vs. generic divs</text>
     {/* Bad */}
-    <rect className="idg-anim" x="10" y="28" width="240" height="90" rx="4" stroke="#ff5370" strokeWidth="1" fill="none" />
-    <text className="idg-anim" x="130" y="46" textAnchor="middle" fill="#ff5370" fontSize="10" fontFamily="var(--font-mono)" fontWeight="600">{"<div onclick>"}</text>
-    <text className="idg-anim" x="130" y="66" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">no keyboard support</text>
-    <text className="idg-anim" x="130" y="80" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">no screen reader label</text>
-    <text className="idg-anim" x="130" y="94" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">no focus management</text>
-    <text className="idg-anim" x="130" y="111" textAnchor="middle" fill="#ff5370" fontSize="9" fontFamily="var(--font-mono)">you build it all manually</text>
+    <rect className="idg-input" x="10" y="28" width="240" height="90" rx="4" stroke="#ff5370" strokeWidth="1" fill="none" />
+    <text className="idg-input" x="130" y="46" textAnchor="middle" fill="#ff5370" fontSize="10" fontFamily="var(--font-mono)" fontWeight="600">{"<div onclick>"}</text>
+    <text className="idg-input" x="130" y="66" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">no keyboard support</text>
+    <text className="idg-input" x="130" y="80" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">no screen reader label</text>
+    <text className="idg-input" x="130" y="94" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">no focus management</text>
+    <text className="idg-process" x="130" y="111" textAnchor="middle" fill="#ff5370" fontSize="9" fontFamily="var(--font-mono)">you build it all manually</text>
     {/* Good */}
-    <rect className="idg-anim" x="270" y="28" width="240" height="90" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
-    <text className="idg-anim" x="390" y="46" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)" fontWeight="600">{"<button>"}</text>
-    <text className="idg-anim" x="390" y="66" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">Enter + Space to activate</text>
-    <text className="idg-anim" x="390" y="80" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">announced as "button"</text>
-    <text className="idg-anim" x="390" y="94" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">focusable by default</text>
-    <text className="idg-anim" x="390" y="111" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">all free, built in</text>
+    <rect className="idg-output" x="270" y="28" width="240" height="90" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
+    <text className="idg-output" x="390" y="46" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)" fontWeight="600">{"<button>"}</text>
+    <text className="idg-output" x="390" y="66" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">Enter + Space to activate</text>
+    <text className="idg-output" x="390" y="80" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">announced as "button"</text>
+    <text className="idg-output" x="390" y="94" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">focusable by default</text>
+    <text className="idg-process" x="390" y="111" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">all free, built in</text>
   </svg>
 );
 
 const InteractiveContrast = (
   <svg viewBox="0 0 520 110" fill="none">
-    <text className="idg-anim" x="10" y="15" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">colour contrast comparison</text>
+    <text className="idg-title" x="10" y="15" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">colour contrast comparison</text>
     {/* Fail */}
-    <rect className="idg-anim" x="10" y="28" width="240" height="50" rx="4" fill="#ffffff" stroke="#ddd" strokeWidth="1" />
-    <text className="idg-anim" x="130" y="58" textAnchor="middle" fill="#aaaaaa" fontSize="14" fontFamily="var(--font-body)">Light grey on white</text>
-    <text className="idg-anim" x="130" y="96" textAnchor="middle" fill="#ff5370" fontSize="10" fontFamily="var(--font-mono)">ratio 2.3:1 - FAIL</text>
+    <rect className="idg-input" x="10" y="28" width="240" height="50" rx="4" fill="#ffffff" stroke="#ddd" strokeWidth="1" />
+    <text className="idg-input" x="130" y="58" textAnchor="middle" fill="#aaaaaa" fontSize="14" fontFamily="var(--font-body)">Light grey on white</text>
+    <text className="idg-process" x="130" y="96" textAnchor="middle" fill="#ff5370" fontSize="10" fontFamily="var(--font-mono)">ratio 2.3:1 - FAIL</text>
     {/* Pass */}
-    <rect className="idg-anim" x="270" y="28" width="240" height="50" rx="4" fill="#0b0b0b" stroke="var(--color-border)" strokeWidth="1" />
-    <text className="idg-anim" x="390" y="58" textAnchor="middle" fill="#f2f2ee" fontSize="14" fontFamily="var(--font-body)">Light text on dark</text>
-    <text className="idg-anim" x="390" y="96" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)">ratio 18.1:1 - PASS AA</text>
+    <rect className="idg-output" x="270" y="28" width="240" height="50" rx="4" fill="#0b0b0b" stroke="var(--color-border)" strokeWidth="1" />
+    <text className="idg-output" x="390" y="58" textAnchor="middle" fill="#f2f2ee" fontSize="14" fontFamily="var(--font-body)">Light text on dark</text>
+    <text className="idg-process" x="390" y="96" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)">ratio 18.1:1 - PASS AA</text>
   </svg>
 );
 
 const InteractiveFocusOrder = (
   <svg viewBox="0 0 520 120" fill="none">
-    <text className="idg-anim" x="10" y="15" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">Tab key moves through interactive elements</text>
+    <text className="idg-title" x="10" y="15" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">Tab key moves through interactive elements</text>
     {/* Elements in tab order */}
     {[{ label: "Logo link", x: 10 }, { label: "Nav link", x: 120 }, { label: "Button", x: 230 }, { label: "Input", x: 340 }].map((el, i) => (
       <g key={el.label}>
-        <rect className="idg-anim" x={el.x} y="30" width="95" height="35" rx="4" stroke={i === 2 ? "var(--color-accent)" : "var(--color-border)"} strokeWidth={i === 2 ? 2 : 1} fill={i === 2 ? "var(--color-accent-dim)" : "none"} />
-        <text className="idg-anim" x={el.x + 48} y="52" textAnchor="middle" fill={i === 2 ? "var(--color-accent)" : "var(--color-text-secondary)"} fontSize="10" fontFamily="var(--font-mono)">{el.label}</text>
-        {i === 2 && <text className="idg-anim" x={el.x + 48} y="80" textAnchor="middle" fill="var(--color-accent)" fontSize="8" fontFamily="var(--font-mono)">:focus-visible</text>}
+        <rect className={i === 2 ? "idg-output" : "idg-input"} x={el.x} y="30" width="95" height="35" rx="4" stroke={i === 2 ? "var(--color-accent)" : "var(--color-border)"} strokeWidth={i === 2 ? 2 : 1} fill={i === 2 ? "var(--color-accent-dim)" : "none"} />
+        <text className={i === 2 ? "idg-output" : "idg-input"} x={el.x + 48} y="52" textAnchor="middle" fill={i === 2 ? "var(--color-accent)" : "var(--color-text-secondary)"} fontSize="10" fontFamily="var(--font-mono)">{el.label}</text>
+        {i === 2 && <text className="idg-process" x={el.x + 48} y="80" textAnchor="middle" fill="var(--color-accent)" fontSize="8" fontFamily="var(--font-mono)">:focus-visible</text>}
         {i < 3 && (
           <g>
-            <line className="idg-anim" x1={el.x + 100} y1="47" x2={el.x + 115} y2="47" stroke="var(--color-accent)" strokeWidth="1" />
-            <polygon className="idg-anim" points={`${el.x + 113},43 ${el.x + 120},47 ${el.x + 113},51`} fill="var(--color-accent)" />
-            <text className="idg-anim" x={el.x + 108} y="40" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="7" fontFamily="var(--font-mono)">Tab</text>
+            <line className="idg-arrow" x1={el.x + 100} y1="47" x2={el.x + 115} y2="47" stroke="var(--color-accent)" strokeWidth="1" />
+            <polygon className="idg-arrow" points={`${el.x + 113},43 ${el.x + 120},47 ${el.x + 113},51`} fill="var(--color-accent)" />
+            <text className="idg-process" x={el.x + 108} y="40" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="7" fontFamily="var(--font-mono)">Tab</text>
           </g>
         )}
       </g>
     ))}
-    <text className="idg-anim" x="260" y="110" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">Every interactive element must be reachable and have a visible focus indicator.</text>
+    <text className="idg-note" x="260" y="110" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">Every interactive element must be reachable and have a visible focus indicator.</text>
   </svg>
 );
 
@@ -1383,39 +1426,39 @@ const InteractiveFocusOrder = (
 
 const InteractiveVariables = (
   <svg viewBox="0 0 520 110" fill="none">
-    <text className="idg-anim" x="10" y="15" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">let vs. const</text>
+    <text className="idg-title" x="10" y="15" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">let vs. const</text>
     {/* let */}
-    <rect className="idg-anim" x="10" y="30" width="220" height="65" rx="4" stroke="var(--color-accent-border)" strokeWidth="1" fill="none" />
-    <text className="idg-anim" x="120" y="48" textAnchor="middle" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)" fontWeight="600">let score = 0</text>
-    <line className="idg-anim" x1="120" y1="55" x2="120" y2="65" stroke="var(--color-accent)" strokeWidth="1" />
-    <text className="idg-anim" x="120" y="78" textAnchor="middle" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)">score = 10</text>
-    <text className="idg-anim" x="120" y="88" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)">can change</text>
+    <rect className="idg-input" x="10" y="30" width="220" height="65" rx="4" stroke="var(--color-accent-border)" strokeWidth="1" fill="none" />
+    <text className="idg-input" x="120" y="48" textAnchor="middle" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)" fontWeight="600">let score = 0</text>
+    <line className="idg-input" x1="120" y1="55" x2="120" y2="65" stroke="var(--color-accent)" strokeWidth="1" />
+    <text className="idg-output" x="120" y="78" textAnchor="middle" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)">score = 10</text>
+    <text className="idg-note" x="120" y="88" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)">can change</text>
     {/* const */}
-    <rect className="idg-anim" x="280" y="30" width="220" height="65" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
-    <text className="idg-anim" x="390" y="48" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)" fontWeight="600">const name = "Alex"</text>
-    <line className="idg-anim" x1="390" y1="55" x2="390" y2="65" stroke="#ff5370" strokeWidth="1" />
-    <text className="idg-anim" x="390" y="78" textAnchor="middle" fill="#ff5370" fontSize="11" fontFamily="var(--font-mono)">name = "Sam"</text>
-    <text className="idg-anim" x="390" y="88" textAnchor="middle" fill="#ff5370" fontSize="8" fontFamily="var(--font-mono)">error: cannot reassign</text>
+    <rect className="idg-input" x="280" y="30" width="220" height="65" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
+    <text className="idg-input" x="390" y="48" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)" fontWeight="600">const name = "Alex"</text>
+    <line className="idg-input" x1="390" y1="55" x2="390" y2="65" stroke="#ff5370" strokeWidth="1" />
+    <text className="idg-process" x="390" y="78" textAnchor="middle" fill="#ff5370" fontSize="11" fontFamily="var(--font-mono)">name = "Sam"</text>
+    <text className="idg-note" x="390" y="88" textAnchor="middle" fill="#ff5370" fontSize="8" fontFamily="var(--font-mono)">error: cannot reassign</text>
   </svg>
 );
 
 const InteractiveConditional = (
   <svg viewBox="0 0 520 130" fill="none">
-    <text className="idg-anim" x="10" y="15" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">if / else decision flow</text>
+    <text className="idg-title" x="10" y="15" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">if / else decision flow</text>
     {/* Condition */}
-    <rect className="idg-anim" x="170" y="25" width="180" height="30" rx="15" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
-    <text className="idg-anim" x="260" y="45" textAnchor="middle" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)">age &gt;= 18 ?</text>
+    <rect className="idg-input" x="170" y="25" width="180" height="30" rx="15" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
+    <text className="idg-input" x="260" y="45" textAnchor="middle" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)">age &gt;= 18 ?</text>
     {/* Branches */}
-    <line className="idg-anim" x1="210" y1="55" x2="120" y2="78" stroke="var(--color-accent)" strokeWidth="1.5" />
-    <line className="idg-anim" x1="310" y1="55" x2="400" y2="78" stroke="var(--color-border)" strokeWidth="1.5" />
-    <text className="idg-anim" x="150" y="70" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">true</text>
-    <text className="idg-anim" x="358" y="70" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">false</text>
+    <line className="idg-arrow" x1="210" y1="55" x2="120" y2="78" stroke="var(--color-accent)" strokeWidth="1.5" />
+    <line className="idg-arrow" x1="310" y1="55" x2="400" y2="78" stroke="var(--color-border)" strokeWidth="1.5" />
+    <text className="idg-process" x="150" y="70" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">true</text>
+    <text className="idg-process" x="358" y="70" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">false</text>
     {/* True */}
-    <rect className="idg-anim" x="30" y="82" width="180" height="32" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
-    <text className="idg-anim" x="120" y="103" textAnchor="middle" fill="var(--color-accent)" fontSize="12" fontFamily="var(--font-mono)" fontWeight="600">"Adult"</text>
+    <rect className="idg-output" x="30" y="82" width="180" height="32" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
+    <text className="idg-output" x="120" y="103" textAnchor="middle" fill="var(--color-accent)" fontSize="12" fontFamily="var(--font-mono)" fontWeight="600">"Adult"</text>
     {/* False */}
-    <rect className="idg-anim" x="310" y="82" width="180" height="32" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
-    <text className="idg-anim" x="400" y="103" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="12" fontFamily="var(--font-mono)">"Minor"</text>
+    <rect className="idg-output" x="310" y="82" width="180" height="32" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
+    <text className="idg-output" x="400" y="103" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="12" fontFamily="var(--font-mono)">"Minor"</text>
   </svg>
 );
 
