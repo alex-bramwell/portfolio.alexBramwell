@@ -132,15 +132,73 @@ function CodeToggle({ js, ts, id }) {
   );
 }
 
-function renderBody(body, codeToggles) {
+function InteractiveDiagram({ diagram }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const contentRef = useRef(null);
+  const { isReduced } = useTheme();
+
+  useEffect(() => {
+    if (!isOpen || !contentRef.current || isReduced) return;
+    const ctx = gsap.context(() => {
+      gsap.fromTo(contentRef.current, { height: 0, opacity: 0 }, {
+        height: "auto", opacity: 1, duration: 0.4, ease: "power2.out",
+      });
+      // Animate diagram elements after container opens
+      gsap.fromTo(".idg-anim", { opacity: 0, y: 8 }, {
+        opacity: 1, y: 0, duration: 0.35, stagger: 0.07, delay: 0.25, ease: "power2.out",
+      });
+    }, contentRef);
+    return () => ctx.revert();
+  }, [isOpen, isReduced]);
+
+  const handleToggle = () => {
+    if (isOpen && contentRef.current && !isReduced) {
+      gsap.to(contentRef.current, {
+        height: 0, opacity: 0, duration: 0.3, ease: "power2.in",
+        onComplete: () => setIsOpen(false),
+      });
+    } else {
+      setIsOpen(!isOpen);
+    }
+  };
+
+  return (
+    <div className={`am-interactive ${isOpen ? "am-interactive-open" : ""}`}>
+      <button className="am-interactive-btn" onClick={handleToggle} aria-label={isOpen ? "Hide diagram" : "Show diagram"}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="16" x2="12" y2="11" />
+          <circle cx="12" cy="8" r="0.5" fill="currentColor" />
+        </svg>
+        <span>{isOpen ? "Hide visual" : "See it visually"}</span>
+      </button>
+      {isOpen && (
+        <div className="am-interactive-content" ref={contentRef} style={isReduced ? undefined : { height: 0, opacity: 0 }}>
+          {diagram}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function renderBody(body, codeToggles, interactives) {
   const blocks = body.split("\n\n");
   const result = [];
   let i = 0;
 
   while (i < blocks.length) {
+    // Check for interactive placeholder
+    const interactiveMatch = blocks[i].match(/^\{\{interactive:(\d+)\}\}$/);
+    if (interactiveMatch && interactives) {
+      const idx = parseInt(interactiveMatch[1], 10);
+      const diagram = interactives[idx];
+      if (diagram) {
+        result.push(<InteractiveDiagram key={`interactive-${i}`} diagram={diagram} />);
+      }
+      i++;
     // Check for toggle placeholder
-    const toggleMatch = blocks[i].match(/^\{\{toggle:(\d+)\}\}$/);
-    if (toggleMatch && codeToggles) {
+    } else if (blocks[i].match(/^\{\{toggle:(\d+)\}\}$/) && codeToggles) {
+      const toggleMatch = blocks[i].match(/^\{\{toggle:(\d+)\}\}$/);
       const idx = parseInt(toggleMatch[1], 10);
       const toggle = codeToggles[idx];
       if (toggle) {
@@ -832,6 +890,176 @@ const TsDiagramNarrowing = (
     <rect x="330" y="148" width="180" height="35" rx="6" stroke="var(--color-border)" strokeWidth="1" fill="none" />
     <text x="420" y="171" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="12" fontFamily="var(--font-mono)">value<tspan fill="#89ddff">:</tspan> <tspan fill="#ffcb6b">number</tspan></text>
     <text x="420" y="200" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">narrowed - safe to use .toFixed()</text>
+  </svg>
+);
+
+/* ---- Interactive diagrams for JS/TS articles ---- */
+
+const InteractiveMapDiagram = (
+  <svg viewBox="0 0 520 140" fill="none">
+    {/* Input array */}
+    <text className="idg-anim" x="10" y="18" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">.map(n =&gt; n * 2)</text>
+    {[1, 2, 3, 4].map((n, idx) => (
+      <g key={n}>
+        <rect className="idg-anim" x={10 + idx * 65} y="30" width="52" height="36" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
+        <text className="idg-anim" x={36 + idx * 65} y="54" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="16" fontFamily="var(--font-mono)">{n}</text>
+      </g>
+    ))}
+    {/* Arrows */}
+    {[0, 1, 2, 3].map((idx) => (
+      <g key={`arrow-${idx}`}>
+        <line className="idg-anim" x1={36 + idx * 65} y1="70" x2={36 + idx * 65} y2="88" stroke="var(--color-accent)" strokeWidth="1.5" />
+        <polygon className="idg-anim" points={`${31 + idx * 65},85 ${36 + idx * 65},93 ${41 + idx * 65},85`} fill="var(--color-accent)" />
+        <text className="idg-anim" x={56 + idx * 65} y="82" fill="var(--color-accent)" fontSize="8" fontFamily="var(--font-mono)">x2</text>
+      </g>
+    ))}
+    {/* Output array */}
+    {[2, 4, 6, 8].map((n, idx) => (
+      <g key={`out-${n}`}>
+        <rect className="idg-anim" x={10 + idx * 65} y="96" width="52" height="36" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
+        <text className="idg-anim" x={36 + idx * 65} y="120" textAnchor="middle" fill="var(--color-accent)" fontSize="16" fontFamily="var(--font-mono)" fontWeight="600">{n}</text>
+      </g>
+    ))}
+    {/* Labels */}
+    <text className="idg-anim" x="380" y="53" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">input</text>
+    <text className="idg-anim" x="380" y="119" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)">output</text>
+  </svg>
+);
+
+const InteractiveFilterDiagram = (
+  <svg viewBox="0 0 520 140" fill="none">
+    <text className="idg-anim" x="10" y="18" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">.filter(w =&gt; w.length &lt;= 3)</text>
+    {/* Input */}
+    {["hello", "hi", "hey", "howdy"].map((w, idx) => {
+      const keeps = w.length <= 3;
+      return (
+        <g key={w}>
+          <rect className="idg-anim" x={10 + idx * 120} y="30" width="105" height="36" rx="4" stroke={keeps ? "var(--color-accent)" : "var(--color-border)"} strokeWidth={keeps ? 1.5 : 1} fill="none" />
+          <text className="idg-anim" x={62 + idx * 120} y="54" textAnchor="middle" fill={keeps ? "var(--color-accent)" : "var(--color-text-disabled)"} fontSize="13" fontFamily="var(--font-mono)">{`"${w}"`}</text>
+        </g>
+      );
+    })}
+    {/* Arrows for kept items */}
+    {[1, 2].map((idx, pos) => (
+      <g key={`fa-${idx}`}>
+        <line className="idg-anim" x1={62 + idx * 120} y1="70" x2={36 + pos * 120} y2="88" stroke="var(--color-accent)" strokeWidth="1.5" />
+        <polygon className="idg-anim" points={`${31 + pos * 120},85 ${36 + pos * 120},93 ${41 + pos * 120},85`} fill="var(--color-accent)" />
+      </g>
+    ))}
+    {/* Crossed out items */}
+    {[0, 3].map((idx) => (
+      <g key={`fx-${idx}`}>
+        <line className="idg-anim" x1={25 + idx * 120} y1="72" x2={40 + idx * 120} y2="86" stroke="#ff5370" strokeWidth="1.5" opacity="0.6" />
+        <line className="idg-anim" x1={40 + idx * 120} y1="72" x2={25 + idx * 120} y2="86" stroke="#ff5370" strokeWidth="1.5" opacity="0.6" />
+      </g>
+    ))}
+    {/* Output */}
+    {["hi", "hey"].map((w, pos) => (
+      <g key={`fo-${w}`}>
+        <rect className="idg-anim" x={10 + pos * 120} y="96" width="105" height="36" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
+        <text className="idg-anim" x={62 + pos * 120} y="120" textAnchor="middle" fill="var(--color-accent)" fontSize="13" fontFamily="var(--font-mono)" fontWeight="600">{`"${w}"`}</text>
+      </g>
+    ))}
+  </svg>
+);
+
+const InteractiveFindDiagram = (
+  <svg viewBox="0 0 520 130" fill="none">
+    <text className="idg-anim" x="10" y="18" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">.find(p =&gt; p.name === "Sam")</text>
+    {/* Array items */}
+    {[{ name: "Alex", found: false }, { name: "Sam", found: true }].map((p, idx) => (
+      <g key={p.name}>
+        <rect className="idg-anim" x={10 + idx * 200} y="30" width="180" height="40" rx="4" stroke={p.found ? "var(--color-accent)" : "var(--color-border)"} strokeWidth={p.found ? 1.5 : 1} fill={p.found ? "var(--color-accent-dim)" : "none"} />
+        <text className="idg-anim" x={100 + idx * 200} y="56" textAnchor="middle" fill={p.found ? "var(--color-accent)" : "var(--color-text-secondary)"} fontSize="12" fontFamily="var(--font-mono)">{`{ name: "${p.name}", age: ${p.name === "Alex" ? 39 : 28} }`}</text>
+        {!p.found && <text className="idg-anim" x={100 + idx * 200} y="88" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">skip</text>}
+        {p.found && (
+          <>
+            <line className="idg-anim" x1={100 + idx * 200} y1="74" x2={100 + idx * 200} y2="90" stroke="var(--color-accent)" strokeWidth="1.5" />
+            <polygon className="idg-anim" points={`${95 + idx * 200},88 ${100 + idx * 200},96 ${105 + idx * 200},88`} fill="var(--color-accent)" />
+            <rect className="idg-anim" x={30 + idx * 200} y="98" width="140" height="28" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
+            <text className="idg-anim" x={100 + idx * 200} y="117" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)" fontWeight="600">found! stop here</text>
+          </>
+        )}
+      </g>
+    ))}
+  </svg>
+);
+
+const InteractiveSpreadDiagram = (
+  <svg viewBox="0 0 520 140" fill="none">
+    <text className="idg-anim" x="10" y="18" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">{"{ ...original, age: 40 }"}</text>
+    {/* Original object */}
+    <rect className="idg-anim" x="10" y="30" width="180" height="65" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
+    <text className="idg-anim" x="100" y="50" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">original</text>
+    <text className="idg-anim" x="50" y="70" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">name: "Alex"</text>
+    <text className="idg-anim" x="50" y="86" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">age: 39</text>
+    {/* Spread arrows */}
+    <path className="idg-anim" d="M195 48 Q230 30 260 48" stroke="var(--color-accent)" strokeWidth="1" strokeDasharray="4" fill="none" />
+    <path className="idg-anim" d="M195 78 Q230 95 260 78" stroke="var(--color-accent)" strokeWidth="1" strokeDasharray="4" fill="none" />
+    <text className="idg-anim" x="227" y="68" textAnchor="middle" fill="var(--color-accent)" fontSize="14" fontFamily="var(--font-mono)" fontWeight="700">...</text>
+    {/* New object */}
+    <rect className="idg-anim" x="260" y="30" width="200" height="65" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
+    <text className="idg-anim" x="360" y="50" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">updated (new copy)</text>
+    <text className="idg-anim" x="290" y="70" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">name: "Alex"</text>
+    <text className="idg-anim" x="290" y="86" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)" fontWeight="600">age: 40</text>
+    {/* Override label */}
+    <rect className="idg-anim" x="380" y="77" width="70" height="18" rx="3" fill="var(--color-accent-dim)" stroke="var(--color-accent-border)" strokeWidth="1" />
+    <text className="idg-anim" x="415" y="90" textAnchor="middle" fill="var(--color-accent)" fontSize="8" fontFamily="var(--font-mono)">overridden</text>
+    {/* Bottom note */}
+    <text className="idg-anim" x="260" y="128" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">Original stays unchanged. Spread copies then overwrites.</text>
+  </svg>
+);
+
+const InteractiveDestructureDiagram = (
+  <svg viewBox="0 0 520 140" fill="none">
+    <text className="idg-anim" x="10" y="18" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">{"const { name, role } = user"}</text>
+    {/* Object */}
+    <rect className="idg-anim" x="10" y="30" width="200" height="90" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
+    <text className="idg-anim" x="110" y="50" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">user object</text>
+    <text className="idg-anim" x="35" y="70" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)">name: "Alex"</text>
+    <text className="idg-anim" x="35" y="86" fill="var(--color-text-secondary)" fontSize="11" fontFamily="var(--font-mono)">age: 39</text>
+    <text className="idg-anim" x="35" y="102" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)">role: "Engineer"</text>
+    {/* Arrows pulling values out */}
+    <line className="idg-anim" x1="215" y1="66" x2="280" y2="50" stroke="var(--color-accent)" strokeWidth="1.5" />
+    <polygon className="idg-anim" points="277,45 287,50 277,55" fill="var(--color-accent)" />
+    <line className="idg-anim" x1="215" y1="98" x2="280" y2="100" stroke="var(--color-accent)" strokeWidth="1.5" />
+    <polygon className="idg-anim" points="277,95 287,100 277,105" fill="var(--color-accent)" />
+    {/* Extracted variables */}
+    <rect className="idg-anim" x="290" y="35" width="170" height="32" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
+    <text className="idg-anim" x="375" y="56" textAnchor="middle" fill="var(--color-accent)" fontSize="12" fontFamily="var(--font-mono)" fontWeight="600">name = "Alex"</text>
+    <rect className="idg-anim" x="290" y="82" width="170" height="32" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
+    <text className="idg-anim" x="375" y="103" textAnchor="middle" fill="var(--color-accent)" fontSize="12" fontFamily="var(--font-mono)" fontWeight="600">role = "Engineer"</text>
+    {/* age stays behind */}
+    <text className="idg-anim" x="110" y="130" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">age not extracted (not destructured)</text>
+  </svg>
+);
+
+const InteractiveFunctionDiagram = (
+  <svg viewBox="0 0 520 130" fill="none">
+    <text className="idg-anim" x="10" y="18" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">function add(a, b) {"{"} return a + b {"}"}</text>
+    {/* Input args */}
+    <rect className="idg-anim" x="10" y="35" width="60" height="35" rx="4" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
+    <text className="idg-anim" x="40" y="58" textAnchor="middle" fill="var(--color-accent)" fontSize="14" fontFamily="var(--font-mono)" fontWeight="600">5</text>
+    <text className="idg-anim" x="40" y="84" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">a</text>
+    <rect className="idg-anim" x="85" y="35" width="60" height="35" rx="4" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
+    <text className="idg-anim" x="115" y="58" textAnchor="middle" fill="var(--color-accent)" fontSize="14" fontFamily="var(--font-mono)" fontWeight="600">3</text>
+    <text className="idg-anim" x="115" y="84" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">b</text>
+    {/* Arrow into function */}
+    <line className="idg-anim" x1="155" y1="52" x2="190" y2="52" stroke="var(--color-accent)" strokeWidth="1.5" />
+    <polygon className="idg-anim" points="190,47 200,52 190,57" fill="var(--color-accent)" />
+    {/* Function box */}
+    <rect className="idg-anim" x="205" y="30" width="140" height="45" rx="6" stroke="var(--color-accent)" strokeWidth="1.5" fill="none" />
+    <text className="idg-anim" x="275" y="48" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="10" fontFamily="var(--font-mono)">add(a, b)</text>
+    <text className="idg-anim" x="275" y="65" textAnchor="middle" fill="var(--color-accent)" fontSize="11" fontFamily="var(--font-mono)">return a + b</text>
+    {/* Arrow out */}
+    <line className="idg-anim" x1="350" y1="52" x2="385" y2="52" stroke="var(--color-accent)" strokeWidth="1.5" />
+    <polygon className="idg-anim" points="385,47 395,52 385,57" fill="var(--color-accent)" />
+    {/* Output */}
+    <rect className="idg-anim" x="400" y="35" width="70" height="35" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
+    <text className="idg-anim" x="435" y="58" textAnchor="middle" fill="var(--color-accent)" fontSize="16" fontFamily="var(--font-mono)" fontWeight="700">8</text>
+    <text className="idg-anim" x="435" y="84" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">result</text>
+    {/* Bottom */}
+    <text className="idg-anim" x="260" y="118" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">Data flows in through parameters, out through return.</text>
   </svg>
 );
 
@@ -1795,6 +2023,8 @@ Functions can return a value using the return keyword. Whatever comes after retu
 
 {{toggle:1}}
 
+{{interactive:0}}
+
 Arrow functions are a shorter way to write the same thing. They are especially common in React.
 
 {{toggle:2}}
@@ -1814,6 +2044,7 @@ The key difference you will notice in the TypeScript versions is that every para
             ts: `const double = (n: number): number => n * 2;\n\nconst greet = (name: string): string => {\n  return "Hello, " + name;\n};`,
           },
         ],
+        interactives: [InteractiveFunctionDiagram],
       },
       {
         heading: "Objects",
@@ -1849,13 +2080,19 @@ JavaScript arrays come with built-in methods that let you transform, filter, and
 
 {{toggle:1}}
 
+{{interactive:0}}
+
 .filter() creates a new array with only the items that pass a test:
 
 {{toggle:2}}
 
+{{interactive:1}}
+
 .find() returns the first item that matches:
 
 {{toggle:3}}
+
+{{interactive:2}}
 
 These methods are everywhere in modern JavaScript and React. Learning them well pays off quickly.`,
         codeToggles: [
@@ -1876,6 +2113,7 @@ These methods are everywhere in modern JavaScript and React. Learning them well 
             ts: `interface Person {\n  name: string;\n  age: number;\n}\n\nconst people: Person[] = [\n  { name: "Alex", age: 39 },\n  { name: "Sam", age: 28 },\n];\n\nconst sam: Person | undefined = people.find((p) => p.name === "Sam");`,
           },
         ],
+        interactives: [InteractiveMapDiagram, InteractiveFilterDiagram, InteractiveFindDiagram],
       },
       {
         heading: "Conditionals and logic",
@@ -1905,6 +2143,8 @@ You can also check multiple conditions with else if, or use switch for matching 
 
 {{toggle:0}}
 
+{{interactive:0}}
+
 Array destructuring works the same way but uses position instead of names:
 
 {{toggle:1}}
@@ -1912,6 +2152,8 @@ Array destructuring works the same way but uses position instead of names:
 The spread operator (...) copies the contents of an array or object into a new one. It is useful for creating copies without mutating the original.
 
 {{toggle:2}}
+
+{{interactive:1}}
 
 Destructuring and spread show up constantly in React. Props are destructured in function parameters, state updates use spread to copy objects, and arrays are spread into new arrays when adding items.`,
         codeToggles: [
@@ -1928,6 +2170,7 @@ Destructuring and spread show up constantly in React. Props are destructured in 
             ts: `const original = { name: "Alex", age: 39 };\nconst updated = { ...original, age: 40 };\n// { name: "Alex", age: 40 }\n\nconst list: number[] = [1, 2, 3];\nconst extended: number[] = [...list, 4, 5];\n// [1, 2, 3, 4, 5]`,
           },
         ],
+        interactives: [InteractiveDestructureDiagram, InteractiveSpreadDiagram],
       },
       {
         heading: "Async: promises and fetch",
@@ -2093,7 +2336,7 @@ export default function ArticleModal({ articleId, isOpen, onClose }) {
                     {section.diagram}
                   </div>
                 )}
-                {renderBody(section.body, section.codeToggles)}
+                {renderBody(section.body, section.codeToggles, section.interactives)}
               </section>
             ))}
           </div>
