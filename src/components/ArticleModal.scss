@@ -279,6 +279,72 @@
   color: #3178c6;
 }
 
+// ===== INTERACTIVE DIAGRAMS =====
+.am-interactive {
+  margin-bottom: 16px;
+}
+
+.am-interactive-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--color-accent-border);
+  background: var(--color-accent-dim);
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: background 200ms ease, border-color 200ms ease, transform 200ms ease;
+
+  &:hover {
+    background: rgba(223, 255, 71, 0.12);
+    border-color: var(--color-accent);
+    transform: translateY(-1px);
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+}
+
+.am-interactive-open .am-interactive-btn {
+  background: var(--color-accent);
+  color: var(--color-background);
+  border-color: var(--color-accent);
+
+  &:hover {
+    opacity: 0.9;
+    background: var(--color-accent);
+  }
+}
+
+.am-interactive-content {
+  margin-top: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  background: var(--color-surface);
+  padding: 28px 24px;
+  overflow: hidden;
+
+  svg {
+    width: 100%;
+    max-width: 520px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    padding: 20px 16px;
+  }
+}
+
 // Syntax colours
 .am-syn-keyword {
   color: #c792ea;
