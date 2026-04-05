@@ -14,6 +14,7 @@ const ARTICLES = [
   { id: "web-accessibility", title: "Web accessibility basics" },
   { id: "typescript-basics", title: "TypeScript basics" },
   { id: "javascript-essentials", title: "JavaScript essentials" },
+  { id: "gsap-animation-architecture", title: "How I animated this portfolio" },
 ];
 
 export default function ThoughtsFab({ onOpenArticle }) {

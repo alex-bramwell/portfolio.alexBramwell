@@ -1548,6 +1548,52 @@ function JavaScriptIllustration() {
   );
 }
 
+function AnimationIllustration() {
+  const svgRef = useRef(null);
+  const { isReduced } = useTheme();
+
+  useEffect(() => {
+    if (isReduced || !svgRef.current) return;
+    const ctx = gsap.context(() => {
+      gsap.fromTo(".anim-bar", { scaleX: 0 }, {
+        scaleX: 1, duration: 0.6, stagger: 0.12, delay: 0.3, ease: "power2.out",
+      });
+      gsap.fromTo(".anim-dot", { scale: 0, opacity: 0 }, {
+        scale: 1, opacity: 1, duration: 0.4, stagger: 0.1, delay: 0.6, ease: "back.out(2)",
+      });
+      gsap.fromTo(".anim-label", { opacity: 0, y: 6 }, {
+        opacity: 1, y: 0, duration: 0.35, stagger: 0.08, delay: 0.9, ease: "power2.out",
+      });
+      gsap.to(".anim-playhead", {
+        x: 300, duration: 3, repeat: -1, ease: "none", delay: 1.2,
+      });
+    }, svgRef);
+    return () => ctx.revert();
+  }, [isReduced]);
+
+  return (
+    <svg ref={svgRef} className="article-illustration" viewBox="0 0 400 280" fill="none">
+      {/* Timeline tracks */}
+      <text className="anim-label" x="20" y="30" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)" letterSpacing="2">GSAP TIMELINE</text>
+      {[{ y: 50, w: 200, label: "opacity", color: "var(--color-accent)" }, { y: 80, w: 150, label: "y", color: "var(--color-accent-border)" }, { y: 110, w: 180, label: "scale", color: "var(--color-accent)" }, { y: 140, w: 120, label: "skewY", color: "var(--color-accent-border)" }, { y: 170, w: 250, label: "clipPath", color: "var(--color-accent)" }].map((t) => (
+        <g key={t.label}>
+          <text className="anim-label" x="20" y={t.y + 12} fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)">{t.label}</text>
+          <rect className="anim-bar" x="90" y={t.y} width={t.w} height="16" rx="3" fill={t.color} opacity="0.2" style={{ transformOrigin: `90px ${t.y + 8}px` }} />
+          <circle className="anim-dot" cx="90" cy={t.y + 8} r="4" fill={t.color} style={{ transformOrigin: `90px ${t.y + 8}px` }} />
+          <circle className="anim-dot" cx={90 + t.w} cy={t.y + 8} r="4" fill={t.color} style={{ transformOrigin: `${90 + t.w}px ${t.y + 8}px` }} />
+        </g>
+      ))}
+      {/* Playhead */}
+      <line className="anim-playhead" x1="90" y1="42" x2="90" y2="194" stroke="var(--color-accent)" strokeWidth="1.5" opacity="0.6" />
+      {/* Easing curve */}
+      <text className="anim-label" x="20" y="220" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)" letterSpacing="2">EASING</text>
+      <rect className="anim-label" x="90" y="210" width="280" height="60" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
+      <path className="anim-bar" d="M90 270 C150 270 160 210 370 210" stroke="var(--color-accent)" strokeWidth="2" fill="none" style={{ transformOrigin: "90px 240px" }} />
+      <text className="anim-label" x="200" y="256" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)">power3.out</text>
+    </svg>
+  );
+}
+
 /* ===== ARTICLE CONTENT ===== */
 
 const ARTICLES = {
@@ -2676,6 +2722,182 @@ These are the core building blocks of JavaScript. Every framework, library, and 
             ts: `interface User {\n  name: string;\n  email: string;\n}\n\nasync function getUser(): Promise<User> {\n  const response: Response = await fetch("/api/user");\n  const data: User = await response.json();\n  console.log(data.name);\n  return data;\n}`,
           },
         ],
+      },
+    ],
+  },
+  "gsap-animation-architecture": {
+    title: "How I animated this portfolio",
+    subtitle: "The GSAP patterns, motion toggle, and performance tricks behind every animation on this site",
+    date: "April 2026",
+    readTime: "9 min read",
+    illustration: AnimationIllustration,
+    sections: [
+      {
+        heading: "The animation stack",
+        body: `Every animation on this site uses GSAP (GreenSock Animation Platform) with the ScrollTrigger plugin. No CSS keyframes for the main animations, no Framer Motion, no Spring libraries. GSAP gives you precise control over timing, easing, and sequencing that CSS alone cannot match.
+
+The setup is minimal. Two imports at the top of any component that animates:
+
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
+
+From there, every animation follows one of five patterns that I reuse across the entire site. Understanding these five patterns is enough to build everything you see here.`,
+      },
+      {
+        heading: "Pattern 1: entrance timelines",
+        body: `When the page loads, the hero section plays a choreographed sequence. Each element appears in order with a slight overlap, creating a cascade effect.
+
+The key is gsap.timeline(). A timeline lets you chain animations so they play in sequence, with control over how much they overlap.
+
+const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+tl.from(".hero-heading", { opacity: 0, y: 40, duration: 0.8 })
+  .from(".hero-subtitle", { opacity: 0, y: 20, duration: 0.5 }, "-=0.4")
+  .from(".hero-buttons", { opacity: 0, y: 20, duration: 0.5 }, "-=0.3")
+  .from(".hero-stats", { opacity: 0, x: 40, duration: 0.6 }, "-=0.5");
+
+The "-=0.4" tells GSAP to start this animation 0.4 seconds before the previous one finishes. That overlap is what makes the sequence feel fluid rather than robotic. Without it, each element would wait for the previous one to fully complete before starting.
+
+The defaults object sets the easing for every animation in the timeline. "power3.out" starts fast and decelerates, which feels natural for elements entering the screen.
+
+I use this pattern for the hero, the mobile navigation menu, the contact modal, and the case study modal. Each has its own timeline with different properties (the nav uses clipPath, the modal uses scale and rotateX), but the structure is identical.`,
+      },
+      {
+        heading: "Pattern 2: scroll reveals",
+        body: `Most sections on the page are invisible until you scroll to them. The ScrollReveal component wraps any content and animates it in when it enters the viewport.
+
+gsap.fromTo(element,
+  { opacity: 0, y: 30 },
+  {
+    opacity: 1, y: 0,
+    duration: 0.7,
+    ease: "power3.out",
+    scrollTrigger: {
+      trigger: element,
+      start: "top 88%",
+      once: true,
+    },
+  }
+);
+
+The scrollTrigger object tells GSAP when to fire. "start: top 88%" means the animation triggers when the top of the element reaches 88% down the viewport. This fires just before the element would naturally come into view, so the animation is already playing by the time the user sees it.
+
+"once: true" means it only fires once. Scroll back up and the element stays visible. This prevents the annoying pattern where content keeps replaying every time you scroll past it.
+
+The direction prop lets me vary the entry: some elements slide up (y: 30), some from the left (x: -30), some from the right (x: 30). The stagger prop adds a small delay (stagger * 0.1s) so grid items cascade rather than all appearing at once.`,
+      },
+      {
+        heading: "Pattern 3: continuous motion",
+        body: `The hero section has three coloured glow orbs that float slowly behind the content. These use infinite looping animations.
+
+gsap.to(".hero-glow-1", {
+  x: 60, y: -40,
+  scale: 1.15,
+  opacity: 0.25,
+  duration: 8,
+  repeat: -1,
+  yoyo: true,
+  ease: "sine.inOut",
+});
+
+"repeat: -1" means loop forever. "yoyo: true" means alternate direction on each loop, so the orb drifts right then back left, rather than snapping back to the start. "sine.inOut" gives a smooth acceleration and deceleration that feels organic.
+
+Each orb has a different duration (8s, 10s, 12s) and a different delay, so they never sync up. This creates a gentle, ambient movement that does not loop visibly.
+
+The same pattern powers the floating action button (ThoughtsFab), which bobs up and down with a 2-second yoyo cycle, and the pulsing dot on the availability badge, which uses a CSS animation since it is simpler.`,
+      },
+      {
+        heading: "Pattern 4: cursor interaction",
+        body: `The MagneticButton component follows the cursor with a subtle elastic effect. When you hover, the button shifts towards your mouse. When you leave, it snaps back with a bounce.
+
+// On mouse move
+const x = (mouseX - centerX) * 0.3;
+const y = (mouseY - centerY) * 0.3;
+gsap.to(buttonRef, { x, y, duration: 0.3, ease: "power2.out" });
+
+// On mouse leave
+gsap.to(buttonRef, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.4)" });
+
+The 0.3 multiplier means the button only moves 30% of the distance to the cursor, creating a "magnetic pull" rather than a direct follow. "elastic.out(1, 0.4)" on the leave animation adds a spring-like overshoot when the button returns to centre.
+
+This interaction is disabled entirely on touch devices and when reduced motion is active, since it depends on a mouse cursor.`,
+      },
+      {
+        heading: "Pattern 5: modal choreography",
+        body: `The contact modal and case study both use a multi-stage entrance with 3D transforms. The key properties are scale, rotateX, and skewY, which give depth to flat elements.
+
+const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+tl.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: 0.3 })
+  .fromTo(modal, {
+    opacity: 0, scale: 0.92, y: 40, rotateX: 8,
+  }, {
+    opacity: 1, scale: 1, y: 0, rotateX: 0,
+    duration: 0.5, ease: "back.out(1.4)",
+  }, "-=0.15");
+
+"back.out(1.4)" is the easing that gives the modal a slight overshoot, it scales past 1.0 then settles back. The rotateX: 8 to 0 creates a subtle tilt that makes the modal feel like it is swinging into place from above.
+
+For the case study and article modals, I use clipPath instead. The content slides up from the bottom with "y: 100% to 0%", and the overlay fades in behind it. The exit reverses: content slides down while the overlay fades out. Each takes less than half a second total.
+
+The contact modal also has a success state with a particle burst effect. After the form submits, small circles explode outward from the centre using randomised angles and distances, each with a slight random delay. It is purely decorative but it makes the success feel celebratory.`,
+      },
+      {
+        heading: "The motion toggle",
+        body: `Every animation on this site can be turned off. The MotionToggle component switches a data-motion attribute between "full" and "reduced" on the document root, and every component checks this before running animations.
+
+const { isReduced } = useTheme();
+
+useEffect(() => {
+  if (isReduced) return;
+  // ... animation code
+}, [isReduced]);
+
+The pattern is simple: if isReduced is true, the useEffect returns early before creating any GSAP timelines. No animations play, no requestAnimationFrame loops run, no ScrollTriggers are created.
+
+On first load, the site checks the operating system preference using window.matchMedia("(prefers-reduced-motion: reduce)"). If the user has told their OS they prefer less motion, the toggle starts in the reduced state automatically.
+
+For components that need to show content even without animation (like scroll reveals), the SCSS files include CSS fallback animations:
+
+[data-motion="reduced"] .css-reveal-up {
+  animation: cssRevealUp 0.4s ease both;
+}
+
+@keyframes cssRevealUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+These CSS animations are simpler and shorter than the GSAP versions, providing a basic entrance without the full choreography. They run once and settle immediately.`,
+      },
+      {
+        heading: "Performance on mobile",
+        body: `The background canvas was the biggest performance concern. It runs a continuous requestAnimationFrame loop drawing a dot-grid with connecting lines. On desktop this is fine. On an iPhone, it was eating 40-60% of the main thread.
+
+The fixes were straightforward:
+
+1. Detect mobile and reduce the dot count from 80 to 30.
+2. Skip the connecting-line calculation entirely on mobile (it is O(n squared) and barely visible on small screens).
+3. Throttle the frame rate to 24fps on mobile instead of 60.
+4. Pre-render the static grid to an offscreen canvas and blit it each frame, instead of redrawing hundreds of lines every frame.
+5. Read CSS custom properties once on mount instead of calling getComputedStyle every frame.
+
+The other key performance decision was lazy-loading. The article modal, case study, contact form, and floating action button are all loaded with React.lazy(). They are not downloaded until the user actually opens them. This cut the initial bundle from 561KB to 366KB, a 35% reduction in what mobile users download on first load.
+
+The easing functions also matter for perceived performance. "power3.out" and "power4.out" start fast and slow down at the end, which makes animations feel snappy even when the total duration is 0.5-0.6 seconds. A linear easing at the same duration would feel sluggish.`,
+      },
+      {
+        heading: "What I would do differently",
+        body: `If I were starting this project again, I would consider using GSAP's context API more aggressively from the start. gsap.context() scopes all animations to a specific DOM element and provides a clean revert() method for cleanup. I adopted it partway through, so some earlier components handle cleanup manually.
+
+I would also extract the five animation patterns into reusable hooks: useEntranceTimeline, useScrollReveal, useFloatingMotion, useMagneticFollow, useModalChoreography. The patterns are consistent enough that a hook with a few options would cover 90% of cases and reduce duplication.
+
+The SVG illustrations in the article modals could benefit from GSAP's DrawSVG plugin for smoother path drawing. Currently I use strokeDashoffset, which works but requires manual calculation of path lengths. DrawSVG handles this automatically.
+
+Finally, I would invest more time in the CSS fallback animations for reduced-motion users. Currently, some components just show content instantly when motion is off. A set of subtle, short CSS transitions would give reduced-motion users a better experience without causing discomfort.
+
+The animation architecture here is not complicated. Five patterns, one toggle, and consistent cleanup. The complexity is in the choreography: getting the timing, easing, and overlap right so each interaction feels intentional rather than decorative.`,
       },
     ],
   },
