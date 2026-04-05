@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useTheme } from "../context/ThemeContext";
 import "./ArticleModal.scss";
+import { mapSteps, filterSteps, findSteps, spreadSteps, destructureSteps, functionSteps, variablesSteps, conditionalSteps, imperativeSteps, eventSteps, listRenderSteps, conditionalRenderSteps, propsSteps, stateSteps, useEffectSteps, keysSteps, nestingSteps, mixinSteps, partialsSteps, semanticSteps, contrastSteps, focusSteps } from "../data/diagramSteps";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -132,7 +133,7 @@ function CodeToggle({ js, ts, id }) {
   );
 }
 
-function InteractiveDiagram({ diagram: Diagram }) {
+function InteractiveDiagram({ diagram: Diagram, steps }) {
   const [isOpen, setIsOpen] = useState(false);
   const contentRef = useRef(null);
   const { isReduced } = useTheme();
@@ -170,58 +171,88 @@ function InteractiveDiagram({ diagram: Diagram }) {
       </button>
       {isOpen && (
         <div className="am-interactive-content" ref={contentRef} style={isReduced ? undefined : { height: 0, opacity: 0 }}>
-          <AnimatedDiagram playing={isOpen} isReduced={isReduced}>{Diagram}</AnimatedDiagram>
+          {steps ? (
+            <StepDiagram steps={steps} playing={isOpen} isReduced={isReduced}>{Diagram}</StepDiagram>
+          ) : Diagram}
         </div>
       )}
     </div>
   );
 }
 
-function AnimatedDiagram({ playing, isReduced, children }) {
+const ALL_STAGES = [".idg-title", ".idg-input", ".idg-arrow", ".idg-process", ".idg-output", ".idg-note"];
+const ALL_SELECTOR = ALL_STAGES.concat("[data-step]").join(", ");
+
+function StepDiagram({ steps, playing, isReduced, children }) {
+  const [step, setStep] = useState(0);
   const ref = useRef(null);
+  const pulseRef = useRef([]);
+
+  const total = steps.length;
+  const current = steps[step];
+
+  useEffect(() => { if (playing) setStep(0); }, [playing]);
 
   useEffect(() => {
-    if (!playing || !ref.current || isReduced) return;
+    if (!ref.current) return;
     const el = ref.current;
+    pulseRef.current.forEach((tw) => tw.kill());
+    pulseRef.current = [];
+
+    const allEls = el.querySelectorAll(ALL_SELECTOR);
+    const visSel = current.show.join(", ");
+    const hlSel = current.highlight ? current.highlight.join(", ") : null;
+
+    if (isReduced) {
+      allEls.forEach((n) => { n.style.opacity = visSel && n.matches(visSel) ? "1" : "0"; n.style.filter = "none"; });
+      return;
+    }
 
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
-
-      // Stage 1: title/label at top
-      tl.fromTo(el.querySelectorAll(".idg-title"), { opacity: 0 }, {
-        opacity: 1, duration: 0.3,
+      allEls.forEach((n) => {
+        const vis = visSel && n.matches(visSel);
+        gsap.to(n, { opacity: vis ? 1 : 0, duration: vis ? 0.4 : 0.25, ease: vis ? "power2.out" : "power2.in" });
+        gsap.set(n, { filter: "none" });
       });
-
-      // Stage 2: input elements slide in from left
-      tl.fromTo(el.querySelectorAll(".idg-input"), { opacity: 0, x: -15 }, {
-        opacity: 1, x: 0, duration: 0.4, stagger: 0.08,
-      }, "-=0.1");
-
-      // Stage 3: arrows/connectors draw in
-      tl.fromTo(el.querySelectorAll(".idg-arrow"), { opacity: 0, scaleX: 0 }, {
-        opacity: 1, scaleX: 1, duration: 0.3, stagger: 0.06,
-      }, "-=0.15");
-
-      // Stage 4: processing/transform labels pop
-      tl.fromTo(el.querySelectorAll(".idg-process"), { opacity: 0, scale: 0.5 }, {
-        opacity: 1, scale: 1, duration: 0.35, stagger: 0.06, ease: "back.out(2)",
-      }, "-=0.1");
-
-      // Stage 5: output elements scale up from center
-      tl.fromTo(el.querySelectorAll(".idg-output"), { opacity: 0, scale: 0.7, y: 5 }, {
-        opacity: 1, scale: 1, y: 0, duration: 0.4, stagger: 0.08, ease: "back.out(1.5)",
-      }, "-=0.15");
-
-      // Stage 6: footnote/explanation fades in last
-      tl.fromTo(el.querySelectorAll(".idg-note"), { opacity: 0, y: 6 }, {
-        opacity: 1, y: 0, duration: 0.4, stagger: 0.06,
-      }, "-=0.1");
+      if (hlSel) {
+        el.querySelectorAll(hlSel).forEach((n) => {
+          pulseRef.current.push(gsap.to(n, { filter: "drop-shadow(0 0 8px var(--color-accent))", duration: 0.8, repeat: -1, yoyo: true, ease: "sine.inOut" }));
+        });
+      }
     }, ref);
-
     return () => ctx.revert();
-  }, [playing, isReduced]);
+  }, [step, isReduced, current]);
 
-  return <div ref={ref}>{children}</div>;
+  useEffect(() => {
+    if (!playing) return;
+    const h = (e) => {
+      if (e.key === "ArrowRight" && step < total - 1) setStep(step + 1);
+      if (e.key === "ArrowLeft" && step > 0) setStep(step - 1);
+    };
+    window.addEventListener("keydown", h);
+    return () => window.removeEventListener("keydown", h);
+  }, [playing, step, total]);
+
+  return (
+    <div ref={ref} className="idg-stepper">
+      <div className="idg-svg-wrap">{children}</div>
+      {current.text && <p className="idg-annotation" key={step}>{current.text}</p>}
+      <div className="idg-controls">
+        <button className="idg-controls-btn" onClick={() => setStep(Math.max(0, step - 1))} disabled={step === 0} aria-label="Previous step">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="15 18 9 12 15 6" /></svg>
+        </button>
+        <span className="idg-step-indicator">{step + 1} / {total}</span>
+        <button className="idg-controls-btn" onClick={() => setStep(Math.min(total - 1, step + 1))} disabled={step === total - 1} aria-label="Next step">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
+        </button>
+        {step === total - 1 && (
+          <button className="idg-controls-btn idg-replay-btn" onClick={() => setStep(0)} aria-label="Replay">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M1 4v6h6M23 20v-6h-6" /><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15" /></svg>
+          </button>
+        )}
+      </div>
+    </div>
+  );
 }
 
 function renderBody(body, codeToggles, interactives) {
@@ -234,9 +265,10 @@ function renderBody(body, codeToggles, interactives) {
     const interactiveMatch = blocks[i].match(/^\{\{interactive:(\d+)\}\}$/);
     if (interactiveMatch && interactives) {
       const idx = parseInt(interactiveMatch[1], 10);
-      const diagram = interactives[idx];
-      if (diagram) {
-        result.push(<InteractiveDiagram key={`interactive-${i}`} diagram={diagram} />);
+      const entry = interactives[idx];
+      if (entry) {
+        const isDef = entry && typeof entry === "object" && entry.diagram;
+        result.push(<InteractiveDiagram key={`interactive-${i}`} diagram={isDef ? entry.diagram : entry} steps={isDef ? entry.steps : undefined} />);
       }
       i++;
     // Check for toggle placeholder
@@ -1742,7 +1774,7 @@ return <h1>{title}</h1>;
 The key difference: in vanilla JS, you tell the browser what to change. In React, you describe what the page should look like, and React figures out what to change. This is called declarative rendering.
 
 {{interactive:0}}`,
-        interactives: [InteractiveImperativeVsDeclarative],
+        interactives: [{ diagram: InteractiveImperativeVsDeclarative, steps: imperativeSteps }],
       },
       {
         heading: "Handling events",
@@ -1767,7 +1799,7 @@ function MyButton() {
 No need to query the DOM, no need to worry about when the element exists. The handler is right there next to the element it belongs to.
 
 {{interactive:0}}`,
-        interactives: [InteractiveEventComparison],
+        interactives: [{ diagram: InteractiveEventComparison, steps: eventSteps }],
       },
       {
         heading: "Looping through a list",
@@ -1797,7 +1829,7 @@ return (
 The .map() pattern is one of the most common things you will write in React. It replaces manual DOM creation entirely.
 
 {{interactive:0}}`,
-        interactives: [InteractiveListRendering],
+        interactives: [{ diagram: InteractiveListRendering, steps: listRenderSteps }],
       },
       {
         heading: "Fetching data",
@@ -1852,7 +1884,7 @@ The expression {isOpen && <div>...</div>} means "only render this div if isOpen 
 {{interactive:0}}
 
 The jump from vanilla JS to React is smaller than it looks. The core skills transfer directly: functions, arrays, objects, and events. React just gives you a tidier way to organise them.`,
-        interactives: [InteractiveConditionalRender],
+        interactives: [{ diagram: InteractiveConditionalRender, steps: conditionalRenderSteps }],
       },
     ],
   },
@@ -1891,7 +1923,7 @@ The parent decides what data to pass. The child receives it and uses it. Props f
 You can pass anything as a prop: strings, numbers, arrays, objects, even other components. If a component needs data it does not own, it gets it through props.
 
 {{interactive:0}}`,
-        interactives: [InteractivePropsFlow],
+        interactives: [{ diagram: InteractivePropsFlow, steps: propsSteps }],
       },
       {
         heading: "State: data that changes",
@@ -1913,7 +1945,7 @@ useState gives you two things: the current value (count) and a function to updat
 The rule is simple: if something on the screen needs to change in response to user action, it should be state.
 
 {{interactive:0}}`,
-        interactives: [InteractiveStateRender],
+        interactives: [{ diagram: InteractiveStateRender, steps: stateSteps }],
       },
       {
         heading: "useEffect: doing things after render",
@@ -1936,7 +1968,7 @@ useEffect(() => {
 Think of useEffect as "after this component renders, also do this."
 
 {{interactive:0}}`,
-        interactives: [InteractiveUseEffect],
+        interactives: [{ diagram: InteractiveUseEffect, steps: useEffectSteps }],
       },
       {
         heading: "Conditional rendering",
@@ -1980,7 +2012,7 @@ The best key is a unique ID from your data (like a database ID). Using the array
 {{interactive:0}}
 
 These concepts - components, props, state, effects, conditionals, and lists - cover about 90% of what you will do in React day to day. Master these and the rest follows naturally.`,
-        interactives: [InteractiveKeysTracking],
+        interactives: [{ diagram: InteractiveKeysTracking, steps: keysSteps }],
       },
     ],
   },
@@ -2044,7 +2076,7 @@ The & symbol means "the current selector." So &:hover inside .card-title becomes
 One warning: do not nest too deeply. Two or three levels is plenty. Deeply nested SCSS produces long, brittle CSS selectors that are hard to override.
 
 {{interactive:0}}`,
-        interactives: [InteractiveNesting],
+        interactives: [{ diagram: InteractiveNesting, steps: nestingSteps }],
       },
       {
         heading: "Mixins: reusable blocks of styles",
@@ -2086,7 +2118,7 @@ Mixins can also accept arguments, just like a function.
 The @content keyword passes whatever styles you write inside the @include block into the mixin. This is incredibly useful for responsive breakpoints.
 
 {{interactive:0}}`,
-        interactives: [InteractiveMixin],
+        interactives: [{ diagram: InteractiveMixin, steps: mixinSteps }],
       },
       {
         heading: "Partials and imports",
@@ -2119,7 +2151,7 @@ styles/
 Each component can also have its own .scss file sitting next to the .jsx file. This is called co-location, and it makes it easy to find the styles for any component.
 
 {{interactive:0}}`,
-        interactives: [InteractivePartials],
+        interactives: [{ diagram: InteractivePartials, steps: partialsSteps }],
       },
       {
         heading: "Putting it together",
@@ -2196,7 +2228,7 @@ Other examples:
 If you use semantic HTML, you get most accessibility features without writing any extra code.
 
 {{interactive:0}}`,
-        interactives: [InteractiveSemanticHtml],
+        interactives: [{ diagram: InteractiveSemanticHtml, steps: semanticSteps }],
       },
       {
         heading: "Colour contrast and text",
@@ -2215,7 +2247,7 @@ Make sure links are distinguishable from surrounding text. An underline or bold 
 Avoid light grey text on white backgrounds. It looks clean but fails contrast requirements. If in doubt, check the ratio.
 
 {{interactive:0}}`,
-        interactives: [InteractiveContrast],
+        interactives: [{ diagram: InteractiveContrast, steps: contrastSteps }],
       },
       {
         heading: "Keyboard navigation",
@@ -2237,7 +2269,7 @@ Removing the focus outline. The blue or black ring that appears when you Tab to 
 Focus trapping in modals. When a modal is open, Tab should cycle through the modal's content, not disappear behind it. When the modal closes, focus should return to the element that opened it.
 
 {{interactive:0}}`,
-        interactives: [InteractiveFocusOrder],
+        interactives: [{ diagram: InteractiveFocusOrder, steps: focusSteps }],
       },
       {
         heading: "ARIA: when HTML is not enough",
@@ -2445,7 +2477,7 @@ JavaScript has a handful of basic data types. The most common are strings (text)
 You do not need to tell JavaScript what type a variable is. It figures it out from the value you assign. TypeScript adds that ability, and you can see how by toggling the examples above.
 
 {{interactive:0}}`,
-        interactives: [InteractiveVariables],
+        interactives: [{ diagram: InteractiveVariables, steps: variablesSteps }],
         codeToggles: [
           {
             js: `let score = 0;\nscore = 10;\n\nconst name = "Alex";\n// name = "Sam";  // Error: can't reassign a const`,
@@ -2488,7 +2520,7 @@ The key difference you will notice in the TypeScript versions is that every para
             ts: `const double = (n: number): number => n * 2;\n\nconst greet = (name: string): string => {\n  return "Hello, " + name;\n};`,
           },
         ],
-        interactives: [InteractiveFunctionDiagram],
+        interactives: [{ diagram: InteractiveFunctionDiagram, steps: functionSteps }],
       },
       {
         heading: "Objects",
@@ -2557,7 +2589,7 @@ These methods are everywhere in modern JavaScript and React. Learning them well 
             ts: `interface Person {\n  name: string;\n  age: number;\n}\n\nconst people: Person[] = [\n  { name: "Alex", age: 39 },\n  { name: "Sam", age: 28 },\n];\n\nconst sam: Person | undefined = people.find((p) => p.name === "Sam");`,
           },
         ],
-        interactives: [InteractiveMapDiagram, InteractiveFilterDiagram, InteractiveFindDiagram],
+        interactives: [{ diagram: InteractiveMapDiagram, steps: mapSteps }, { diagram: InteractiveFilterDiagram, steps: filterSteps }, { diagram: InteractiveFindDiagram, steps: findSteps }],
       },
       {
         heading: "Conditionals and logic",
@@ -2572,7 +2604,7 @@ The ternary operator is a one-line shorthand for simple if/else checks. It is us
 You can also check multiple conditions with else if, or use switch for matching against specific values. But if/else and ternaries cover the vast majority of real-world cases.
 
 {{interactive:0}}`,
-        interactives: [InteractiveConditional],
+        interactives: [{ diagram: InteractiveConditional, steps: conditionalSteps }],
         codeToggles: [
           {
             js: `const age = 39;\n\nif (age >= 18) {\n  console.log("Adult");\n} else {\n  console.log("Minor");\n}`,
@@ -2617,7 +2649,7 @@ Destructuring and spread show up constantly in React. Props are destructured in 
             ts: `const original = { name: "Alex", age: 39 };\nconst updated = { ...original, age: 40 };\n// { name: "Alex", age: 40 }\n\nconst list: number[] = [1, 2, 3];\nconst extended: number[] = [...list, 4, 5];\n// [1, 2, 3, 4, 5]`,
           },
         ],
-        interactives: [InteractiveDestructureDiagram, InteractiveSpreadDiagram],
+        interactives: [{ diagram: InteractiveDestructureDiagram, steps: destructureSteps }, { diagram: InteractiveSpreadDiagram, steps: spreadSteps }],
       },
       {
         heading: "Async: promises and fetch",
