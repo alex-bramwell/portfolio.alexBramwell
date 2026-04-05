@@ -51,7 +51,7 @@
 
 .contact-detail-row {
   display: grid;
-  grid-template-columns: 100px 1fr auto;
+  grid-template-columns: 100px minmax(0, 1fr) auto;
   align-items: center;
   gap: 16px;
   padding: 16px 20px;
@@ -89,6 +89,10 @@
   font-size: 14px;
   color: var(--color-text-primary);
   font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
 }
 
 .contact-detail-row-arrow {

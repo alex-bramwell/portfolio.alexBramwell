@@ -119,7 +119,7 @@ export default function Hero({ onOpenArticle }) {
             <p className="hero-role-typewriter-line">
               <span className="hero-role-current-text">{currentRoleText}</span>
               <span className="typewriter-cursor" />
-              {" "}&ndash; design&nbsp;&harr;&nbsp;code
+              {" "}&ndash; design&nbsp;{"\u2194\uFE0E"}&nbsp;code
             </p>
             <p className="hero-description-paragraph">
               7+ years designing and shipping production SaaS interfaces. I own the full pipeline,
@@ -145,7 +145,7 @@ export default function Hero({ onOpenArticle }) {
             <div className="hero-stats-row">
               <AnimatedStat endValue={7} suffix="+" descriptor={"Years in\nproduct"} />
               <div className="hero-stat-item">
-                <div className="hero-stat-number">Design ↔ Code</div>
+                <div className="hero-stat-number">Design {"\u2194\uFE0E"} Code</div>
                 <div className="hero-stat-descriptor" style={{ whiteSpace: "pre-line" }}>{"Full\npipeline"}</div>
               </div>
               <AnimatedStat endValue={0} suffix="" descriptor={"Handoff\ngaps"} />
