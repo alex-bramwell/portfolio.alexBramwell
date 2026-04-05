@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { ThemeProvider } from "./context/ThemeContext";
 import BackgroundCanvas from "./components/BackgroundCanvas";
-import ContactModal from "./components/ContactModal";
-import CaseStudy from "./components/CaseStudy";
-import ArticleModal from "./components/ArticleModal";
-import ThoughtsFab from "./components/ThoughtsFab";
 import Navbar from "./components/sections/Navbar";
+
+const ContactModal = lazy(() => import("./components/ContactModal"));
+const CaseStudy = lazy(() => import("./components/CaseStudy"));
+const ArticleModal = lazy(() => import("./components/ArticleModal"));
+const ThoughtsFab = lazy(() => import("./components/ThoughtsFab"));
 import Hero from "./components/sections/Hero";
 import About from "./components/sections/About";
 import Skills from "./components/sections/Skills";
@@ -51,10 +52,12 @@ export default function App() {
         <hr className="full-width-rule" />
         <Footer onOpenContact={() => setIsContactOpen(true)} />
       </main>
-      <ContactModal isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />
-      <CaseStudy isOpen={isCaseStudyOpen} onClose={() => setIsCaseStudyOpen(false)} />
-      <ArticleModal articleId={openArticleId} isOpen={!!openArticleId} onClose={() => setOpenArticleId(null)} />
-      <ThoughtsFab onOpenArticle={(id) => setOpenArticleId(id)} />
+      <Suspense fallback={null}>
+        {isContactOpen && <ContactModal isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />}
+        {isCaseStudyOpen && <CaseStudy isOpen={isCaseStudyOpen} onClose={() => setIsCaseStudyOpen(false)} />}
+        {openArticleId && <ArticleModal articleId={openArticleId} isOpen={!!openArticleId} onClose={() => setOpenArticleId(null)} />}
+        <ThoughtsFab onOpenArticle={(id) => setOpenArticleId(id)} />
+      </Suspense>
     </ThemeProvider>
   );
 }

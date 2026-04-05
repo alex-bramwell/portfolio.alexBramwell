@@ -3,16 +3,30 @@ import { useTheme } from "../context/ThemeContext";
 
 export default function BackgroundCanvas() {
   const canvasRef = useRef(null);
-  const { theme } = useTheme();
+  const { theme, isReduced } = useTheme();
 
   useEffect(() => {
+    if (isReduced) return;
+
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     let animationFrameId;
     let canvasWidth = (canvas.width = window.innerWidth);
     let canvasHeight = (canvas.height = window.innerHeight);
 
-    const floatingDots = Array.from({ length: 80 }, () => ({
+    const isMobile = window.innerWidth < 768;
+    const dotCount = isMobile ? 30 : 80;
+    const drawLines = !isMobile;
+    const targetFPS = isMobile ? 24 : 60;
+    const frameInterval = 1000 / targetFPS;
+    let lastFrameTime = 0;
+
+    // Read CSS vars once, re-read only on theme change
+    const styles = getComputedStyle(document.documentElement);
+    let gridColor = styles.getPropertyValue("--canvas-grid").trim();
+    let dotRGB = styles.getPropertyValue("--canvas-dot").trim();
+
+    const floatingDots = Array.from({ length: dotCount }, () => ({
       x: Math.random() * canvasWidth,
       y: Math.random() * canvasHeight,
       velocityX: (Math.random() - 0.5) * 0.15,
@@ -21,30 +35,51 @@ export default function BackgroundCanvas() {
       opacity: Math.random() * 0.25 + 0.05,
     }));
 
+    // Pre-render grid to offscreen canvas (static, no need to redraw)
+    const gridCanvas = document.createElement("canvas");
+    gridCanvas.width = canvasWidth;
+    gridCanvas.height = canvasHeight;
+    const gridCtx = gridCanvas.getContext("2d");
+    const drawGrid = () => {
+      gridCtx.clearRect(0, 0, canvasWidth, canvasHeight);
+      gridCtx.strokeStyle = gridColor;
+      gridCtx.lineWidth = 0.5;
+      const gridCellSize = 100;
+      gridCtx.beginPath();
+      for (let x = 0; x <= canvasWidth; x += gridCellSize) {
+        gridCtx.moveTo(x, 0); gridCtx.lineTo(x, canvasHeight);
+      }
+      for (let y = 0; y <= canvasHeight; y += gridCellSize) {
+        gridCtx.moveTo(0, y); gridCtx.lineTo(canvasWidth, y);
+      }
+      gridCtx.stroke();
+    };
+    drawGrid();
+
     const handleWindowResize = () => {
       canvasWidth = canvas.width = window.innerWidth;
       canvasHeight = canvas.height = window.innerHeight;
+      gridCanvas.width = canvasWidth;
+      gridCanvas.height = canvasHeight;
+      drawGrid();
     };
     window.addEventListener("resize", handleWindowResize);
 
-    const drawFrame = () => {
-      const styles = getComputedStyle(document.documentElement);
-      const gridColor = styles.getPropertyValue("--canvas-grid").trim();
-      const dotRGB = styles.getPropertyValue("--canvas-dot").trim();
+    const drawFrame = (timestamp) => {
+      animationFrameId = requestAnimationFrame(drawFrame);
+
+      // Throttle FPS on mobile
+      if (timestamp - lastFrameTime < frameInterval) return;
+      lastFrameTime = timestamp;
 
       ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
-      ctx.strokeStyle = gridColor;
-      ctx.lineWidth = 0.5;
-      const gridCellSize = 100;
-      for (let x = 0; x <= canvasWidth; x += gridCellSize) {
-        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvasHeight); ctx.stroke();
-      }
-      for (let y = 0; y <= canvasHeight; y += gridCellSize) {
-        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvasWidth, y); ctx.stroke();
-      }
+      // Blit cached grid
+      ctx.drawImage(gridCanvas, 0, 0);
 
-      floatingDots.forEach((dot) => {
+      // Update and draw dots
+      for (let i = 0; i < dotCount; i++) {
+        const dot = floatingDots[i];
         dot.x += dot.velocityX;
         dot.y += dot.velocityY;
         if (dot.x < 0) dot.x = canvasWidth;
@@ -55,31 +90,36 @@ export default function BackgroundCanvas() {
         ctx.arc(dot.x, dot.y, dot.radius, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${dotRGB},${dot.opacity})`;
         ctx.fill();
-      });
+      }
 
-      floatingDots.forEach((dotA, index) => {
-        floatingDots.slice(index + 1).forEach((dotB) => {
-          const distanceBetweenDots = Math.hypot(dotA.x - dotB.x, dotA.y - dotB.y);
-          if (distanceBetweenDots < 100) {
-            ctx.strokeStyle = `rgba(${dotRGB},${0.05 * (1 - distanceBetweenDots / 100)})`;
-            ctx.lineWidth = 0.5;
-            ctx.beginPath();
-            ctx.moveTo(dotA.x, dotA.y);
-            ctx.lineTo(dotB.x, dotB.y);
-            ctx.stroke();
+      // Draw connecting lines (desktop only)
+      if (drawLines) {
+        ctx.lineWidth = 0.5;
+        for (let i = 0; i < dotCount; i++) {
+          const a = floatingDots[i];
+          for (let j = i + 1; j < dotCount; j++) {
+            const b = floatingDots[j];
+            const dx = a.x - b.x;
+            const dy = a.y - b.y;
+            const dist = dx * dx + dy * dy;
+            if (dist < 10000) { // 100^2, avoid Math.hypot
+              ctx.strokeStyle = `rgba(${dotRGB},${0.05 * (1 - Math.sqrt(dist) / 100)})`;
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.stroke();
+            }
           }
-        });
-      });
-
-      animationFrameId = requestAnimationFrame(drawFrame);
+        }
+      }
     };
 
-    drawFrame();
+    animationFrameId = requestAnimationFrame(drawFrame);
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("resize", handleWindowResize);
     };
-  }, [theme]);
+  }, [theme, isReduced]);
 
   return <canvas className="background-canvas" ref={canvasRef} />;
 }
