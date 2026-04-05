@@ -103,6 +103,15 @@ const ARTICLES = [
     readTime: "8 min read",
     category: "guides",
   },
+  {
+    id: "gsap-animation-architecture",
+    number: "11",
+    title: "How I animated this portfolio",
+    subtitle: "The GSAP patterns, motion toggle, and performance tricks behind every animation",
+    tags: ["GSAP", "Animation", "Performance"],
+    readTime: "9 min read",
+    category: "engineering",
+  },
 ];
 
 export default function Thinking({ onOpenArticle }) {
