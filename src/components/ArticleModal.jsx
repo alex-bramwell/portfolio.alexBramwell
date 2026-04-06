@@ -255,6 +255,20 @@ function StepDiagram({ steps, playing, isReduced, children }) {
   );
 }
 
+function parseLinks(text) {
+  const linkRegex = /\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g;
+  const parts = [];
+  let lastIndex = 0;
+  let match;
+  while ((match = linkRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) parts.push(text.slice(lastIndex, match.index));
+    parts.push(<a key={match.index} href={match[2]} target="_blank" rel="noopener" className="am-inline-link">{match[1]}</a>);
+    lastIndex = linkRegex.lastIndex;
+  }
+  if (lastIndex < text.length) parts.push(text.slice(lastIndex));
+  return parts.length > 1 ? parts : text;
+}
+
 function renderBody(body, codeToggles, interactives) {
   const blocks = body.split("\n\n");
   const result = [];
@@ -296,7 +310,7 @@ function renderBody(body, codeToggles, interactives) {
       );
     } else {
       result.push(
-        <p key={`p-${i}`} className="am-section-paragraph">{blocks[i]}</p>
+        <p key={`p-${i}`} className="am-section-paragraph">{parseLinks(blocks[i])}</p>
       );
       i++;
     }
@@ -2744,7 +2758,7 @@ Step 2: export the SVG. Select the frame in Figma, right-click, "Copy as SVG." P
 
 Step 3: decide how things arrive. This is the only animation step. You look at the finished SVG and ask: what appears first? What appears second? What slides in, what fades in, what pops? Then you write a short GSAP timeline that describes the entrances. That is it.
 
-The mental model is simple. Figma gives you the destination. GSAP describes the journey to get there.`,
+The mental model is simple. Figma gives you the destination. [GSAP](https://gsap.com/docs/v3/GSAP/) describes the journey to get there.`,
       },
       {
         heading: "Step 1: designing in Figma",
@@ -2777,7 +2791,7 @@ No coordinates to calculate. No maths to do. Figma already placed everything whe
         heading: "Step 3: writing the GSAP timeline",
         body: `This is where the animation happens, and it is the shortest step. Every animation on this site uses one of five patterns, and they all follow the same structure.
 
-The most common pattern is an entrance timeline. You create a timeline, then tell each group how to enter:
+The most common pattern is an entrance [timeline](https://gsap.com/docs/v3/GSAP/gsap.timeline()). You create a timeline, then tell each group how to enter:
 
 const tl = gsap.timeline();
 
@@ -2788,7 +2802,7 @@ tl.from(".idg-title", { opacity: 0, duration: 0.3 })
 
 That is the entire animation. Four lines. Each line says: "take this group, start it invisible (and optionally offset or scaled), and animate it to where Figma placed it."
 
-The ".from()" method is the key insight. It animates FROM the values you give it TO the element's natural position. You never specify the end state because the end state is already defined by the SVG markup that Figma generated. GSAP just needs to know where things start.
+The [.from()](https://gsap.com/docs/v3/GSAP/Timeline/from()) method is the key insight. It animates FROM the values you give it TO the element's natural position. You never specify the end state because the end state is already defined by the SVG markup that Figma generated. GSAP just needs to know where things start.
 
 The "-=0.2" overlap means the next animation starts 0.2 seconds before the previous one finishes. This is what makes sequences feel smooth rather than mechanical. I adjust this by feel, not by formula. Usually 0.1 to 0.3 seconds of overlap works well.`,
       },
@@ -2796,11 +2810,11 @@ The "-=0.2" overlap means the next animation starts 0.2 seconds before the previ
         heading: "The five patterns I reuse everywhere",
         body: `Every animation on this site is one of five patterns. Once you know them, you can build any animation you see here.
 
-1. Entrance timelines: a gsap.timeline() with chained .from() calls and overlap. Used for the hero section, navigation menu, contact modal, and case study. The elements cascade in order.
+1. Entrance timelines: a [gsap.timeline()](https://gsap.com/docs/v3/GSAP/gsap.timeline()) with chained .from() calls and overlap. Used for the hero section, navigation menu, contact modal, and case study. The elements cascade in order.
 
-2. Scroll reveals: gsap.fromTo() with a scrollTrigger that fires once when the element enters the viewport. Used for every section on the page. The element fades and slides in from a direction (up, left, or right).
+2. Scroll reveals: [gsap.fromTo()](https://gsap.com/docs/v3/GSAP/gsap.fromTo()) with a [scrollTrigger](https://gsap.com/docs/v3/Plugins/ScrollTrigger/) that fires once when the element enters the viewport. Used for every section on the page. The element fades and slides in from a direction (up, left, or right).
 
-3. Continuous motion: gsap.to() with repeat: -1 and yoyo: true. Used for the hero glow orbs and the floating action button. The element drifts back and forth forever.
+3. Continuous motion: [gsap.to()](https://gsap.com/docs/v3/GSAP/gsap.to()) with repeat: -1 and yoyo: true. Used for the hero glow orbs and the floating action button. The element drifts back and forth forever.
 
 4. Cursor interaction: gsap.to() on mousemove with a multiplier (0.3) so the element follows at a fraction of the cursor distance. On mouseleave, elastic.out easing snaps it back with a bounce. Used for the magnetic buttons.
 
@@ -2820,7 +2834,7 @@ I use three easing functions for almost everything:
 
 "elastic.out(1, 0.4)" for playful snap-backs. The element overshoots its target and springs back. Used sparingly, only on the magnetic button return and a few scale-in effects.
 
-The easiest way to understand easing is to try the GSAP Ease Visualizer (search for it on the GSAP site). It lets you see the speed curve of every easing function. I spent time there before choosing mine, and I suggest doing the same. Pick two or three and use them consistently. Mixing too many easing functions makes a site feel chaotic.`,
+The easiest way to understand easing is to try the [GSAP Ease Visualizer](https://gsap.com/docs/v3/Eases/). It lets you see the speed curve of every easing function. I spent time there before choosing mine, and I suggest doing the same. Pick two or three and use them consistently. Mixing too many easing functions makes a site feel chaotic.`,
       },
       {
         heading: "The motion toggle",
@@ -2857,7 +2871,9 @@ I do not calculate coordinates. Figma does that. I do not work out timing with f
 
 The five patterns (entrance timelines, scroll reveals, continuous motion, cursor interaction, modal choreography) cover every animation on this site. Learn those five and you can animate anything.
 
-The hardest part is not the code. It is restraint. Every element could bounce, every section could parallax, every button could wiggle. The discipline is knowing when animation serves the experience and when it is just showing off. If you would not notice the animation on a second visit, it is doing its job.`,
+The hardest part is not the code. It is restraint. Every element could bounce, every section could parallax, every button could wiggle. The discipline is knowing when animation serves the experience and when it is just showing off. If you would not notice the animation on a second visit, it is doing its job.
+
+If you want to learn GSAP from scratch, start with the [getting started guide](https://gsap.com/resources/getting-started/timelines/), then explore the [ease visualizer](https://gsap.com/docs/v3/Eases/) and the [ScrollTrigger docs](https://gsap.com/docs/v3/Plugins/ScrollTrigger/). For React specifically, look into [gsap.context()](https://gsap.com/docs/v3/GSAP/gsap.context()) for clean animation cleanup in useEffect hooks.`,
       },
     ],
   },
