@@ -2727,177 +2727,137 @@ These are the core building blocks of JavaScript. Every framework, library, and 
   },
   "gsap-animation-architecture": {
     title: "How I animated this portfolio",
-    subtitle: "The GSAP patterns, motion toggle, and performance tricks behind every animation on this site",
+    subtitle: "The design-to-code workflow, GSAP patterns, and the human process behind every animation",
     date: "April 2026",
-    readTime: "9 min read",
+    readTime: "10 min read",
     illustration: AnimationIllustration,
     sections: [
       {
-        heading: "The animation stack",
-        body: `Every animation on this site uses GSAP (GreenSock Animation Platform) with the ScrollTrigger plugin. No CSS keyframes for the main animations, no Framer Motion, no Spring libraries. GSAP gives you precise control over timing, easing, and sequencing that CSS alone cannot match.
+        heading: "The workflow: Figma to code to animation",
+        body: `Every animation on this site started the same way: as a static design in Figma. Not as code, not as a GSAP timeline, not as coordinates on a grid. As a picture of what the finished state should look like.
 
-The setup is minimal. Two imports at the top of any component that animates:
+The process has three steps, and the first two have nothing to do with animation.
 
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-gsap.registerPlugin(ScrollTrigger);
+Step 1: design the final frame in Figma. Place the boxes, the arrows, the labels, the layout. This is where all the visual decisions happen. Figma handles the coordinates, the spacing, the alignment. You are just arranging shapes on a canvas.
 
-From there, every animation follows one of five patterns that I reuse across the entire site. Understanding these five patterns is enough to build everything you see here.`,
+Step 2: export the SVG. Select the frame in Figma, right-click, "Copy as SVG." Paste it into a React component. Figma gives you the full SVG markup with every coordinate, colour, and size already calculated. You never type a coordinate yourself.
+
+Step 3: decide how things arrive. This is the only animation step. You look at the finished SVG and ask: what appears first? What appears second? What slides in, what fades in, what pops? Then you write a short GSAP timeline that describes the entrances. That is it.
+
+The mental model is simple. Figma gives you the destination. GSAP describes the journey to get there.`,
       },
       {
-        heading: "Pattern 1: entrance timelines",
-        body: `When the page loads, the hero section plays a choreographed sequence. Each element appears in order with a slight overlap, creating a cascade effect.
+        heading: "Step 1: designing in Figma",
+        body: `I design every illustration and diagram in Figma first. The interactive diagrams for the blog articles, the hero illustrations, the modal entrance layouts, all of them start as static frames.
 
-The key is gsap.timeline(). A timeline lets you chain animations so they play in sequence, with control over how much they overlap.
+The key decision at this stage is grouping. While designing, I think about which elements should appear together. The title text is one group. The input boxes are another. The arrows are another. The output boxes are another. I name these groups in Figma so they translate cleanly into code.
 
-const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+For example, the .map() diagram started as a Figma frame with four input boxes at the top, four arrows in the middle, and four output boxes at the bottom. I did not think about timing or easing at this stage. I just made sure the layout told the story: data goes in at the top, gets transformed, and comes out at the bottom.
 
-tl.from(".hero-heading", { opacity: 0, y: 40, duration: 0.8 })
-  .from(".hero-subtitle", { opacity: 0, y: 20, duration: 0.5 }, "-=0.4")
-  .from(".hero-buttons", { opacity: 0, y: 20, duration: 0.5 }, "-=0.3")
-  .from(".hero-stats", { opacity: 0, x: 40, duration: 0.6 }, "-=0.5");
-
-The "-=0.4" tells GSAP to start this animation 0.4 seconds before the previous one finishes. That overlap is what makes the sequence feel fluid rather than robotic. Without it, each element would wait for the previous one to fully complete before starting.
-
-The defaults object sets the easing for every animation in the timeline. "power3.out" starts fast and decelerates, which feels natural for elements entering the screen.
-
-I use this pattern for the hero, the mobile navigation menu, the contact modal, and the case study modal. Each has its own timeline with different properties (the nav uses clipPath, the modal uses scale and rotateX), but the structure is identical.`,
+The design tokens (colours, fonts, radii) are managed with Tokens Studio in Figma. The same tokens power the live site through SCSS variables. This means the colours in Figma and the colours in production are always in sync.`,
       },
       {
-        heading: "Pattern 2: scroll reveals",
-        body: `Most sections on the page are invisible until you scroll to them. The ScrollReveal component wraps any content and animates it in when it enters the viewport.
+        heading: "Step 2: from Figma SVG to React",
+        body: `Once the design looks right, I select the frame in Figma and copy as SVG. The output is standard SVG markup with all positions baked in. I paste it into a React component and make two small changes.
 
-gsap.fromTo(element,
-  { opacity: 0, y: 30 },
-  {
-    opacity: 1, y: 0,
-    duration: 0.7,
-    ease: "power3.out",
-    scrollTrigger: {
-      trigger: element,
-      start: "top 88%",
-      once: true,
-    },
-  }
-);
+First, I replace hardcoded hex colours with CSS custom properties. #dfff47 becomes var(--color-accent). This way the illustration responds to the dark/light theme toggle automatically.
 
-The scrollTrigger object tells GSAP when to fire. "start: top 88%" means the animation triggers when the top of the element reaches 88% down the viewport. This fires just before the element would naturally come into view, so the animation is already playing by the time the user sees it.
+Second, I wrap related elements in groups and give them class names that describe their role in the animation:
 
-"once: true" means it only fires once. Scroll back up and the element stays visible. This prevents the annoying pattern where content keeps replaying every time you scroll past it.
+<g className="idg-title">...</g>
+<g className="idg-input">...</g>
+<g className="idg-arrow">...</g>
+<g className="idg-output">...</g>
 
-The direction prop lets me vary the entry: some elements slide up (y: 30), some from the left (x: -30), some from the right (x: 30). The stagger prop adds a small delay (stagger * 0.1s) so grid items cascade rather than all appearing at once.`,
+These class names are not about styling. They are handles for GSAP to grab onto. "idg-input" means "this is an input element, animate it during the input stage." The grouping mirrors what I decided in Figma.
+
+No coordinates to calculate. No maths to do. Figma already placed everything where it needs to be. The class names are the only thing I add by hand.`,
       },
       {
-        heading: "Pattern 3: continuous motion",
-        body: `The hero section has three coloured glow orbs that float slowly behind the content. These use infinite looping animations.
+        heading: "Step 3: writing the GSAP timeline",
+        body: `This is where the animation happens, and it is the shortest step. Every animation on this site uses one of five patterns, and they all follow the same structure.
 
-gsap.to(".hero-glow-1", {
-  x: 60, y: -40,
-  scale: 1.15,
-  opacity: 0.25,
-  duration: 8,
-  repeat: -1,
-  yoyo: true,
-  ease: "sine.inOut",
-});
+The most common pattern is an entrance timeline. You create a timeline, then tell each group how to enter:
 
-"repeat: -1" means loop forever. "yoyo: true" means alternate direction on each loop, so the orb drifts right then back left, rather than snapping back to the start. "sine.inOut" gives a smooth acceleration and deceleration that feels organic.
+const tl = gsap.timeline();
 
-Each orb has a different duration (8s, 10s, 12s) and a different delay, so they never sync up. This creates a gentle, ambient movement that does not loop visibly.
+tl.from(".idg-title", { opacity: 0, duration: 0.3 })
+  .from(".idg-input", { opacity: 0, x: -20, duration: 0.4 }, "-=0.2")
+  .from(".idg-arrow", { opacity: 0, scaleX: 0, duration: 0.3 }, "-=0.1")
+  .from(".idg-output", { opacity: 0, scale: 0.8, duration: 0.4 }, "-=0.15");
 
-The same pattern powers the floating action button (ThoughtsFab), which bobs up and down with a 2-second yoyo cycle, and the pulsing dot on the availability badge, which uses a CSS animation since it is simpler.`,
+That is the entire animation. Four lines. Each line says: "take this group, start it invisible (and optionally offset or scaled), and animate it to where Figma placed it."
+
+The ".from()" method is the key insight. It animates FROM the values you give it TO the element's natural position. You never specify the end state because the end state is already defined by the SVG markup that Figma generated. GSAP just needs to know where things start.
+
+The "-=0.2" overlap means the next animation starts 0.2 seconds before the previous one finishes. This is what makes sequences feel smooth rather than mechanical. I adjust this by feel, not by formula. Usually 0.1 to 0.3 seconds of overlap works well.`,
       },
       {
-        heading: "Pattern 4: cursor interaction",
-        body: `The MagneticButton component follows the cursor with a subtle elastic effect. When you hover, the button shifts towards your mouse. When you leave, it snaps back with a bounce.
+        heading: "The five patterns I reuse everywhere",
+        body: `Every animation on this site is one of five patterns. Once you know them, you can build any animation you see here.
 
-// On mouse move
-const x = (mouseX - centerX) * 0.3;
-const y = (mouseY - centerY) * 0.3;
-gsap.to(buttonRef, { x, y, duration: 0.3, ease: "power2.out" });
+1. Entrance timelines: a gsap.timeline() with chained .from() calls and overlap. Used for the hero section, navigation menu, contact modal, and case study. The elements cascade in order.
 
-// On mouse leave
-gsap.to(buttonRef, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.4)" });
+2. Scroll reveals: gsap.fromTo() with a scrollTrigger that fires once when the element enters the viewport. Used for every section on the page. The element fades and slides in from a direction (up, left, or right).
 
-The 0.3 multiplier means the button only moves 30% of the distance to the cursor, creating a "magnetic pull" rather than a direct follow. "elastic.out(1, 0.4)" on the leave animation adds a spring-like overshoot when the button returns to centre.
+3. Continuous motion: gsap.to() with repeat: -1 and yoyo: true. Used for the hero glow orbs and the floating action button. The element drifts back and forth forever.
 
-This interaction is disabled entirely on touch devices and when reduced motion is active, since it depends on a mouse cursor.`,
+4. Cursor interaction: gsap.to() on mousemove with a multiplier (0.3) so the element follows at a fraction of the cursor distance. On mouseleave, elastic.out easing snaps it back with a bounce. Used for the magnetic buttons.
+
+5. Modal choreography: a timeline combining opacity, scale, rotateX, and either y-translation or clipPath for the reveal. Used for the contact modal, case study, and article modals.
+
+Every animation on this site is one of these five. The variety comes from mixing different properties (opacity + y for a slide, opacity + scale for a pop, opacity + scaleX for an arrow drawing in), not from different techniques.`,
       },
       {
-        heading: "Pattern 5: modal choreography",
-        body: `The contact modal and case study both use a multi-stage entrance with 3D transforms. The key properties are scale, rotateX, and skewY, which give depth to flat elements.
+        heading: "Easing: why animations feel right or wrong",
+        body: `The easing function is the most important decision in any animation. It controls the speed curve: does the animation start fast and slow down, or start slow and speed up?
 
-const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+I use three easing functions for almost everything:
 
-tl.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: 0.3 })
-  .fromTo(modal, {
-    opacity: 0, scale: 0.92, y: 40, rotateX: 8,
-  }, {
-    opacity: 1, scale: 1, y: 0, rotateX: 0,
-    duration: 0.5, ease: "back.out(1.4)",
-  }, "-=0.15");
+"power3.out" for entrances. Starts fast, decelerates at the end. Elements snap into place and settle gently. This is the default for 90% of animations.
 
-"back.out(1.4)" is the easing that gives the modal a slight overshoot, it scales past 1.0 then settles back. The rotateX: 8 to 0 creates a subtle tilt that makes the modal feel like it is swinging into place from above.
+"sine.inOut" for looping motion. Smooth acceleration and deceleration in both directions. Used for the glow orbs and any continuous floating effect.
 
-For the case study and article modals, I use clipPath instead. The content slides up from the bottom with "y: 100% to 0%", and the overlay fades in behind it. The exit reverses: content slides down while the overlay fades out. Each takes less than half a second total.
+"elastic.out(1, 0.4)" for playful snap-backs. The element overshoots its target and springs back. Used sparingly, only on the magnetic button return and a few scale-in effects.
 
-The contact modal also has a success state with a particle burst effect. After the form submits, small circles explode outward from the centre using randomised angles and distances, each with a slight random delay. It is purely decorative but it makes the success feel celebratory.`,
+The easiest way to understand easing is to try the GSAP Ease Visualizer (search for it on the GSAP site). It lets you see the speed curve of every easing function. I spent time there before choosing mine, and I suggest doing the same. Pick two or three and use them consistently. Mixing too many easing functions makes a site feel chaotic.`,
       },
       {
         heading: "The motion toggle",
-        body: `Every animation on this site can be turned off. The MotionToggle component switches a data-motion attribute between "full" and "reduced" on the document root, and every component checks this before running animations.
+        body: `Every animation on this site can be turned off. This is not optional, it is a core accessibility requirement.
+
+The MotionToggle component switches a data-motion attribute between "full" and "reduced" on the document root. Every component checks an isReduced flag from context before running any animation:
 
 const { isReduced } = useTheme();
 
 useEffect(() => {
   if (isReduced) return;
-  // ... animation code
+  // ... animation code only runs if motion is on
 }, [isReduced]);
 
-The pattern is simple: if isReduced is true, the useEffect returns early before creating any GSAP timelines. No animations play, no requestAnimationFrame loops run, no ScrollTriggers are created.
+On first load, the site checks the operating system preference using window.matchMedia("(prefers-reduced-motion: reduce)"). If the user has told their OS they prefer less motion, the toggle starts in the reduced state automatically. No animations play, no canvas loops run, no ScrollTriggers are created.
 
-On first load, the site checks the operating system preference using window.matchMedia("(prefers-reduced-motion: reduce)"). If the user has told their OS they prefer less motion, the toggle starts in the reduced state automatically.
-
-For components that need to show content even without animation (like scroll reveals), the SCSS files include CSS fallback animations:
-
-[data-motion="reduced"] .css-reveal-up {
-  animation: cssRevealUp 0.4s ease both;
-}
-
-@keyframes cssRevealUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-These CSS animations are simpler and shorter than the GSAP versions, providing a basic entrance without the full choreography. They run once and settle immediately.`,
+For components that still need to show content (like scroll reveals), I provide simple CSS fallback animations that run once and settle immediately. These are shorter, simpler, and cause no motion sensitivity issues.`,
       },
       {
         heading: "Performance on mobile",
-        body: `The background canvas was the biggest performance concern. It runs a continuous requestAnimationFrame loop drawing a dot-grid with connecting lines. On desktop this is fine. On an iPhone, it was eating 40-60% of the main thread.
+        body: `The background canvas was the biggest performance problem. It runs a continuous requestAnimationFrame loop drawing dots with connecting lines. On desktop this is fine. On an iPhone, it was consuming 40-60% of the main thread.
 
-The fixes were straightforward:
+The fixes were straightforward: reduce dots from 80 to 30 on mobile, skip the connecting-line calculation entirely (it is O(n squared) and barely visible on small screens), throttle to 24fps instead of 60, pre-render the static grid to an offscreen canvas, and read CSS custom properties once on mount instead of every frame.
 
-1. Detect mobile and reduce the dot count from 80 to 30.
-2. Skip the connecting-line calculation entirely on mobile (it is O(n squared) and barely visible on small screens).
-3. Throttle the frame rate to 24fps on mobile instead of 60.
-4. Pre-render the static grid to an offscreen canvas and blit it each frame, instead of redrawing hundreds of lines every frame.
-5. Read CSS custom properties once on mount instead of calling getComputedStyle every frame.
+The other performance decision was lazy-loading. The article modal, case study, contact form, and floating action button are all loaded with React.lazy(). They are not downloaded until the user actually opens them. This cut the initial bundle by 35%.
 
-The other key performance decision was lazy-loading. The article modal, case study, contact form, and floating action button are all loaded with React.lazy(). They are not downloaded until the user actually opens them. This cut the initial bundle from 561KB to 366KB, a 35% reduction in what mobile users download on first load.
-
-The easing functions also matter for perceived performance. "power3.out" and "power4.out" start fast and slow down at the end, which makes animations feel snappy even when the total duration is 0.5-0.6 seconds. A linear easing at the same duration would feel sluggish.`,
+Easing functions also matter for perceived performance. "power3.out" starts fast and slows down, making a 0.5 second animation feel snappy. A linear easing at the same duration feels sluggish. The animation is the same length, but the speed curve tricks your brain into thinking it was faster.`,
       },
       {
-        heading: "What I would do differently",
-        body: `If I were starting this project again, I would consider using GSAP's context API more aggressively from the start. gsap.context() scopes all animations to a specific DOM element and provides a clean revert() method for cleanup. I adopted it partway through, so some earlier components handle cleanup manually.
+        heading: "The honest summary",
+        body: `The process is simpler than it looks. Design the end state in Figma. Export the SVG. Group elements by when they should appear. Write a short GSAP timeline with .from() calls and overlaps. Pick an easing. Check reduced motion. Done.
 
-I would also extract the five animation patterns into reusable hooks: useEntranceTimeline, useScrollReveal, useFloatingMotion, useMagneticFollow, useModalChoreography. The patterns are consistent enough that a hook with a few options would cover 90% of cases and reduce duplication.
+I do not calculate coordinates. Figma does that. I do not work out timing with formulas. I adjust by feel, scrubbing durations between 0.3 and 0.6 seconds and overlaps between 0.1 and 0.3 until it looks right. I do not memorise easing curves. I use power3.out for almost everything and only reach for elastic or back easing when something needs to feel playful.
 
-The SVG illustrations in the article modals could benefit from GSAP's DrawSVG plugin for smoother path drawing. Currently I use strokeDashoffset, which works but requires manual calculation of path lengths. DrawSVG handles this automatically.
+The five patterns (entrance timelines, scroll reveals, continuous motion, cursor interaction, modal choreography) cover every animation on this site. Learn those five and you can animate anything.
 
-Finally, I would invest more time in the CSS fallback animations for reduced-motion users. Currently, some components just show content instantly when motion is off. A set of subtle, short CSS transitions would give reduced-motion users a better experience without causing discomfort.
-
-The animation architecture here is not complicated. Five patterns, one toggle, and consistent cleanup. The complexity is in the choreography: getting the timing, easing, and overlap right so each interaction feels intentional rather than decorative.`,
+The hardest part is not the code. It is restraint. Every element could bounce, every section could parallax, every button could wiggle. The discipline is knowing when animation serves the experience and when it is just showing off. If you would not notice the animation on a second visit, it is doing its job.`,
       },
     ],
   },
