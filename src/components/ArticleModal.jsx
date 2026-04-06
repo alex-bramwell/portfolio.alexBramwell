@@ -3,7 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useTheme } from "../context/ThemeContext";
 import "./ArticleModal.scss";
-import { mapSteps, filterSteps, findSteps, spreadSteps, destructureSteps, functionSteps, variablesSteps, conditionalSteps, imperativeSteps, eventSteps, listRenderSteps, conditionalRenderSteps, propsSteps, stateSteps, useEffectSteps, keysSteps, nestingSteps, mixinSteps, partialsSteps, semanticSteps, contrastSteps, focusSteps } from "../data/diagramSteps";
+import { mapSteps, filterSteps, findSteps, spreadSteps, destructureSteps, functionSteps, variablesSteps, conditionalSteps, imperativeSteps, eventSteps, listRenderSteps, conditionalRenderSteps, propsSteps, stateSteps, useEffectSteps, keysSteps, nestingSteps, mixinSteps, partialsSteps, semanticSteps, contrastSteps, focusSteps, nosweatArchSteps, tenantFlowSteps, paymentFlowSteps } from "../data/diagramSteps";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -1673,6 +1673,119 @@ function LivingPortfolioIllustration() {
   );
 }
 
+const InteractiveNoSweatArch = (
+  <svg viewBox="0 0 520 200" fill="none">
+    <text className="idg-title" x="260" y="15" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)" letterSpacing="1">NOSWEAT ARCHITECTURE</text>
+    {/* Frontend layer */}
+    <rect className="idg-input" x="30" y="28" width="460" height="34" rx="4" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
+    <text className="idg-input" x="50" y="50" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)" fontWeight="500">React 19 + TypeScript + Vite</text>
+    <text className="idg-input" x="460" y="50" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)" textAnchor="end">FRONTEND</text>
+    {/* Arrows down */}
+    <line className="idg-arrow" x1="160" y1="62" x2="160" y2="74" stroke="var(--color-border)" strokeWidth="1" />
+    <line className="idg-arrow" x1="360" y1="62" x2="360" y2="74" stroke="var(--color-border)" strokeWidth="1" />
+    {/* API layer */}
+    <rect className="idg-arrow" x="30" y="76" width="220" height="34" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="var(--color-surface-raised)" />
+    <text className="idg-arrow" x="50" y="98" fill="var(--color-text-secondary)" fontSize="10" fontFamily="var(--font-mono)">Express (dev)</text>
+    <rect className="idg-arrow" x="270" y="76" width="220" height="34" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="var(--color-surface-raised)" />
+    <text className="idg-arrow" x="290" y="98" fill="var(--color-text-secondary)" fontSize="10" fontFamily="var(--font-mono)">Vercel Serverless (prod)</text>
+    <text className="idg-arrow" x="460" y="98" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)" textAnchor="end">API</text>
+    {/* Arrows down */}
+    <line className="idg-process" x1="260" y1="110" x2="260" y2="122" stroke="var(--color-border)" strokeWidth="1" />
+    {/* Database layer */}
+    <rect className="idg-process" x="30" y="124" width="460" height="34" rx="4" stroke="#3ecf8e" strokeWidth="1" fill="rgba(62, 207, 142, 0.08)" />
+    <text className="idg-process" x="50" y="146" fill="#3ecf8e" fontSize="10" fontFamily="var(--font-mono)" fontWeight="500">Supabase + PostgreSQL + RLS</text>
+    <text className="idg-process" x="460" y="146" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)" textAnchor="end">DATABASE</text>
+    {/* External services */}
+    <rect className="idg-output" x="30" y="168" width="140" height="28" rx="4" stroke="#635bff" strokeWidth="1" fill="rgba(99, 91, 255, 0.08)" />
+    <text className="idg-output" x="100" y="186" textAnchor="middle" fill="#635bff" fontSize="9" fontFamily="var(--font-mono)">Stripe Connect</text>
+    <rect className="idg-output" x="185" y="168" width="100" height="28" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="var(--color-surface-raised)" />
+    <text className="idg-output" x="235" y="186" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">Resend</text>
+    <rect className="idg-output" x="300" y="168" width="190" height="28" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="var(--color-surface-raised)" />
+    <text className="idg-output" x="395" y="186" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">QuickBooks / Xero</text>
+    <text className="idg-output" x="460" y="146" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)" textAnchor="end">DATABASE</text>
+    {/* Note */}
+    <text className="idg-note" x="260" y="146" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)">59 migrations</text>
+  </svg>
+);
+
+const InteractiveTenantFlow = (
+  <svg viewBox="0 0 520 170" fill="none">
+    <text className="idg-title" x="260" y="15" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)" letterSpacing="1">GYM ONBOARDING FLOW</text>
+    {/* Step 1: Owner signs up */}
+    <rect className="idg-input" x="10" y="30" width="100" height="50" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
+    <text className="idg-input" x="60" y="52" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="10" fontFamily="var(--font-mono)">Owner</text>
+    <text className="idg-input" x="60" y="68" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">signs up</text>
+    {/* Arrow 1 */}
+    <line className="idg-arrow" x1="115" y1="55" x2="145" y2="55" stroke="var(--color-accent)" strokeWidth="1.5" />
+    <polygon className="idg-arrow" points="143,50 150,55 143,60" fill="var(--color-accent)" />
+    {/* Step 2: Tenant created */}
+    <rect className="idg-arrow" x="155" y="30" width="100" height="50" rx="4" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
+    <text className="idg-arrow" x="205" y="52" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)">Tenant</text>
+    <text className="idg-arrow" x="205" y="68" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">created</text>
+    {/* Arrow 2 */}
+    <line className="idg-process" x1="260" y1="55" x2="290" y2="55" stroke="var(--color-accent)" strokeWidth="1.5" />
+    <polygon className="idg-process" points="288,50 295,55 288,60" fill="var(--color-accent)" />
+    {/* Step 3: RLS */}
+    <rect className="idg-process" x="300" y="30" width="100" height="50" rx="4" stroke="#3ecf8e" strokeWidth="1.5" fill="rgba(62, 207, 142, 0.08)" />
+    <text className="idg-process" x="350" y="52" textAnchor="middle" fill="#3ecf8e" fontSize="10" fontFamily="var(--font-mono)">RLS</text>
+    <text className="idg-process" x="350" y="68" textAnchor="middle" fill="#3ecf8e" fontSize="9" fontFamily="var(--font-mono)">isolates</text>
+    {/* Arrow 3 */}
+    <line className="idg-output" x1="405" y1="55" x2="435" y2="55" stroke="var(--color-accent)" strokeWidth="1.5" />
+    <polygon className="idg-output" points="433,50 440,55 433,60" fill="var(--color-accent)" />
+    {/* Step 4: Storefront */}
+    <rect className="idg-output" x="445" y="30" width="70" height="50" rx="4" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
+    <text className="idg-output" x="480" y="50" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">/gym</text>
+    <text className="idg-output" x="480" y="66" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">/:slug</text>
+    {/* Isolation detail */}
+    <rect className="idg-process" x="155" y="100" width="100" height="34" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
+    <text className="idg-process" x="205" y="121" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">Gym A data</text>
+    <rect className="idg-process" x="270" y="100" width="100" height="34" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
+    <text className="idg-process" x="320" y="121" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">Gym B data</text>
+    <line className="idg-process" x1="258" y1="100" x2="258" y2="134" stroke="var(--color-accent)" strokeWidth="2" strokeDasharray="3 3" />
+    {/* Note */}
+    <text className="idg-note" x="260" y="158" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">One codebase, one database. RLS enforces complete data isolation per tenant.</text>
+  </svg>
+);
+
+const InteractivePaymentFlow = (
+  <svg viewBox="0 0 520 170" fill="none">
+    <text className="idg-title" x="260" y="15" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)" letterSpacing="1">STRIPE CONNECT PAYMENT FLOW</text>
+    {/* Step 1: Member */}
+    <rect className="idg-input" x="10" y="30" width="90" height="50" rx="4" stroke="var(--color-border)" strokeWidth="1" fill="none" />
+    <text className="idg-input" x="55" y="52" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="10" fontFamily="var(--font-mono)">Member</text>
+    <text className="idg-input" x="55" y="68" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">checks out</text>
+    {/* Arrow 1 */}
+    <line className="idg-arrow" x1="105" y1="55" x2="135" y2="55" stroke="var(--color-accent)" strokeWidth="1.5" />
+    <polygon className="idg-arrow" points="133,50 140,55 133,60" fill="var(--color-accent)" />
+    {/* Step 2: API */}
+    <rect className="idg-arrow" x="140" y="30" width="90" height="50" rx="4" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
+    <text className="idg-arrow" x="185" y="52" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)">API</text>
+    <text className="idg-arrow" x="185" y="68" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)">PaymentIntent</text>
+    {/* Arrow 2 */}
+    <line className="idg-process" x1="235" y1="55" x2="265" y2="55" stroke="#635bff" strokeWidth="1.5" />
+    <polygon className="idg-process" points="263,50 270,55 263,60" fill="#635bff" />
+    {/* Step 3: Stripe */}
+    <rect className="idg-process" x="270" y="30" width="90" height="50" rx="4" stroke="#635bff" strokeWidth="1.5" fill="rgba(99, 91, 255, 0.08)" />
+    <text className="idg-process" x="315" y="50" textAnchor="middle" fill="#635bff" fontSize="10" fontFamily="var(--font-mono)">Stripe</text>
+    <text className="idg-process" x="315" y="66" textAnchor="middle" fill="#635bff" fontSize="9" fontFamily="var(--font-mono)">Connect</text>
+    {/* Split arrows */}
+    <line className="idg-output" x1="365" y1="45" x2="400" y2="35" stroke="#635bff" strokeWidth="1" />
+    <line className="idg-output" x1="365" y1="65" x2="400" y2="75" stroke="var(--color-accent)" strokeWidth="1" />
+    {/* Gym payout */}
+    <rect className="idg-output" x="405" y="18" width="100" height="34" rx="4" stroke="#635bff" strokeWidth="1" fill="rgba(99, 91, 255, 0.08)" />
+    <text className="idg-output" x="455" y="40" textAnchor="middle" fill="#635bff" fontSize="10" fontFamily="var(--font-mono)">Gym receives $</text>
+    {/* Platform fee */}
+    <rect className="idg-output" x="405" y="60" width="100" height="34" rx="4" stroke="var(--color-accent-border)" strokeWidth="1" fill="var(--color-accent-dim)" />
+    <text className="idg-output" x="455" y="82" textAnchor="middle" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)">Platform fee</text>
+    {/* Webhook return */}
+    <path className="idg-output" d="M315 85 L315 115 L185 115 L185 85" stroke="var(--color-text-disabled)" strokeWidth="1" strokeDasharray="4 4" fill="none" />
+    <text className="idg-output" x="250" y="128" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">webhook</text>
+    <polygon className="idg-output" points="180,88 185,80 190,88" fill="var(--color-text-disabled)" />
+    {/* Note */}
+    <text className="idg-note" x="260" y="158" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">Each gym is a Stripe connected account. Payments split automatically between gym and platform.</text>
+  </svg>
+);
+
 function NoSweatIllustration() {
   const svgRef = useRef(null);
   const { isReduced } = useTheme();
@@ -1757,7 +1870,10 @@ That meant a class schedule page, a WOD (workout of the day) editor, coach profi
 
 The backend started as an Express server running alongside Vite in development. It handled Stripe webhook processing, payment intent creation, and anything that needed server-side secrets. In production, the same logic runs as Vercel serverless functions. The two backends share utility code but have separate entry points, which means I can develop locally with hot reload and deploy to edge functions without changing any business logic.
 
-This dual-backend pattern turned out to be one of the best early decisions. It kept the development loop fast (Express restarts in milliseconds) while the production path stayed serverless and scalable.`,
+This dual-backend pattern turned out to be one of the best early decisions. It kept the development loop fast (Express restarts in milliseconds) while the production path stayed serverless and scalable.
+
+{{interactive:0}}`,
+        interactives: [{ diagram: InteractiveNoSweatArch, steps: nosweatArchSteps }],
       },
       {
         heading: "Going multi-tenant",
@@ -1769,7 +1885,10 @@ The routing layer resolves tenants in two ways. Path-based routing (/gym/:slug) 
 
 The TenantContext wraps the entire gym-side app. It provides the current gym's ID, branding tokens, feature flags, and Stripe account ID to every component. The BrandingOverrideContext sits on top of that and powers the site builder's live preview, letting gym owners see changes before they publish.
 
-Getting RLS right was the hardest part of the entire project. One early policy created an infinite recursion loop, which took down every query. Debugging RLS in Supabase means reading PostgreSQL logs and reasoning about policy evaluation order. It is not glamorous work, but it is the kind of thing that matters enormously in production.`,
+Getting RLS right was the hardest part of the entire project. One early policy created an infinite recursion loop, which took down every query. Debugging RLS in Supabase means reading PostgreSQL logs and reasoning about policy evaluation order. It is not glamorous work, but it is the kind of thing that matters enormously in production.
+
+{{interactive:0}}`,
+        interactives: [{ diagram: InteractiveTenantFlow, steps: tenantFlowSteps }],
       },
       {
         heading: "Payments and Stripe Connect",
@@ -1779,7 +1898,10 @@ Stripe Connect solves this. Each gym onboards as a connected account. When a mem
 
 The payment flows span several features: day passes (one-off PaymentIntents), trial memberships (card-authorized SetupIntents that convert to subscriptions), recurring memberships (Stripe Subscriptions with plan management), and service bookings (coach-set pricing for PT, massage, nutrition consultations). Each flow has its own modal, confirmation page, and webhook handler.
 
-I also integrated QuickBooks and Xero for gym owners who need accounting sync. This required encrypted API keys stored per tenant, OAuth token refresh flows, and a sync log that tracks which transactions have been pushed to which accounting system. It is the least visible feature in the app and the one that required the most careful error handling.`,
+I also integrated QuickBooks and Xero for gym owners who need accounting sync. This required encrypted API keys stored per tenant, OAuth token refresh flows, and a sync log that tracks which transactions have been pushed to which accounting system. It is the least visible feature in the app and the one that required the most careful error handling.
+
+{{interactive:0}}`,
+        interactives: [{ diagram: InteractivePaymentFlow, steps: paymentFlowSteps }],
       },
       {
         heading: "The feature system",

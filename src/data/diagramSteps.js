@@ -185,3 +185,32 @@ export const focusSteps = [
   { show: [S.T, S.I, S.A, S.P, S.O], highlight: [S.O], text: "The currently focused element (Button) gets a visible outline. This is :focus-visible. Never remove it without providing an alternative." },
   { show: [S.T, S.I, S.A, S.P, S.O, S.N], highlight: [], text: null },
 ];
+
+// ===== NOSWEAT FITNESS =====
+
+export const nosweatArchSteps = [
+  { show: [S.T], highlight: [S.T], text: "The NoSweat stack has four layers, each handling a specific concern." },
+  { show: [S.T, S.I], highlight: [S.I], text: "The frontend: React 19 with TypeScript, built with Vite, styled with SCSS Modules. Components, pages, hooks, and contexts." },
+  { show: [S.T, S.I, S.A], highlight: [S.A], text: "The API layer: Express in development, Vercel serverless in production. Handles payments, webhooks, and anything needing server secrets." },
+  { show: [S.T, S.I, S.A, S.P], highlight: [S.P], text: "The database: Supabase (PostgreSQL) with Row-Level Security. Auth, real-time subscriptions, and 59 migration files tracking schema evolution." },
+  { show: [S.T, S.I, S.A, S.P, S.O], highlight: [S.O], text: "External services: Stripe Connect for payments, Resend for email, QuickBooks and Xero for accounting. Each integrated via the API layer." },
+  { show: [S.T, S.I, S.A, S.P, S.O, S.N], highlight: [], text: null },
+];
+
+export const tenantFlowSteps = [
+  { show: [S.T], highlight: [S.T], text: "When a gym owner signs up, a multi-step onboarding flow creates their entire tenant." },
+  { show: [S.T, S.I], highlight: [S.I], text: "The owner fills in gym details: name, slug, logo, and colour palette. This becomes their brand config." },
+  { show: [S.T, S.I, S.A], highlight: [S.A], text: "A new row is inserted into the gyms table. Every table in the database uses gym_id as its tenant key." },
+  { show: [S.T, S.I, S.A, S.P], highlight: [S.P], text: "Row-Level Security policies activate automatically. Every query is now filtered to this gym's data only." },
+  { show: [S.T, S.I, S.A, S.P, S.O], highlight: [S.O], text: "The gym gets a branded storefront at /gym/:slug. Members see only their gym's classes, coaches, and branding." },
+  { show: [S.T, S.I, S.A, S.P, S.O, S.N], highlight: [], text: null },
+];
+
+export const paymentFlowSteps = [
+  { show: [S.T], highlight: [S.T], text: "Payments in NoSweat route money directly to each gym via Stripe Connect." },
+  { show: [S.T, S.I], highlight: [S.I], text: "A member selects a day pass, PT session, or subscription. The frontend creates a checkout session." },
+  { show: [S.T, S.I, S.A], highlight: [S.A], text: "The API creates a Stripe PaymentIntent with the gym's connected account ID and an application fee." },
+  { show: [S.T, S.I, S.A, S.P], highlight: [S.P], text: "Stripe processes the payment and splits it: the gym receives the amount, the platform takes the fee." },
+  { show: [S.T, S.I, S.A, S.P, S.O], highlight: [S.O], text: "A webhook fires back to the API. It matches the Stripe account to the correct gym and updates the booking record." },
+  { show: [S.T, S.I, S.A, S.P, S.O, S.N], highlight: [], text: null },
+];
