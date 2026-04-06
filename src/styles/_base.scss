@@ -97,6 +97,9 @@
   --color-success-text: #86efac;
   --canvas-grid: rgba(42, 42, 42, 0.5);
   --canvas-dot: 223, 255, 71;
+  --color-accent-alt:        #47b8ff;
+  --color-accent-alt-dim:    rgba(71, 184, 255, 0.08);
+  --color-accent-alt-border: rgba(71, 184, 255, 0.25);
 }
 
 [data-theme="light"] {
@@ -118,6 +121,9 @@
   --color-success-text: #16a34a;
   --canvas-grid: rgba(0, 0, 0, 0.06);
   --canvas-dot: 74, 124, 0;
+  --color-accent-alt:        #0077cc;
+  --color-accent-alt-dim:    rgba(0, 119, 204, 0.06);
+  --color-accent-alt-border: rgba(0, 119, 204, 0.2);
 }
 
 html {

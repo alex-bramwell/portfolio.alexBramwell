@@ -4,14 +4,31 @@
   background: var(--color-surface);
 }
 
+// Featured article row (side-by-side)
+.thinking-featured-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 56px;
+
+  @media (max-width: $breakpoint-tablet) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.thinking-featured-single {
+  grid-template-columns: 1fr;
+}
+
 // Featured article card
 .thinking-featured-card {
   display: flex;
-  align-items: center;
-  gap: 32px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
   width: 100%;
-  margin-top: 56px;
-  padding: 40px;
+  height: 100%;
+  padding: 32px;
   border: 1px solid var(--color-accent-border);
   border-radius: var(--radius-medium);
   background: var(--color-accent-dim);
@@ -34,9 +51,34 @@
   }
 
   @media (max-width: $breakpoint-mobile) {
-    flex-direction: column;
     padding: 28px;
-    gap: 20px;
+  }
+}
+
+// Alt accent variant (blue)
+.thinking-featured-alt {
+  border-color: var(--color-accent-alt-border);
+  background: var(--color-accent-alt-dim);
+
+  &:hover {
+    border-color: var(--color-accent-alt);
+  }
+
+  &:hover .thinking-article-arrow {
+    color: var(--color-accent-alt);
+  }
+
+  .thinking-featured-accent {
+    background: var(--color-accent-alt);
+  }
+
+  .thinking-article-number {
+    color: var(--color-accent-alt);
+  }
+
+  .thinking-featured-badge {
+    color: var(--color-accent-alt);
+    border-color: var(--color-accent-alt-border);
   }
 }
 
@@ -55,6 +97,7 @@
 
 .thinking-featured-content {
   flex: 1;
+  width: 100%;
 }
 
 .thinking-featured-meta {
