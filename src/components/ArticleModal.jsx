@@ -1608,9 +1608,127 @@ function AnimationIllustration() {
   );
 }
 
+function LivingPortfolioIllustration() {
+  const svgRef = useRef(null);
+  const { isReduced } = useTheme();
+
+  useEffect(() => {
+    if (isReduced || !svgRef.current) return;
+    const ctx = gsap.context(() => {
+      gsap.fromTo(".lp-branch", { scaleY: 0 }, {
+        scaleY: 1, duration: 0.5, stagger: 0.15, delay: 0.3, ease: "power2.out",
+      });
+      gsap.fromTo(".lp-commit", { scale: 0, opacity: 0 }, {
+        scale: 1, opacity: 1, duration: 0.35, stagger: 0.08, delay: 0.6, ease: "back.out(2)",
+      });
+      gsap.fromTo(".lp-label", { opacity: 0, y: 6 }, {
+        opacity: 1, y: 0, duration: 0.3, stagger: 0.06, delay: 1.0, ease: "power2.out",
+      });
+      gsap.fromTo(".lp-arrow", { scaleX: 0, opacity: 0 }, {
+        scaleX: 1, opacity: 1, duration: 0.4, stagger: 0.1, delay: 1.3, ease: "power2.out",
+      });
+    }, svgRef);
+    return () => ctx.revert();
+  }, [isReduced]);
+
+  return (
+    <svg ref={svgRef} className="article-illustration" viewBox="0 0 400 280" fill="none">
+      {/* Main branch line */}
+      <line className="lp-branch" x1="60" y1="30" x2="60" y2="260" stroke="var(--color-accent-alt)" strokeWidth="3" style={{ transformOrigin: "60px 30px" }} />
+      {/* Feature branches */}
+      <line className="lp-branch" x1="60" y1="70" x2="160" y2="70" stroke="var(--color-accent)" strokeWidth="2" opacity="0.5" style={{ transformOrigin: "60px 70px" }} />
+      <line className="lp-branch" x1="160" y1="70" x2="160" y2="110" stroke="var(--color-accent)" strokeWidth="2" opacity="0.5" style={{ transformOrigin: "160px 70px" }} />
+      <line className="lp-branch" x1="60" y1="140" x2="200" y2="140" stroke="var(--color-accent)" strokeWidth="2" opacity="0.5" style={{ transformOrigin: "60px 140px" }} />
+      <line className="lp-branch" x1="200" y1="140" x2="200" y2="180" stroke="var(--color-accent)" strokeWidth="2" opacity="0.5" style={{ transformOrigin: "200px 140px" }} />
+      <line className="lp-branch" x1="60" y1="210" x2="140" y2="210" stroke="var(--color-accent)" strokeWidth="2" opacity="0.5" style={{ transformOrigin: "60px 210px" }} />
+      {/* Main branch commits */}
+      {[70, 110, 140, 180, 210, 250].map((y) => (
+        <circle key={y} className="lp-commit" cx="60" cy={y} r="6" fill="var(--color-accent-alt)" style={{ transformOrigin: `60px ${y}px` }} />
+      ))}
+      {/* Feature branch commits */}
+      <circle className="lp-commit" cx="160" cy="90" r="5" fill="var(--color-accent)" style={{ transformOrigin: "160px 90px" }} />
+      <circle className="lp-commit" cx="200" cy="160" r="5" fill="var(--color-accent)" style={{ transformOrigin: "200px 160px" }} />
+      <circle className="lp-commit" cx="140" cy="210" r="5" fill="var(--color-accent)" style={{ transformOrigin: "140px 210px" }} />
+      {/* Deploy arrows */}
+      <line className="lp-arrow" x1="80" y1="110" x2="280" y2="110" stroke="var(--color-accent-alt)" strokeWidth="1" strokeDasharray="4 4" opacity="0.4" style={{ transformOrigin: "80px 110px" }} />
+      <line className="lp-arrow" x1="80" y1="180" x2="280" y2="180" stroke="var(--color-accent-alt)" strokeWidth="1" strokeDasharray="4 4" opacity="0.4" style={{ transformOrigin: "80px 180px" }} />
+      <line className="lp-arrow" x1="80" y1="250" x2="280" y2="250" stroke="var(--color-accent-alt)" strokeWidth="1" strokeDasharray="4 4" opacity="0.4" style={{ transformOrigin: "80px 250px" }} />
+      {/* Deploy labels */}
+      <text className="lp-label" x="290" y="114" fill="var(--color-accent-alt)" fontSize="9" fontFamily="var(--font-mono)" letterSpacing="1">v1.0</text>
+      <text className="lp-label" x="290" y="184" fill="var(--color-accent-alt)" fontSize="9" fontFamily="var(--font-mono)" letterSpacing="1">v2.0</text>
+      <text className="lp-label" x="290" y="254" fill="var(--color-accent-alt)" fontSize="9" fontFamily="var(--font-mono)" letterSpacing="1">v3.0</text>
+      {/* Branch labels */}
+      <text className="lp-label" x="40" y="20" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)" letterSpacing="2">MAIN</text>
+      <text className="lp-label" x="130" y="60" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)">feature/</text>
+      <text className="lp-label" x="170" y="130" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)">feature/</text>
+      <text className="lp-label" x="110" y="200" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)">fix/</text>
+      {/* Right side: iteration blocks */}
+      <rect className="lp-label" x="290" y="40" width="90" height="24" rx="4" fill="var(--color-surface-raised)" stroke="var(--color-border)" strokeWidth="1" />
+      <text className="lp-label" x="335" y="56" fill="var(--color-text-secondary)" fontSize="8" fontFamily="var(--font-mono)" textAnchor="middle">SHIP</text>
+      <rect className="lp-label" x="290" y="70" width="90" height="24" rx="4" fill="var(--color-surface-raised)" stroke="var(--color-border)" strokeWidth="1" />
+      <text className="lp-label" x="335" y="86" fill="var(--color-text-secondary)" fontSize="8" fontFamily="var(--font-mono)" textAnchor="middle">MEASURE</text>
+      <rect className="lp-label" x="290" y="100" width="90" height="24" rx="4" fill="var(--color-surface-raised)" stroke="var(--color-border)" strokeWidth="1" />
+      <text className="lp-label" x="335" y="116" fill="var(--color-text-secondary)" fontSize="8" fontFamily="var(--font-mono)" textAnchor="middle">ITERATE</text>
+    </svg>
+  );
+}
+
 /* ===== ARTICLE CONTENT ===== */
 
 const ARTICLES = {
+  "building-a-living-portfolio": {
+    title: "Building a living portfolio",
+    subtitle: "How this site evolved from a static page into a product I ship, test, and iterate on",
+    date: "April 2026",
+    readTime: "8 min read",
+    illustration: LivingPortfolioIllustration,
+    sections: [
+      {
+        heading: "It started as a weekend project",
+        body: `Most portfolio sites get built once and left to rot. I know because I have done it before. You spend a weekend on it, deploy it, share the link, then never touch it again. Six months later the dependencies are outdated, the copy does not reflect your current role, and the whole thing feels like a time capsule rather than a representation of who you are now.
+
+This time I wanted something different. Not a polished monument to a single weekend of effort, but a working product that I treat the same way I treat any codebase at work: with version control, a deployment pipeline, automated quality checks, and a backlog of things to improve.
+
+The first version was simple. A React app scaffolded with Vite, some SCSS for styling, and enough content to fill five sections. No animations, no blog, no Storybook, no Lighthouse audits. Just a clean layout that loaded fast and communicated the basics: who I am, what I do, how to get in touch.`,
+      },
+      {
+        heading: "Treating it like a product",
+        body: `The shift happened when I stopped thinking of the portfolio as a finished artefact and started thinking of it as a product with users. The users are hiring managers and recruiters. Their goal is to quickly understand whether I am worth interviewing. Every feature I add should serve that goal.
+
+That framing changed how I make decisions. When I added GSAP animations, it was not because animations are fun (they are), but because smooth scroll-triggered reveals make the content easier to consume and demonstrate frontend craft in a way that a bullet-point list cannot. When I added a motion toggle, it was because accessibility is a core part of UX engineering and I wanted to show that I think about it by default. When I added Lighthouse audits to the CI pipeline, it was because I wanted proof, not just claims, that the site performs well.
+
+Every feature goes through the same process. Identify a gap, build it on a feature branch, test it locally, merge it into main, and let GitHub Actions deploy it. The site has had dozens of these small iterations. Some visible, like the blog section you are reading right now. Some invisible, like switching from runtime Lighthouse API calls to a CI-generated static JSON file to eliminate an external dependency.`,
+      },
+      {
+        heading: "The stack and why it works",
+        body: `The stack is deliberately simple. React 19 with functional components and hooks. Vite for the dev server and production builds. SCSS with design tokens bridged to CSS custom properties. GSAP with ScrollTrigger for all animations. Storybook for component documentation. GitHub Pages for hosting.
+
+There is no backend, no database, no CMS. Content lives in JavaScript files: an array of experience items, a list of skills, article objects with sections. This keeps everything in one place and means I can update copy with the same workflow I use for code changes.
+
+The styling system uses SCSS variables as the source of truth, bridged to CSS custom properties at :root. Every component consumes var(--color-*) tokens, never raw hex values. The dark theme is the default. Light theme overrides via a [data-theme="light"] selector. Switching themes is instant because it is just swapping custom property values, no re-render required.
+
+Storybook runs alongside the main site. It documents the reusable components (ThemeToggle, SkillChip, MagneticButton, ScrollReveal, SplitHeading) with live examples. It builds as part of the same CI pipeline and deploys to a /storybook/ subpath. Having a component library for a personal site might seem like overkill, but it forces the same discipline I use at work: every component should work in isolation, with clear props and predictable behaviour.`,
+      },
+      {
+        heading: "The CI/CD pipeline",
+        body: `Every push to main triggers a GitHub Actions workflow. It installs dependencies, builds the Vite app, builds Storybook, and deploys both to GitHub Pages. A second workflow runs after each successful deploy: it launches three Lighthouse audits against the live site, averages the scores, and commits the results to a JSON file in the repo. That file gets picked up on the next deploy, and the scores are displayed in the Design System section with animated SVG ring gauges.
+
+This means the site is always telling the truth about its own performance. The Lighthouse scores are not screenshots from a good run. They are live data from the most recent deploy, generated automatically, committed to version control, and rendered at runtime.
+
+The branching strategy is strict. No commits directly to main. Feature branches for new work, fix branches for bugs. Single commit per branch, merged with --no-ff to preserve the branch topology in the git graph. It is the same workflow I follow on production codebases, scaled down to a one-person project.`,
+      },
+      {
+        heading: "What I have learned",
+        body: `Building this site iteratively has taught me more about frontend engineering than any single project at work. When you are the only person on the team, you feel every decision. If the SCSS architecture is messy, you are the one who suffers when you come back to it three months later. If the animation code does not respect reduced motion, you are the one who has to retrofit it.
+
+Some specific things I learned along the way. GSAP's ScrollTrigger is powerful but needs careful cleanup in React. Every useEffect that creates a timeline needs to revert it on unmount, or you get ghost animations and memory leaks. The motion toggle taught me that accessibility is not a feature you bolt on, it is an architectural decision that touches every animation in the codebase.
+
+The blog system taught me that you do not always need a framework. I considered MDX, markdown files with frontmatter, even a headless CMS. In the end, plain JavaScript objects with a custom renderer gave me exactly the flexibility I needed: syntax highlighting, interactive diagrams, code toggles, all without adding a single dependency.
+
+The biggest lesson is the simplest one. A portfolio is not a snapshot. It is a signal. It tells hiring managers not just what you can build, but how you build: your taste, your process, your standards. Treating it as a living product means that signal stays current. Every time I push a commit, the site gets a little better, and the gap between "what I claim I can do" and "what you can see I have done" gets a little smaller.`,
+      },
+    ],
+  },
   "outcome-oriented-design": {
     title: "Outcome-oriented design",
     subtitle: "Why AI is shifting UX from pixels to purpose",

@@ -27,8 +27,19 @@ const ARTICLES = [
     featured: true,
   },
   {
-    id: "outcome-oriented-design",
+    id: "building-a-living-portfolio",
     number: "02",
+    title: "Building a living portfolio",
+    subtitle: "How this site evolved from a static page into a product I ship, test, and iterate on",
+    tags: ["React", "GSAP", "GitHub Actions", "Process"],
+    readTime: "8 min read",
+    category: "engineering",
+    featured: true,
+    accent: "alt",
+  },
+  {
+    id: "outcome-oriented-design",
+    number: "03",
     title: "Outcome-oriented design",
     subtitle: "Why AI is shifting UX from pixels to purpose",
     tags: ["UX Strategy", "AI-assisted Design", "Measurement"],
@@ -37,7 +48,7 @@ const ARTICLES = [
   },
   {
     id: "spec-driven-development",
-    number: "03",
+    number: "04",
     title: "Spec-driven development",
     subtitle: "Writing specifications that AI turns into code",
     tags: ["Engineering", "AI Workflow", "Specifications"],
@@ -46,7 +57,7 @@ const ARTICLES = [
   },
   {
     id: "the-split-brain-problem",
-    number: "04",
+    number: "05",
     title: "The split-brain problem",
     subtitle: "What nobody tells you about being both the designer and the developer",
     tags: ["Career", "Design + Code", "Personal"],
@@ -55,7 +66,7 @@ const ARTICLES = [
   },
   {
     id: "javascript-to-react",
-    number: "05",
+    number: "06",
     title: "JavaScript to React",
     subtitle: "Simple side-by-side examples showing how plain JS becomes React code",
     tags: ["JavaScript", "React", "Beginner"],
@@ -64,7 +75,7 @@ const ARTICLES = [
   },
   {
     id: "react-concepts",
-    number: "06",
+    number: "07",
     title: "React basics explained",
     subtitle: "The most common React concepts with plain-English explanations and examples",
     tags: ["React", "Hooks", "Components"],
@@ -73,7 +84,7 @@ const ARTICLES = [
   },
   {
     id: "scss-in-practice",
-    number: "07",
+    number: "08",
     title: "SCSS made simple",
     subtitle: "A beginner-friendly look at variables, nesting, and mixins with real examples",
     tags: ["SCSS", "CSS", "Styling"],
@@ -82,7 +93,7 @@ const ARTICLES = [
   },
   {
     id: "web-accessibility",
-    number: "08",
+    number: "09",
     title: "Web accessibility basics",
     subtitle: "A practical guide to building websites that everyone can use",
     tags: ["Accessibility", "WCAG", "HTML"],
@@ -91,7 +102,7 @@ const ARTICLES = [
   },
   {
     id: "typescript-basics",
-    number: "09",
+    number: "10",
     title: "TypeScript basics",
     subtitle: "A plain-English guide to TypeScript, with diagrams",
     tags: ["TypeScript", "JavaScript", "Beginner"],
@@ -100,7 +111,7 @@ const ARTICLES = [
   },
   {
     id: "javascript-essentials",
-    number: "10",
+    number: "11",
     title: "JavaScript essentials",
     subtitle: "Core JS concepts with a TypeScript toggle on every code example",
     tags: ["JavaScript", "TypeScript", "Beginner"],
@@ -109,7 +120,7 @@ const ARTICLES = [
   },
   {
     id: "gsap-animation-architecture",
-    number: "11",
+    number: "12",
     title: "How I animated this portfolio",
     subtitle: "The GSAP patterns, motion toggle, and performance tricks behind every animation",
     tags: ["GSAP", "Animation", "Performance"],
@@ -121,13 +132,15 @@ const ARTICLES = [
 export default function Thinking({ onOpenArticle }) {
   const [activeCategory, setActiveCategory] = useState("all");
 
-  const featured = ARTICLES.find((a) => a.featured);
+  const featuredArticles = ARTICLES.filter((a) => a.featured);
   const rest = ARTICLES.filter((a) => !a.featured);
   const filtered = activeCategory === "all"
     ? rest
     : rest.filter((a) => a.category === activeCategory);
 
-  const showFeatured = activeCategory === "all" || (featured && featured.category === activeCategory);
+  const visibleFeatured = activeCategory === "all"
+    ? featuredArticles
+    : featuredArticles.filter((a) => a.category === activeCategory);
 
   return (
     <section className="page-section thinking-section" id="thinking">
@@ -165,32 +178,36 @@ export default function Thinking({ onOpenArticle }) {
           ))}
         </div>
 
-        {/* Featured article */}
-        {showFeatured && featured && (
-          <ScrollReveal>
-            <button
-              className="thinking-featured-card"
-              onClick={() => onOpenArticle(featured.id)}
-            >
-              <div className="thinking-featured-accent" aria-hidden="true" />
-              <div className="thinking-featured-content">
-                <div className="thinking-featured-meta">
-                  <span className="thinking-article-number">{featured.number}</span>
-                  <span className="thinking-featured-badge">Featured</span>
-                  <span className="thinking-category-pill">{CATEGORY_LABELS[featured.category]}</span>
-                  <span className="thinking-article-read-time">{featured.readTime}</span>
-                </div>
-                <h3 className="thinking-featured-title">{featured.title}</h3>
-                <p className="thinking-featured-subtitle">{featured.subtitle}</p>
-                <div className="thinking-article-tags">
-                  {featured.tags.map((tag) => (
-                    <span key={tag} className="skill-chip">{tag}</span>
-                  ))}
-                </div>
-              </div>
-              <span className="thinking-article-arrow">&rarr;</span>
-            </button>
-          </ScrollReveal>
+        {/* Featured articles */}
+        {visibleFeatured.length > 0 && (
+          <div className={`thinking-featured-row ${visibleFeatured.length === 1 ? "thinking-featured-single" : ""}`}>
+            {visibleFeatured.map((article, i) => (
+              <ScrollReveal key={article.id} direction={i === 0 ? "left" : "right"} stagger={i}>
+                <button
+                  className={`thinking-featured-card ${article.accent === "alt" ? "thinking-featured-alt" : ""}`}
+                  onClick={() => onOpenArticle(article.id)}
+                >
+                  <div className="thinking-featured-accent" aria-hidden="true" />
+                  <div className="thinking-featured-content">
+                    <div className="thinking-featured-meta">
+                      <span className="thinking-article-number">{article.number}</span>
+                      <span className="thinking-featured-badge">Featured</span>
+                      <span className="thinking-category-pill">{CATEGORY_LABELS[article.category]}</span>
+                      <span className="thinking-article-read-time">{article.readTime}</span>
+                    </div>
+                    <h3 className="thinking-featured-title">{article.title}</h3>
+                    <p className="thinking-featured-subtitle">{article.subtitle}</p>
+                    <div className="thinking-article-tags">
+                      {article.tags.map((tag) => (
+                        <span key={tag} className="skill-chip">{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <span className="thinking-article-arrow">&rarr;</span>
+                </button>
+              </ScrollReveal>
+            ))}
+          </div>
         )}
 
         {/* Article grid */}
@@ -219,7 +236,7 @@ export default function Thinking({ onOpenArticle }) {
           ))}
         </div>
 
-        {filtered.length === 0 && !showFeatured && (
+        {filtered.length === 0 && visibleFeatured.length === 0 && (
           <p className="thinking-empty-state">No articles in this category yet.</p>
         )}
       </div>
