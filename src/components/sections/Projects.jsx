@@ -2,7 +2,7 @@ import ScrollReveal from "../ScrollReveal";
 import SplitHeading from "../SplitHeading";
 import "./Projects.scss";
 
-export default function Projects({ onOpenCaseStudy }) {
+export default function Projects({ onOpenCaseStudy, onOpenArticle }) {
   return (
     <section className="page-section projects-section" id="projects">
       <div className="page-container">
@@ -32,9 +32,14 @@ export default function Projects({ onOpenCaseStudy }) {
                 <a href="https://github.com/alex-bramwell/nosweat" className="project-external-link project-external-link-primary" target="_blank" rel="noopener">&uarr; GitHub repo</a>
                 <a href="https://gym-cross-fit-comet.vercel.app" className="project-external-link" target="_blank" rel="noopener">&rarr; Live demo</a>
               </div>
-              <button className="featured-project-case-study-button" onClick={onOpenCaseStudy}>
-                View full case study &darr;
-              </button>
+              <div className="featured-project-button-row">
+                <button className="featured-project-case-study-button" onClick={onOpenCaseStudy}>
+                  View full case study &darr;
+                </button>
+                <button className="featured-project-deep-dive-button" onClick={() => onOpenArticle("nosweat-fitness-deep-dive")}>
+                  Read the deep dive &rarr;
+                </button>
+              </div>
             </div>
           </ScrollReveal>
           <div className="secondary-project-card-stack">
