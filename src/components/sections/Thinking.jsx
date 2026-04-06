@@ -11,6 +11,10 @@ const CATEGORIES = [
   { value: "career", label: "Career" },
 ];
 
+const CATEGORY_LABELS = Object.fromEntries(
+  CATEGORIES.filter((c) => c.value !== "all").map((c) => [c.value, c.label])
+);
+
 const ARTICLES = [
   {
     id: "design-to-production-pipeline",
@@ -173,6 +177,7 @@ export default function Thinking({ onOpenArticle }) {
                 <div className="thinking-featured-meta">
                   <span className="thinking-article-number">{featured.number}</span>
                   <span className="thinking-featured-badge">Featured</span>
+                  <span className="thinking-category-pill">{CATEGORY_LABELS[featured.category]}</span>
                   <span className="thinking-article-read-time">{featured.readTime}</span>
                 </div>
                 <h3 className="thinking-featured-title">{featured.title}</h3>
@@ -198,6 +203,7 @@ export default function Thinking({ onOpenArticle }) {
               >
                 <div className="thinking-article-header">
                   <span className="thinking-article-number">{article.number}</span>
+                  <span className="thinking-category-pill">{CATEGORY_LABELS[article.category]}</span>
                   <span className="thinking-article-read-time">{article.readTime}</span>
                 </div>
                 <h3 className="thinking-article-title">{article.title}</h3>

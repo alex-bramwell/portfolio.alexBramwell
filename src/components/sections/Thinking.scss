@@ -209,6 +209,19 @@
   letter-spacing: 0.5px;
 }
 
+.thinking-category-pill {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-background);
+  background: var(--color-accent);
+  padding: 2px 8px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
 .thinking-article-read-time {
   font-family: var(--font-mono);
   font-size: 11px;
