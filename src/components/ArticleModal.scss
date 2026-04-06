@@ -170,6 +170,18 @@
   }
 }
 
+.am-inline-link {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(223, 255, 71, 0.3);
+  transition: text-decoration-color 200ms ease;
+
+  &:hover {
+    text-decoration-color: var(--color-accent);
+  }
+}
+
 // ===== SECTION DIAGRAMS =====
 .am-section-diagram {
   border: 1px solid var(--color-border);
