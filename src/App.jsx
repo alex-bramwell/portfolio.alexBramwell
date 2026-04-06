@@ -54,7 +54,7 @@ export default function App() {
       </main>
       <Suspense fallback={null}>
         {isContactOpen && <ContactModal isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />}
-        {isCaseStudyOpen && <CaseStudy isOpen={isCaseStudyOpen} onClose={() => setIsCaseStudyOpen(false)} />}
+        {isCaseStudyOpen && <CaseStudy isOpen={isCaseStudyOpen} onClose={() => setIsCaseStudyOpen(false)} onOpenArticle={(id) => setOpenArticleId(id)} />}
         {openArticleId && <ArticleModal articleId={openArticleId} isOpen={!!openArticleId} onClose={() => setOpenArticleId(null)} />}
         <ThoughtsFab onOpenArticle={(id) => setOpenArticleId(id)} />
       </Suspense>

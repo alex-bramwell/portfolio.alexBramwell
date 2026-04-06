@@ -1673,9 +1673,136 @@ function LivingPortfolioIllustration() {
   );
 }
 
+function NoSweatIllustration() {
+  const svgRef = useRef(null);
+  const { isReduced } = useTheme();
+
+  useEffect(() => {
+    if (isReduced || !svgRef.current) return;
+    const ctx = gsap.context(() => {
+      gsap.fromTo(".ns-layer", { scaleY: 0 }, {
+        scaleY: 1, duration: 0.5, stagger: 0.12, delay: 0.3, ease: "power2.out",
+      });
+      gsap.fromTo(".ns-dot", { scale: 0, opacity: 0 }, {
+        scale: 1, opacity: 1, duration: 0.35, stagger: 0.06, delay: 0.7, ease: "back.out(2)",
+      });
+      gsap.fromTo(".ns-label", { opacity: 0, y: 6 }, {
+        opacity: 1, y: 0, duration: 0.3, stagger: 0.05, delay: 1.0, ease: "power2.out",
+      });
+      gsap.fromTo(".ns-arrow", { scaleX: 0, opacity: 0 }, {
+        scaleX: 1, opacity: 1, duration: 0.4, stagger: 0.08, delay: 1.3, ease: "power2.out",
+      });
+    }, svgRef);
+    return () => ctx.revert();
+  }, [isReduced]);
+
+  return (
+    <svg ref={svgRef} className="article-illustration" viewBox="0 0 400 280" fill="none">
+      {/* Architecture layers */}
+      <text className="ns-label" x="200" y="18" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)" letterSpacing="2" textAnchor="middle">MULTI-TENANT ARCHITECTURE</text>
+      {/* Frontend layer */}
+      <rect className="ns-layer" x="30" y="30" width="340" height="44" rx="4" fill="var(--color-accent-dim)" stroke="var(--color-accent-border)" strokeWidth="1" style={{ transformOrigin: "200px 52px" }} />
+      <text className="ns-label" x="50" y="56" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)" fontWeight="500">React 19 + TypeScript</text>
+      <text className="ns-label" x="340" y="56" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)" textAnchor="end">FRONTEND</text>
+      {/* Tenant boxes */}
+      {[{ x: 50, label: "Gym A" }, { x: 155, label: "Gym B" }, { x: 260, label: "Gym C" }].map((t) => (
+        <g key={t.label}>
+          <rect className="ns-layer" x={t.x} y="90" width="90" height="32" rx="3" fill="var(--color-surface-raised)" stroke="var(--color-border)" strokeWidth="1" style={{ transformOrigin: `${t.x + 45}px 106px` }} />
+          <text className="ns-label" x={t.x + 45} y="110" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)" textAnchor="middle">{t.label}</text>
+          <circle className="ns-dot" cx={t.x + 45} cy="83" r="3" fill="var(--color-accent)" style={{ transformOrigin: `${t.x + 45}px 83px` }} />
+        </g>
+      ))}
+      {/* RLS arrow */}
+      <line className="ns-arrow" x1="50" y1="136" x2="350" y2="136" stroke="var(--color-border)" strokeWidth="1" strokeDasharray="4 4" style={{ transformOrigin: "50px 136px" }} />
+      <text className="ns-label" x="200" y="150" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)" textAnchor="middle">ROW-LEVEL SECURITY</text>
+      {/* Supabase layer */}
+      <rect className="ns-layer" x="30" y="160" width="340" height="44" rx="4" fill="rgba(62, 207, 142, 0.08)" stroke="rgba(62, 207, 142, 0.25)" strokeWidth="1" style={{ transformOrigin: "200px 182px" }} />
+      <text className="ns-label" x="50" y="186" fill="#3ecf8e" fontSize="10" fontFamily="var(--font-mono)" fontWeight="500">Supabase + PostgreSQL</text>
+      <text className="ns-label" x="340" y="186" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)" textAnchor="end">DATABASE</text>
+      {/* Stripe + Vercel layer */}
+      <rect className="ns-layer" x="30" y="220" width="164" height="44" rx="4" fill="rgba(99, 91, 255, 0.08)" stroke="rgba(99, 91, 255, 0.25)" strokeWidth="1" style={{ transformOrigin: "112px 242px" }} />
+      <text className="ns-label" x="50" y="246" fill="#635bff" fontSize="10" fontFamily="var(--font-mono)" fontWeight="500">Stripe Connect</text>
+      <rect className="ns-layer" x="206" y="220" width="164" height="44" rx="4" fill="var(--color-accent-dim)" stroke="var(--color-accent-border)" strokeWidth="1" style={{ transformOrigin: "288px 242px" }} />
+      <text className="ns-label" x="226" y="246" fill="var(--color-accent)" fontSize="10" fontFamily="var(--font-mono)" fontWeight="500">Vercel Edge</text>
+      {/* Connection dots */}
+      <circle className="ns-dot" cx="112" cy="210" r="3" fill="#635bff" style={{ transformOrigin: "112px 210px" }} />
+      <circle className="ns-dot" cx="288" cy="210" r="3" fill="var(--color-accent)" style={{ transformOrigin: "288px 210px" }} />
+    </svg>
+  );
+}
+
 /* ===== ARTICLE CONTENT ===== */
 
 const ARTICLES = {
+  "nosweat-fitness-deep-dive": {
+    title: "Building NoSweat Fitness",
+    subtitle: "From single-gym prototype to multi-tenant SaaS across 474 commits",
+    date: "April 2026",
+    readTime: "9 min read",
+    illustration: NoSweatIllustration,
+    sections: [
+      {
+        heading: "Why build a gym platform",
+        body: `NoSweat Fitness started as a question: what would it look like to build a real SaaS product, end to end, as a solo developer? Not a tutorial project. Not a to-do app. Something with multi-tenancy, payments, role-based access, and the kind of messy, interconnected features that make production software hard.
+
+I chose the gym space because it has a clear set of problems: class scheduling, membership billing, workout programming, coach management. Every gym owner needs these things, and the existing platforms (Wodify, SugarWOD, PushPress) all make trade-offs that leave gaps. I was not trying to compete with them. I was trying to build something real enough that it would force me to solve real problems.
+
+The first commit was in November 2025. By March 2026 the repo had 474 commits, 59 database migrations, and a working multi-tenant platform with Stripe Connect, custom domains, and a visual site builder. This article is about how it got there.`,
+      },
+      {
+        heading: "The single-gym prototype",
+        body: `The first version was deliberately simple. One gym, one database, no tenancy. React 19 with TypeScript on the frontend, Supabase for auth and the database, SCSS Modules for styling. The goal was to get the core features working before worrying about architecture.
+
+That meant a class schedule page, a WOD (workout of the day) editor, coach profiles, and a member dashboard. Each feature lived in its own component directory with co-located styles. The data layer was thin: Supabase client calls directly from React components, guarded by auth context.
+
+The backend started as an Express server running alongside Vite in development. It handled Stripe webhook processing, payment intent creation, and anything that needed server-side secrets. In production, the same logic runs as Vercel serverless functions. The two backends share utility code but have separate entry points, which means I can develop locally with hot reload and deploy to edge functions without changing any business logic.
+
+This dual-backend pattern turned out to be one of the best early decisions. It kept the development loop fast (Express restarts in milliseconds) while the production path stayed serverless and scalable.`,
+      },
+      {
+        heading: "Going multi-tenant",
+        body: `Migration 050 was the big one. Converting from a single-gym app to a multi-tenant platform meant every table needed a gym_id column, every query needed to be scoped, and every RLS policy needed to enforce tenant isolation.
+
+Supabase's Row-Level Security made this feasible as a solo developer. Instead of building a middleware layer to filter queries, the database itself enforces that Gym A can never see Gym B's data. Every table has a policy like "users can only select rows where gym_id matches their current tenant." The policies are defined in SQL migrations and versioned alongside the application code.
+
+The routing layer resolves tenants in two ways. Path-based routing (/gym/:slug) works for the default Vercel deployment. Custom domain routing uses a useDomainResolution hook that queries the domains table on app load. If you visit a gym's custom domain, the app resolves the tenant from the hostname and loads their branding before anything renders.
+
+The TenantContext wraps the entire gym-side app. It provides the current gym's ID, branding tokens, feature flags, and Stripe account ID to every component. The BrandingOverrideContext sits on top of that and powers the site builder's live preview, letting gym owners see changes before they publish.
+
+Getting RLS right was the hardest part of the entire project. One early policy created an infinite recursion loop, which took down every query. Debugging RLS in Supabase means reading PostgreSQL logs and reasoning about policy evaluation order. It is not glamorous work, but it is the kind of thing that matters enormously in production.`,
+      },
+      {
+        heading: "Payments and Stripe Connect",
+        body: `Payments in a multi-tenant platform are more complex than payments in a single app. Each gym owner needs to receive their own money. You cannot just collect everything into one Stripe account and sort it out later.
+
+Stripe Connect solves this. Each gym onboards as a connected account. When a member buys a day pass, books a PT session, or starts a subscription, the payment is routed directly to the gym's Stripe account. The platform takes a cut via application fees. Webhooks from Stripe flow through a single endpoint in the API layer, get matched to the correct gym by their Stripe account ID, and update the relevant database records.
+
+The payment flows span several features: day passes (one-off PaymentIntents), trial memberships (card-authorized SetupIntents that convert to subscriptions), recurring memberships (Stripe Subscriptions with plan management), and service bookings (coach-set pricing for PT, massage, nutrition consultations). Each flow has its own modal, confirmation page, and webhook handler.
+
+I also integrated QuickBooks and Xero for gym owners who need accounting sync. This required encrypted API keys stored per tenant, OAuth token refresh flows, and a sync log that tracks which transactions have been pushed to which accounting system. It is the least visible feature in the app and the one that required the most careful error handling.`,
+      },
+      {
+        heading: "The feature system",
+        body: `Not every gym needs every feature. A yoga studio does not need WOD programming. A CrossFit box does not need service bookings for massage therapists. The feature toggle system lets gym owners enable and disable capabilities from their admin panel.
+
+The implementation is a FeatureGate component that wraps any feature-specific UI. It reads from the tenant's feature flags (stored in the database, cached in context) and renders either the children or nothing. On the backend, API endpoints check the same flags before processing requests.
+
+The site builder is where this flexibility becomes visible. Gym owners can toggle sections on and off, reorder them, and customise every visual detail: logo, colour palette, fonts (loaded dynamically from Google Fonts), gradient direction, navigation style, hero effects, and even inject custom CSS. The BrandingOverrideContext lets them preview all of this in real time before publishing.
+
+Building a site builder as a solo developer is an exercise in restraint. You could spend months on drag-and-drop layout editing. Instead I focused on the things that make each gym feel different: colour, typography, imagery, and section visibility. That covers 90% of what gym owners actually customise.`,
+      },
+      {
+        heading: "Still iterating",
+        body: `NoSweat is not finished. It is a product I continue to develop, and the backlog reflects the same kind of iteration I described in the portfolio article.
+
+The 59 migration files tell the story of the schema's evolution. The early migrations set up profiles, bookings, and payments. The middle ones added the workout system with movement databases, muscle groups, and coach analytics. The later ones introduced multi-tenancy, feature voting, custom domains, and Stripe Connect. Each migration is a small, reversible step. None of them required downtime or data loss.
+
+The codebase has gone through a full semantic class name refactor, a shared component extraction pass, and multiple rounds of RLS policy tightening. The Docker setup supports both development (hot reload, mounted volumes) and production (multi-stage builds, Nginx for the frontend, separate API container).
+
+What makes this project valuable as a portfolio piece is not the feature count. It is the evidence of process. The git history shows how a real application evolves: messy early commits that explore ideas, focused refactoring commits that pay down debt, and careful migration commits that change the database without breaking existing data. That is what building software actually looks like.`,
+      },
+    ],
+  },
   "building-a-living-portfolio": {
     title: "Building a living portfolio",
     subtitle: "How this site evolved from a static page into a product I ship, test, and iterate on",

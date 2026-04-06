@@ -73,7 +73,7 @@ function MetricCard({ endValue, suffix, label, isReduced }) {
   );
 }
 
-export default function CaseStudy({ isOpen, onClose }) {
+export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
   const overlayRef = useRef(null);
   const scrollContainerRef = useRef(null);
   const heroRef = useRef(null);
@@ -374,6 +374,24 @@ export default function CaseStudy({ isOpen, onClose }) {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* ===== DEEP DIVE ===== */}
+        <section className="cs-section cs-deep-dive-section">
+          <div className="cs-section-inner">
+            <span className="cs-section-eyebrow">Deep dive</span>
+            <h2 className="cs-section-heading">The full story</h2>
+            <p className="cs-deep-dive-text">
+              How this project evolved from a single-gym prototype to a multi-tenant
+              SaaS platform across 474 commits, 59 database migrations, and months of iteration.
+            </p>
+            <button
+              className="cs-deep-dive-button"
+              onClick={() => onOpenArticle && onOpenArticle("nosweat-fitness-deep-dive")}
+            >
+              Read the deep dive &rarr;
+            </button>
           </div>
         </section>
 
