@@ -40,7 +40,7 @@ export default function App() {
         <hr className="full-width-rule" />
         <Skills />
         <hr className="full-width-rule" />
-        <Projects onOpenCaseStudy={() => setIsCaseStudyOpen(true)} />
+        <Projects onOpenCaseStudy={() => setIsCaseStudyOpen(true)} onOpenArticle={(id) => setOpenArticleId(id)} />
         <hr className="full-width-rule" />
         <DesignSystem />
         <hr className="full-width-rule" />
