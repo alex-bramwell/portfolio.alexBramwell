@@ -171,14 +171,31 @@
 }
 
 .am-inline-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: 12px;
+  border: 1px solid var(--color-accent-border);
+  background: var(--color-accent-dim);
   color: var(--color-accent);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-color: rgba(223, 255, 71, 0.3);
-  transition: text-decoration-color 200ms ease;
+  font-family: var(--font-mono);
+  font-size: 0.82em;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 200ms ease, border-color 200ms ease;
 
   &:hover {
-    text-decoration-color: var(--color-accent);
+    background: rgba(223, 255, 71, 0.15);
+    border-color: var(--color-accent);
+  }
+
+  &::after {
+    content: "\2197";
+    font-size: 0.8em;
+    opacity: 0.5;
   }
 }
 

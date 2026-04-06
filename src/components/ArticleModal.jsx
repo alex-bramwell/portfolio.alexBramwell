@@ -1833,6 +1833,8 @@ return <h1>{title}</h1>;
 
 The key difference: in vanilla JS, you tell the browser what to change. In React, you describe what the page should look like, and React figures out what to change. This is called declarative rendering.
 
+[MDN: document.querySelector](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector) [React: useState](https://react.dev/reference/react/useState)
+
 {{interactive:0}}`,
         interactives: [{ diagram: InteractiveImperativeVsDeclarative, steps: imperativeSteps }],
       },
@@ -1857,6 +1859,8 @@ function MyButton() {
 }
 
 No need to query the DOM, no need to worry about when the element exists. The handler is right there next to the element it belongs to.
+
+[MDN: addEventListener](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener)
 
 {{interactive:0}}`,
         interactives: [{ diagram: InteractiveEventComparison, steps: eventSteps }],
@@ -1888,6 +1892,8 @@ return (
 
 The .map() pattern is one of the most common things you will write in React. It replaces manual DOM creation entirely.
 
+[MDN: Array.map()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map)
+
 {{interactive:0}}`,
         interactives: [{ diagram: InteractiveListRendering, steps: listRenderSteps }],
       },
@@ -1915,7 +1921,9 @@ useEffect(() => {
 
 return <p>{users.length} users</p>;
 
-The useEffect hook tells React "run this code once after the component appears." The empty array [] at the end means it only runs once, not on every re-render.`,
+The useEffect hook tells React "run this code once after the component appears." The empty array [] at the end means it only runs once, not on every re-render.
+
+[React: useEffect](https://react.dev/reference/react/useEffect)`,
       },
       {
         heading: "Showing and hiding things",
@@ -1965,7 +1973,9 @@ function Greeting() {
 
 You use it like an HTML tag: <Greeting />. You can use it as many times as you like.
 
-The whole idea of React is to break your page into small, reusable pieces. A navbar is a component. A button is a component. A single card in a list is a component. Each one manages its own little piece of the page.`,
+The whole idea of React is to break your page into small, reusable pieces. A navbar is a component. A button is a component. A single card in a list is a component. Each one manages its own little piece of the page.
+
+[React: Your First Component](https://react.dev/learn/your-first-component)`,
       },
       {
         heading: "Props: passing data down",
@@ -1981,6 +1991,8 @@ function Greeting({ name }) {
 The parent decides what data to pass. The child receives it and uses it. Props flow in one direction only: from parent to child. This makes it easy to understand where data comes from.
 
 You can pass anything as a prop: strings, numbers, arrays, objects, even other components. If a component needs data it does not own, it gets it through props.
+
+[React: Passing Props](https://react.dev/learn/passing-props-to-a-component)
 
 {{interactive:0}}`,
         interactives: [{ diagram: InteractivePropsFlow, steps: propsSteps }],
@@ -2003,6 +2015,8 @@ function Counter() {
 useState gives you two things: the current value (count) and a function to update it (setCount). You never change state directly. You always use the setter function.
 
 The rule is simple: if something on the screen needs to change in response to user action, it should be state.
+
+[React: State](https://react.dev/learn/state-a-components-memory)
 
 {{interactive:0}}`,
         interactives: [{ diagram: InteractiveStateRender, steps: stateSteps }],
@@ -2027,6 +2041,8 @@ useEffect(() => {
 
 Think of useEffect as "after this component renders, also do this."
 
+[React: useEffect](https://react.dev/reference/react/useEffect)
+
 {{interactive:0}}`,
         interactives: [{ diagram: InteractiveUseEffect, steps: useEffectSteps }],
       },
@@ -2049,7 +2065,9 @@ function UserProfile({ user }) {
   return <h1>{user.name}</h1>;
 }
 
-These patterns replace the if/else and classList.toggle you would use in vanilla JavaScript. The idea is the same, just expressed differently.`,
+These patterns replace the if/else and classList.toggle you would use in vanilla JavaScript. The idea is the same, just expressed differently.
+
+[React: Conditional Rendering](https://react.dev/learn/conditional-rendering)`,
       },
       {
         heading: "Lists and keys",
@@ -2068,6 +2086,8 @@ return (
 The key prop helps React keep track of which item is which. When the list changes, React uses keys to figure out which items were added, removed, or moved. Without keys, React has to guess, and it can get things wrong.
 
 The best key is a unique ID from your data (like a database ID). Using the array index works for simple, static lists, but can cause bugs if the list gets reordered.
+
+[React: Rendering Lists](https://react.dev/learn/rendering-lists)
 
 {{interactive:0}}
 
@@ -2107,7 +2127,9 @@ $spacing-medium: 24px;
 
 Now if your accent colour changes, you update it in one place. Every element that uses it updates automatically.
 
-SCSS variables start with a dollar sign ($). They can hold colours, sizes, font names, or any CSS value. Think of them as labels you stick on values so you do not have to remember hex codes.`,
+SCSS variables start with a dollar sign ($). They can hold colours, sizes, font names, or any CSS value. Think of them as labels you stick on values so you do not have to remember hex codes.
+
+[Sass: Variables](https://sass-lang.com/documentation/variables/)`,
       },
       {
         heading: "Nesting: write less, see more",
@@ -2134,6 +2156,8 @@ In SCSS, you nest child selectors inside their parent. The structure of your SCS
 The & symbol means "the current selector." So &:hover inside .card-title becomes .card-title:hover in the compiled CSS.
 
 One warning: do not nest too deeply. Two or three levels is plenty. Deeply nested SCSS produces long, brittle CSS selectors that are hard to override.
+
+[Sass: Nesting](https://sass-lang.com/documentation/style-rules/#nesting)
 
 {{interactive:0}}`,
         interactives: [{ diagram: InteractiveNesting, steps: nestingSteps }],
@@ -2177,6 +2201,8 @@ Mixins can also accept arguments, just like a function.
 
 The @content keyword passes whatever styles you write inside the @include block into the mixin. This is incredibly useful for responsive breakpoints.
 
+[Sass: Mixins](https://sass-lang.com/documentation/at-rules/mixin/)
+
 {{interactive:0}}`,
         interactives: [{ diagram: InteractiveMixin, steps: mixinSteps }],
       },
@@ -2209,6 +2235,8 @@ styles/
   main.scss         (imports everything)
 
 Each component can also have its own .scss file sitting next to the .jsx file. This is called co-location, and it makes it easy to find the styles for any component.
+
+[Sass: @use](https://sass-lang.com/documentation/at-rules/use/)
 
 {{interactive:0}}`,
         interactives: [{ diagram: InteractivePartials, steps: partialsSteps }],
@@ -2287,6 +2315,8 @@ Other examples:
 
 If you use semantic HTML, you get most accessibility features without writing any extra code.
 
+[MDN: HTML elements reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Element)
+
 {{interactive:0}}`,
         interactives: [{ diagram: InteractiveSemanticHtml, steps: semanticSteps }],
       },
@@ -2305,6 +2335,8 @@ Do not use colour alone to communicate meaning. A red border on an invalid form 
 Make sure links are distinguishable from surrounding text. An underline or bold weight works. Colour alone does not.
 
 Avoid light grey text on white backgrounds. It looks clean but fails contrast requirements. If in doubt, check the ratio.
+
+[WebAIM: Contrast Checker](https://webaim.org/resources/contrastchecker/)
 
 {{interactive:0}}`,
         interactives: [{ diagram: InteractiveContrast, steps: contrastSteps }],
@@ -2328,6 +2360,8 @@ Removing the focus outline. The blue or black ring that appears when you Tab to 
 
 Focus trapping in modals. When a modal is open, Tab should cycle through the modal's content, not disappear behind it. When the modal closes, focus should return to the element that opened it.
 
+[MDN: :focus-visible](https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible)
+
 {{interactive:0}}`,
         interactives: [{ diagram: InteractiveFocusOrder, steps: focusSteps }],
       },
@@ -2347,7 +2381,9 @@ aria-expanded tells screen readers whether a dropdown or collapsible section is 
 
 aria-live="polite" announces dynamic content changes. If a notification appears without a page reload, this tells screen readers to read it out.
 
-The golden rule of ARIA: do not use it if native HTML can do the job. A <button> is better than <div role="button">. ARIA is a supplement, not a replacement.`,
+The golden rule of ARIA: do not use it if native HTML can do the job. A <button> is better than <div role="button">. ARIA is a supplement, not a replacement.
+
+[MDN: ARIA](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA)`,
       },
       {
         heading: "Motion and animation",
@@ -2369,7 +2405,9 @@ if (isReduced) return;
 
 Accessibility is not about removing features. It is about giving everyone an equivalent experience. A motion-sensitive user should still understand the page structure and content, even if the entrance animations do not play.
 
-Start with semantic HTML, check your contrast, make sure everything works with a keyboard, and use ARIA where needed. These four things solve the vast majority of accessibility issues.`,
+Start with semantic HTML, check your contrast, make sure everything works with a keyboard, and use ARIA where needed. These four things solve the vast majority of accessibility issues.
+
+[MDN: prefers-reduced-motion](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion)`,
       },
     ],
   },
@@ -2409,7 +2447,9 @@ You do not always need to write annotations. TypeScript can often figure out the
 
 const city = "Nottingham";
 
-TypeScript knows city is a string because you assigned a string to it. You only need explicit annotations when TypeScript cannot infer the type, or when you want to be clear about your intent.`,
+TypeScript knows city is a string because you assigned a string to it. You only need explicit annotations when TypeScript cannot infer the type, or when you want to be clear about your intent.
+
+[TypeScript: Everyday Types](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html)`,
       },
       {
         heading: "Interfaces: describing shapes",
@@ -2433,7 +2473,9 @@ function sendEmail(user: User) {
 
 If you pass an object missing the email property, TypeScript flags it immediately. If you misspell a property name, it flags that too.
 
-Interfaces are one of the most useful features in TypeScript. They act as a contract: "any object claiming to be a User must have these properties with these types." It is like a form with required fields. If you leave one blank, the form tells you before you submit.`,
+Interfaces are one of the most useful features in TypeScript. They act as a contract: "any object claiming to be a User must have these properties with these types." It is like a form with required fields. If you leave one blank, the form tells you before you submit.
+
+[TypeScript: Object Types](https://www.typescriptlang.org/docs/handbook/2/objects.html)`,
       },
       {
         heading: "Union types: this or that",
@@ -2452,7 +2494,9 @@ You can also use unions with literal values to create a fixed set of options:
 
 type Status = "loading" | "success" | "error";
 
-Now any variable with the type Status can only be one of those three exact strings. If you misspell one, TypeScript catches it.`,
+Now any variable with the type Status can only be one of those three exact strings. If you misspell one, TypeScript catches it.
+
+[TypeScript: Unions](https://www.typescriptlang.org/docs/handbook/2/narrowing.html)`,
       },
       {
         heading: "Generics: reusable types",
@@ -2478,7 +2522,9 @@ Promises use them:
 
 const response: Promise<User> = fetchUser(1);
 
-You do not need to write your own generics to benefit from them. Just understanding the angle bracket syntax lets you read most TypeScript code. When you see Array<string>, read it as "an array of strings." When you see Promise<User>, read it as "a promise that will eventually give you a User."`,
+You do not need to write your own generics to benefit from them. Just understanding the angle bracket syntax lets you read most TypeScript code. When you see Array<string>, read it as "an array of strings." When you see Promise<User>, read it as "a promise that will eventually give you a User."
+
+[TypeScript: Generics](https://www.typescriptlang.org/docs/handbook/2/generics.html)`,
       },
       {
         heading: "Type narrowing",
@@ -2501,7 +2547,9 @@ typeof checks for primitive types (string, number, boolean).
 instanceof checks whether something is an instance of a class.
 Equality checks like value === null narrow out null.
 
-Narrowing is how TypeScript stays helpful without getting in your way. You write normal JavaScript checks, and TypeScript uses them to understand your code better. The types get more specific as your logic gets more specific.`,
+Narrowing is how TypeScript stays helpful without getting in your way. You write normal JavaScript checks, and TypeScript uses them to understand your code better. The types get more specific as your logic gets more specific.
+
+[TypeScript: Narrowing](https://www.typescriptlang.org/docs/handbook/2/narrowing.html)`,
       },
       {
         heading: "Why it matters",
@@ -2536,6 +2584,8 @@ JavaScript has a handful of basic data types. The most common are strings (text)
 
 You do not need to tell JavaScript what type a variable is. It figures it out from the value you assign. TypeScript adds that ability, and you can see how by toggling the examples above.
 
+[MDN: let](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let) [MDN: const](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/const)
+
 {{interactive:0}}`,
         interactives: [{ diagram: InteractiveVariables, steps: variablesSteps }],
         codeToggles: [
@@ -2565,7 +2615,9 @@ Arrow functions are a shorter way to write the same thing. They are especially c
 
 {{toggle:2}}
 
-The key difference you will notice in the TypeScript versions is that every parameter and return value has a type label. This means if you accidentally pass a number where a string is expected, your editor catches it before you run the code.`,
+The key difference you will notice in the TypeScript versions is that every parameter and return value has a type label. This means if you accidentally pass a number where a string is expected, your editor catches it before you run the code.
+
+[MDN: Functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions)`,
         codeToggles: [
           {
             js: `function greet(name) {\n  return "Hello, " + name;\n}\n\ngreet("Alex");  // "Hello, Alex"`,
@@ -2630,7 +2682,9 @@ JavaScript arrays come with built-in methods that let you transform, filter, and
 
 {{interactive:2}}
 
-These methods are everywhere in modern JavaScript and React. Learning them well pays off quickly.`,
+These methods are everywhere in modern JavaScript and React. Learning them well pays off quickly.
+
+[MDN: Array methods](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)`,
         codeToggles: [
           {
             js: `const colours = ["red", "green", "blue"];\n\nconsole.log(colours[0]);     // "red"\nconsole.log(colours.length); // 3\n\ncolours.push("yellow");      // add to the end`,
@@ -2694,7 +2748,9 @@ The spread operator (...) copies the contents of an array or object into a new o
 
 {{interactive:1}}
 
-Destructuring and spread show up constantly in React. Props are destructured in function parameters, state updates use spread to copy objects, and arrays are spread into new arrays when adding items.`,
+Destructuring and spread show up constantly in React. Props are destructured in function parameters, state updates use spread to copy objects, and arrays are spread into new arrays when adding items.
+
+[MDN: Destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)`,
         codeToggles: [
           {
             js: `const user = { name: "Alex", age: 39, role: "Engineer" };\n\n// Without destructuring\nconst name = user.name;\nconst role = user.role;\n\n// With destructuring\nconst { name, role } = user;`,
@@ -2725,7 +2781,9 @@ The async/await syntax is a cleaner way to write the same thing:
 
 In the TypeScript versions, notice that the fetch response and the resulting data both have types. This means your editor can autocomplete properties on the user object and warn you if you access something that does not exist.
 
-These are the core building blocks of JavaScript. Every framework, library, and tool you encounter is built from these fundamentals: variables, functions, objects, arrays, conditionals, destructuring, and async patterns. Understand these and the rest follows.`,
+These are the core building blocks of JavaScript. Every framework, library, and tool you encounter is built from these fundamentals: variables, functions, objects, arrays, conditionals, destructuring, and async patterns. Understand these and the rest follows.
+
+[MDN: async/await](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Promises)`,
         codeToggles: [
           {
             js: `fetch("/api/user")\n  .then((response) => response.json())\n  .then((data) => {\n    console.log(data.name);\n  })\n  .catch((error) => {\n    console.log("Something went wrong");\n  });`,
