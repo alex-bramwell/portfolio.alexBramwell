@@ -1736,7 +1736,7 @@ function NoSweatIllustration() {
 const ARTICLES = {
   "nosweat-fitness-deep-dive": {
     title: "Building NoSweat Fitness",
-    subtitle: "From single-gym prototype to multi-tenant SaaS across 474 commits",
+    subtitle: "From single-gym prototype to multi-tenant SaaS across 474 commits and counting (still in development)",
     date: "April 2026",
     readTime: "9 min read",
     illustration: NoSweatIllustration,
