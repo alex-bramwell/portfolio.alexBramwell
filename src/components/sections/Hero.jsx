@@ -1,3 +1,23 @@
+// Hero.jsx - Above-the-fold section with staggered GSAP entrance
+//
+// The hero uses a two-column grid: left column is content (heading, typewriter,
+// description, CTAs), right column is at-a-glance proof (stats, code snippet,
+// tech chips). The idea is that a hiring manager scanning quickly gets both the
+// narrative and the evidence without scrolling.
+//
+// The entrance timeline staggers every element with overlapping delays (the
+// "-=0.3" offsets) so it feels like a choreographed reveal rather than a
+// list popping in one by one. I tuned the timing by feel rather than formula.
+//
+// The three glow orbs are continuous animations (repeat: -1, yoyo: true) that
+// run independently of the entrance timeline. They add subtle depth to the
+// background without competing with the content. They are aria-hidden because
+// they carry no semantic meaning.
+//
+// gsap.context() scopes all animations to the section ref and handles cleanup
+// on unmount. Without this, timeline tweens would persist after navigating away
+// from a modal that re-mounts the page, causing ghost animations.
+
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { useTypewriter } from "../../hooks/useTypewriter";

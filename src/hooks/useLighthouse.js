@@ -1,3 +1,20 @@
+// useLighthouse.js - Lazy-fetches CI-generated Lighthouse scores on scroll
+//
+// The scores displayed on the site are not from a third-party API or a cached
+// screenshot. A GitHub Actions workflow runs after every deploy: it launches 3
+// Lighthouse audits against the live site, averages the results, and commits
+// them to public/lighthouse.json. This hook fetches that static JSON file.
+//
+// I use IntersectionObserver to defer the fetch until the Design System section
+// scrolls into view. There is no point loading performance data on page load
+// when the user might never scroll that far. The observer disconnects after the
+// first intersection, so we only fetch once per session.
+//
+// The fallback scores (all 100s) are there as a safety net, the JSON should
+// always exist because the CI pipeline commits it, but if the fetch fails for
+// any reason (network, CDN cache, corrupted file), the UI still renders
+// gracefully rather than showing broken gauges.
+
 import { useState, useEffect, useRef } from "react";
 
 const SCORES_URL = import.meta.env.BASE_URL + "lighthouse.json";

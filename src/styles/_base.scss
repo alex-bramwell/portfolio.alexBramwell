@@ -1,3 +1,20 @@
+// _base.scss - CSS custom properties, reset, and font declarations
+//
+// This file bridges SCSS design tokens to CSS custom properties at :root.
+// Dark theme is the default. Light theme overrides via [data-theme="light"].
+// Switching themes is instant because only CSS custom property values change,
+// no JavaScript re-render, no class toggling on individual elements.
+//
+// I self-host all fonts (woff2 only, latin subset) rather than loading from
+// Google Fonts. This eliminates a render-blocking external request and gives
+// me full control over font-display: swap. The trade-off is a slightly larger
+// initial payload (~120KB total for 8 font files), but it is a single-origin
+// request that benefits from the same CDN and caching as the rest of the site.
+//
+// The scrollbar styling is minimal (4px, background-matched) to keep the
+// visual noise low without hiding the scrollbar entirely, which would be
+// an accessibility issue for users who rely on visible scroll indicators.
+
 @use 'variables' as *;
 
 // Self-hosted fonts (latin subset only)

@@ -1,3 +1,24 @@
+// BackgroundCanvas.jsx - Fixed animated grid + floating dots behind all content
+//
+// I use raw Canvas 2D here instead of SVG or CSS because there are up to 80 dots
+// with connecting lines recalculated every frame. DOM-based approaches would create
+// hundreds of elements and trigger constant layout/paint cycles. Canvas keeps all of
+// that off the main thread's layout pipeline.
+//
+// Performance decisions I made:
+// 1. The static grid is pre-rendered to an offscreen canvas and blitted each frame.
+//    It never changes, so redrawing grid lines every frame would be pure waste.
+// 2. Mobile gets fewer dots (30 vs 80), no connecting lines, and a throttled FPS
+//    target (24 vs 60). I found through testing that the connecting line loop is
+//    O(n^2) and was the main bottleneck on lower-end devices.
+// 3. Distance checks use squared distance (dx*dx + dy*dy < 10000) to avoid
+//    Math.hypot or Math.sqrt in the hot loop. Only the opacity falloff needs the
+//    actual distance, and that runs only for the small subset of nearby dot pairs.
+// 4. CSS custom properties (--canvas-grid, --canvas-dot) are read once per theme
+//    change, not per frame. The effect re-runs when theme changes to pick up new
+//    colours, which also rebuilds the offscreen grid canvas.
+// 5. The entire canvas is skipped when motion is reduced. No RAF loop at all.
+
 import { useRef, useEffect } from "react";
 import { useTheme } from "../context/ThemeContext";
 

@@ -1,3 +1,20 @@
+// MagneticButton.jsx - Cursor-following button with elastic return
+//
+// The button element shifts toward the cursor position while hovering, creating
+// a "magnetic" feel. On mouse leave, it springs back with elastic easing.
+//
+// I use useCallback for both handlers to avoid creating new function references
+// on every render, since these are attached as event listeners and would cause
+// unnecessary re-bindng otherwise. The 0.3 multiplier on cursor offset keeps the
+// movement subtle, larger values felt too exaggerated in testing.
+//
+// The component renders as either <a> or <button> depending on whether an href
+// prop is provided, so it works for both navigation links and action buttons
+// without duplicating the magnetic behaviour.
+//
+// Like all animation components, this respects isReduced from ThemeContext and
+// returns early from both handlers when motion is disabled.
+
 import { useRef, useCallback } from "react";
 import gsap from "gsap";
 import { useTheme } from "../context/ThemeContext";

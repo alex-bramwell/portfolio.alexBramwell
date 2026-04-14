@@ -1,3 +1,21 @@
+// ThemeContext.jsx - Theme (light/dark) and motion (full/reduced) provider
+//
+// I manage both theme and motion in a single context because they are both
+// global visual preferences that every animated component needs access to.
+// Splitting them into separate contexts would mean double the provider nesting
+// and double the useContext calls in components like ScrollReveal and Hero.
+//
+// The key architectural decision: theme and motion are applied as data attributes
+// on document.documentElement, not as React state passed through props. This means
+// CSS can respond to theme changes without any re-render. The :root and
+// [data-theme="light"] selectors in _base.scss swap every custom property at once.
+// GSAP animations check isReduced from this context and return early if true,
+// so the motion toggle is an architectural decision that touches every animation
+// in the codebase, not a bolt-on feature.
+//
+// Motion defaults respect the OS-level prefers-reduced-motion media query on
+// first visit, then persists the user's explicit choice to localStorage.
+
 import { createContext, useContext, useState, useEffect } from "react";
 
 const ThemeContext = createContext();

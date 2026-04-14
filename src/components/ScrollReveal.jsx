@@ -1,3 +1,20 @@
+// ScrollReveal.jsx - Reusable scroll-triggered entrance wrapper
+//
+// This is the most-used animation component on the site. Rather than writing
+// GSAP ScrollTrigger logic in every section, I wrap content in <ScrollReveal>
+// and let it handle the entrance animation, direction, and stagger timing.
+//
+// The approach: GSAP handles animation when motion is "full", but I also provide
+// a pure CSS fallback (via css-reveal classes in ScrollReveal.scss) when motion is
+// "reduced". This means reduced-motion users still get a subtle fade-in via CSS
+// @keyframes, they just do not get the GSAP-driven physics and stagger. I chose
+// this over showing everything statically because a gentle fade still aids readability
+// without being disorienting.
+//
+// Every GSAP tween and ScrollTrigger is cleaned up on unmount. I learned early on
+// that skipping cleanup causes ghost triggers and memory leaks, especially when
+// modals mount and unmount components that contain ScrollReveals.
+
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";

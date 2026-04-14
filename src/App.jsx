@@ -1,3 +1,14 @@
+// App.jsx - Root component and modal orchestrator
+//
+// I chose to keep all modal state here rather than using a router or global store.
+// There are only three modals (contact, case study, article) and they never nest
+// in ways that need URL history, so useState at the root keeps things simple.
+//
+// The heavy modals (ContactModal, CaseStudy, ArticleModal, ThoughtsFab) are
+// lazy-loaded with React.lazy. They contain large SVG illustrations, GSAP timelines,
+// and syntax highlighting logic that would bloat the initial bundle. The user sees
+// the main page sections instantly; modal code only loads on first interaction.
+
 import { useState, useEffect, lazy, Suspense } from "react";
 import { ThemeProvider } from "./context/ThemeContext";
 import BackgroundCanvas from "./components/BackgroundCanvas";

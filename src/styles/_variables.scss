@@ -1,4 +1,18 @@
 // Design tokens
+//
+// These SCSS variables are the single source of truth for the design system.
+// They get bridged to CSS custom properties in _base.scss at :root, and every
+// component consumes var(--color-*) tokens, never these raw values directly.
+//
+// I chose SCSS variables over CSS-only custom properties as the source because
+// SCSS gives me the ability to derive values (rgba(), darken(), etc.) at build
+// time. The CSS custom properties handle runtime theming (dark/light swap)
+// without any JavaScript re-render.
+//
+// The two breakpoints (960px tablet, 600px mobile) cover three layout tiers.
+// I use clamp() throughout the component styles for fluid sizing between
+// breakpoints rather than step-based media queries for typography and spacing.
+
 $color-background:     #0b0b0b;
 $color-surface:        #131313;
 $color-surface-raised: #1a1a1a;
