@@ -284,7 +284,7 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
             </div>
             <div className="cs-hero-links">
               <a href="https://github.com/alex-bramwell/nosweat" target="_blank" rel="noopener">&uarr; GitHub</a>
-              <a href="https://gym-cross-fit-comet.vercel.app" target="_blank" rel="noopener">&rarr; Live demo</a>
+              <a href="https://nosweat.fitness" target="_blank" rel="noopener">&rarr; Live demo</a>
             </div>
           </div>
         </div>
@@ -403,7 +403,7 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
               <a href="https://github.com/alex-bramwell/nosweat" className="cs-cta-button-primary" target="_blank" rel="noopener">
                 View on GitHub &uarr;
               </a>
-              <a href="https://gym-cross-fit-comet.vercel.app" className="cs-cta-button-secondary" target="_blank" rel="noopener">
+              <a href="https://nosweat.fitness" className="cs-cta-button-secondary" target="_blank" rel="noopener">
                 Live demo &rarr;
               </a>
             </div>
