@@ -30,7 +30,7 @@ export default function Projects({ onOpenCaseStudy, onOpenArticle }) {
               </div>
               <div className="project-external-link-row">
                 <a href="https://github.com/alex-bramwell/nosweat" className="project-external-link project-external-link-primary" target="_blank" rel="noopener">&uarr; GitHub repo</a>
-                <a href="https://gym-cross-fit-comet.vercel.app" className="project-external-link" target="_blank" rel="noopener">&rarr; Live demo</a>
+                <a href="https://nosweat.fitness" className="project-external-link" target="_blank" rel="noopener">&rarr; Live demo</a>
               </div>
               <div className="featured-project-button-row">
                 <button className="featured-project-case-study-button" onClick={onOpenCaseStudy}>
