@@ -17,6 +17,7 @@ import Navbar from "./components/sections/Navbar";
 const ContactModal = lazy(() => import("./components/ContactModal"));
 const CaseStudy = lazy(() => import("./components/CaseStudy"));
 const ArticleModal = lazy(() => import("./components/ArticleModal"));
+const DownloadModal = lazy(() => import("./components/DownloadModal"));
 const ThoughtsFab = lazy(() => import("./components/ThoughtsFab"));
 import Hero from "./components/sections/Hero";
 import About from "./components/sections/About";
@@ -33,6 +34,7 @@ export default function App() {
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [isCaseStudyOpen, setIsCaseStudyOpen] = useState(false);
   const [openArticleId, setOpenArticleId] = useState(null);
+  const [isDownloadOpen, setIsDownloadOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setIsNavigationScrolled(window.scrollY > 40);
@@ -45,7 +47,7 @@ export default function App() {
       <BackgroundCanvas />
       <main className="page-wrapper">
         <Navbar isScrolled={isNavigationScrolled} onOpenContact={() => setIsContactOpen(true)} />
-        <Hero onOpenArticle={(id) => setOpenArticleId(id)} />
+        <Hero onOpenArticle={(id) => setOpenArticleId(id)} onOpenDownload={() => setIsDownloadOpen(true)} />
         <hr className="full-width-rule" />
         <About />
         <hr className="full-width-rule" />
@@ -67,6 +69,7 @@ export default function App() {
         {isContactOpen && <ContactModal isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />}
         {isCaseStudyOpen && <CaseStudy isOpen={isCaseStudyOpen} onClose={() => setIsCaseStudyOpen(false)} onOpenArticle={(id) => setOpenArticleId(id)} />}
         {openArticleId && <ArticleModal articleId={openArticleId} isOpen={!!openArticleId} onClose={() => setOpenArticleId(null)} />}
+        {isDownloadOpen && <DownloadModal isOpen={isDownloadOpen} onClose={() => setIsDownloadOpen(false)} />}
         <ThoughtsFab onOpenArticle={(id) => setOpenArticleId(id)} />
       </Suspense>
     </ThemeProvider>
