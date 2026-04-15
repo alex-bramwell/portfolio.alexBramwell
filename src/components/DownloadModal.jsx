@@ -122,6 +122,11 @@ export default function DownloadModal({ isOpen, onClose }) {
         <h2 className="download-modal-title">Download CV</h2>
         <p className="download-modal-subtitle">Choose a format that works best for you.</p>
 
+        <div className="download-modal-notice">
+          <span className="download-modal-notice-icon">:)</span>
+          <p>I've put a lot of effort into this living, breathing online CV to come across in the best possible light. Please explore the site and read some of my articles before downloading.</p>
+        </div>
+
         <div className="download-option-grid">
           <button className="download-option" onClick={handleDocx} disabled={!!generating}>
             <div className="download-option-icon">
