@@ -80,6 +80,49 @@ export default function Projects({ onOpenCaseStudy, onOpenArticle }) {
             </ScrollReveal>
           </div>
         </div>
+
+        <ScrollReveal>
+          <div className="projects-experience-header">
+            <span className="section-number-label">03.1</span>
+            <span className="section-eyebrow-label">Work experience</span>
+          </div>
+        </ScrollReveal>
+        <div className="projects-experience-list">
+          {[
+            {
+              company: "MailMetrics",
+              summary: "Most recently at MailMetrics as a UX Engineer on a currently seven-module enterprise SaaS platform for document management, composition, and data processing for large postal clients across Europe. I was designing across the whole product, writing production React, and maintaining a Storybook component library backed by a Figma design system. Genuinely sitting between design and engineering rather than just handing work over the fence.",
+              tags: ["React", "TypeScript", "Storybook", "Figma", "Design Systems", "SCSS"],
+            },
+            {
+              company: "Adare SEC",
+              summary: "At Adare I was working on customer communications management tooling for enterprise clients, which is where I started getting deeper into the design-to-engineering handoff side of things.",
+              tags: ["CCM Tooling", "Enterprise", "Design Handoff"],
+            },
+            {
+              company: "Imosphere",
+              summary: "At Imosphere I moved into UX on care management software. Very technical, regulated workflows, users who need clarity over anything else.",
+              tags: ["UX Design", "Regulated Software", "Care Management"],
+            },
+            {
+              company: "inspHire",
+              summary: "At inspHire I was doing UI design on ERP software for the plant hire industry. Complex, workflow-heavy tracks for operations teams alongside developing the marketing website.",
+              tags: ["UI Design", "ERP", "Marketing Site"],
+            },
+          ].map((job, index) => (
+            <ScrollReveal key={job.company} stagger={index + 1}>
+              <div className="projects-experience-item">
+                <div className="projects-experience-company">{job.company}</div>
+                <p className="projects-experience-summary">{job.summary}</p>
+                <div className="skill-chip-list">
+                  {job.tags.map((t) => (
+                    <span key={t} className="skill-chip">{t}</span>
+                  ))}
+                </div>
+              </div>
+            </ScrollReveal>
+          ))}
+        </div>
       </div>
     </section>
   );
