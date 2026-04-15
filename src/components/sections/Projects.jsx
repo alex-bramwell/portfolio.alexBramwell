@@ -31,6 +31,7 @@ export default function Projects({ onOpenCaseStudy, onOpenArticle }) {
               <div className="project-external-link-row">
                 <a href="https://github.com/alex-bramwell/nosweat" className="project-external-link project-external-link-primary" target="_blank" rel="noopener">&uarr; GitHub repo</a>
                 <a href="https://nosweat.fitness" className="project-external-link" target="_blank" rel="noopener">&rarr; Live demo</a>
+                <a href="https://sketch.com/s/b2889da2-f9fb-42ca-aa6f-ebdb3948fafd/p/61B1B290-0763-4B00-A3AE-60D7AC99BC4E/canvas" className="project-external-link" target="_blank" rel="noopener">&rarr; View sketch</a>
               </div>
               <div className="featured-project-button-row">
                 <button className="featured-project-case-study-button" onClick={onOpenCaseStudy}>
