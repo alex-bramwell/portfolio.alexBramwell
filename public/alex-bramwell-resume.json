@@ -9,7 +9,14 @@
       "region": "Nottinghamshire",
       "countryCode": "GB"
     },
-    "summary": "Design-trained frontend engineer with 7+ years building production SaaS interfaces. I own the full pipeline, from Figma wireframes through to deployed React components, with deep expertise in design systems, WCAG accessibility, and mobile-first UX.",
+    "summary": "Design-trained frontend engineer with 7+ years building production SaaS interfaces. I own the full pipeline from Figma wireframes through to deployed React components, with deep expertise in design systems, WCAG accessibility, and mobile-first UX. I studied Graphic Design at the University of Lincoln, which gives me a formal grounding in composition, hierarchy, and visual communication that most engineers lack. I bridge the gap between design and engineering rather than working on one side of the fence.",
+    "about": "I'm a UX Engineer with a BA in Graphic Design from the University of Lincoln and 7+ years shipping interfaces for SaaS platforms. I work across the full design-to-code pipeline, equally at home in Figma as in a React codebase. I've built token-based design systems, authored full wireframe specifications for enterprise clients, shipped Stripe-integrated booking flows, and maintained multi-tenant frontend architectures from day one to production.",
+    "strengths": [
+      "Design Systems: Token-based component libraries in Storybook.js, the single source of truth between design and engineering.",
+      "Mobile-first SaaS: Responsive, accessible interfaces for multi-tenant platforms, from booking flows to complex admin dashboards.",
+      "Full pipeline ownership: From Figma wireframes through to deployed React components. I own the whole design-to-production journey.",
+      "Accessibility-first: Every interface targets WCAG 2.1 AA as a baseline, covering keyboard navigation, colour contrast, and screen readers."
+    ],
     "profiles": [
       {
         "network": "GitHub",
@@ -40,10 +47,14 @@
       "endDate": "2025",
       "summary": "UX Engineer on a seven-module enterprise SaaS platform for document management, composition, and data processing for large postal clients across Europe. Designed across the whole product, wrote production React, and maintained a Storybook component library backed by a Figma design system.",
       "highlights": [
-        "Built and maintained the MailMetrics component library in Storybook.js, a token-based design system spanning the full product suite.",
-        "Delivered 18-screen wireframe specification for ESB Networks' stock management system, translating complex requirements into WCAG-compliant responsive UI.",
+        "Built and maintained the MailMetrics component library in Storybook.js: a token-based design system spanning the full product suite with over 60 components.",
+        "Established a single source of truth for colours, spacing, and typography across seven product modules, cutting UI inconsistencies and reducing onboarding time for new developers.",
+        "Delivered an 18-screen wireframe specification for ESB Networks' stock management system, translating a complex requirements catalogue into WCAG-compliant responsive UI from initial discovery through to client-approved handoff.",
         "Developed MFA frontend flows and user management modules in React + TypeScript within a .NET ecosystem.",
-        "Mentored junior developers through technical presentations covering search, document retrieval, and user management architecture."
+        "Designed and prototyped new feature areas in Figma, from low-fidelity wireframes through to high-fidelity interactive prototypes with design token integration.",
+        "Reviewed both designs and pull requests as part of a collaborative product team, bridging design intent and technical execution.",
+        "Mentored junior developers through technical presentations covering search architecture, document retrieval, and user management patterns.",
+        "Ensured full WCAG 2.1 AA compliance across every component in the design system."
       ]
     },
     {
@@ -51,31 +62,37 @@
       "position": "Digital Transformation Specialist",
       "startDate": "2021",
       "endDate": "2023",
-      "summary": "Worked on customer communications management tooling for enterprise clients, getting deeper into the design-to-engineering handoff side of things.",
+      "summary": "Worked on customer communications management tooling for enterprise clients, bridging design and technical delivery in a regulated, high-volume document environment.",
       "highlights": [
         "Led digital transformation using Quadient Inspire CCM software, bridging design and technical delivery for enterprise communications.",
-        "Translated complex CCM workflows into user-centred interfaces for regulated, high-volume document outputs."
+        "Translated complex CCM workflows into user-centred interfaces for regulated, high-volume document outputs serving major financial and utilities clients.",
+        "Designed and implemented template architectures for multi-channel customer communications (print, email, SMS, web).",
+        "Collaborated with enterprise clients to gather requirements and deliver solutions that balanced compliance constraints with usability."
       ]
     },
     {
       "company": "Imosphere",
-      "position": "Frontend Developer",
+      "position": "Frontend Developer / UX Designer",
       "startDate": "2019",
       "endDate": "2021",
-      "summary": "UX on care management software. Very technical, regulated workflows, users who need clarity over anything else.",
+      "summary": "Moved into UX on care management software. Very technical, regulated workflows where users need clarity over anything else.",
       "highlights": [
-        "Delivered responsive, accessible frontend solutions across B2B SaaS products: component architecture, accessibility audits, and design system work."
+        "Designed and developed frontend interfaces for care management software used by local authorities and NHS trusts.",
+        "Conducted user research and usability testing with care professionals to inform interface decisions for complex, regulated workflows.",
+        "Delivered responsive, accessible frontend solutions: component architecture, accessibility audits, and design system foundations.",
+        "Worked closely with backend engineers to ensure data-heavy interfaces remained performant and intuitive."
       ]
     },
     {
       "company": "inspHire",
-      "position": "Frontend Developer",
+      "position": "Frontend Developer / UI Designer",
       "startDate": "2018",
       "endDate": "2019",
       "summary": "UI design on ERP software for the plant hire industry. Complex, workflow-heavy tracks for operations teams alongside developing the marketing website.",
       "highlights": [
-        "Designed and developed UI for ERP software serving the plant hire industry.",
-        "Built and maintained the company marketing website."
+        "Designed and developed UI for ERP software serving the plant hire industry, handling complex operational workflows for fleet management and scheduling.",
+        "Built and maintained the company marketing website, improving lead generation and brand presence.",
+        "Created wireframes and high-fidelity mockups for new product features, working directly with product owners and operations staff."
       ]
     }
   ],
@@ -102,12 +119,12 @@
     },
     {
       "name": "MailMetrics Design System",
-      "description": "Token-based Storybook component library powering the full MailMetrics product suite. Single source of truth for colours, spacing, and typography. Full WCAG 2.1 AA compliance across every component.",
+      "description": "Token-based Storybook component library powering the full MailMetrics product suite. Single source of truth for colours, spacing, and typography with over 60 components. Full WCAG 2.1 AA compliance across every component.",
       "keywords": ["Storybook", "React", "SCSS", "TypeScript"]
     },
     {
       "name": "ESB Networks - 18-Screen Spec",
-      "description": "Translated a complex requirements catalogue into an 18-screen wireframe specification for ESB Networks' stock management system. Delivered responsive, WCAG-compliant UI from initial discovery through to client-approved handoff.",
+      "description": "Translated a complex requirements catalogue into an 18-screen wireframe specification for ESB Networks' stock management system. Delivered responsive, WCAG-compliant UI from initial discovery through to client-approved handoff, bridging stakeholder needs and engineering constraints.",
       "keywords": ["Figma", "Balsamiq", "UX Spec", "WCAG 2.1"]
     }
   ]
