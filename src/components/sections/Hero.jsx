@@ -37,7 +37,7 @@ function AnimatedStat({ endValue, suffix, descriptor }) {
   );
 }
 
-export default function Hero({ onOpenArticle }) {
+export default function Hero({ onOpenArticle, onOpenDownload }) {
   const currentRoleText = useTypewriter(ROLE_PHRASES, 65, 2200);
   const sectionRef = useRef(null);
   const { isReduced } = useTheme();
@@ -152,7 +152,7 @@ export default function Hero({ onOpenArticle }) {
             <div className="hero-action-button-row">
               <MagneticButton href="#projects" className="button-filled">View my work &rarr;</MagneticButton>
               <MagneticButton href="#contact" className="button-outlined">Get in touch</MagneticButton>
-              <MagneticButton href="/portfolio.alexBramwell/alex-bramwell-cv.pdf" className="button-outlined" target="_blank" rel="noopener">Download CV &darr;</MagneticButton>
+              <MagneticButton className="button-outlined" onClick={onOpenDownload}>Download CV &darr;</MagneticButton>
             </div>
             <button className="hero-featured-article" onClick={() => onOpenArticle("the-split-brain-problem")}>
               <span className="hero-featured-article-badge">New article</span>
