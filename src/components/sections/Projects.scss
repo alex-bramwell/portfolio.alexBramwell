@@ -76,6 +76,9 @@
 }
 
 .project-external-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 500;
@@ -95,6 +98,10 @@
       opacity: 0.75;
     }
   }
+}
+
+.project-external-link-icon {
+  flex-shrink: 0;
 }
 
 .featured-project-button-row {
