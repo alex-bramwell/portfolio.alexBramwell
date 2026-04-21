@@ -31,7 +31,16 @@ export default function Projects({ onOpenCaseStudy, onOpenArticle }) {
               <div className="project-external-link-row">
                 <a href="https://github.com/alex-bramwell/nosweat" className="project-external-link project-external-link-primary" target="_blank" rel="noopener">&uarr; GitHub repo</a>
                 <a href="https://nosweat.fitness" className="project-external-link" target="_blank" rel="noopener">&rarr; Live demo</a>
-                <a href="https://sketch.com/s/b2889da2-f9fb-42ca-aa6f-ebdb3948fafd/p/61B1B290-0763-4B00-A3AE-60D7AC99BC4E/canvas" className="project-external-link" target="_blank" rel="noopener">&rarr; View sketch</a>
+                <a href="https://www.figma.com/design/3XVEpFw6C9uTOu9EnjPw42/Untitled?node-id=0-1&t=GEyxAtsXUJJYUBY2-1" className="project-external-link" target="_blank" rel="noopener">
+                  <svg className="project-external-link-icon" viewBox="0 0 24 24" width="11" height="11" fill="currentColor" aria-hidden="true">
+                    <path d="M8 24a4 4 0 0 0 4-4v-4H8a4 4 0 0 0 0 8z" />
+                    <path d="M4 12a4 4 0 0 1 4-4h4v8H8a4 4 0 0 1-4-4z" />
+                    <path d="M4 4a4 4 0 0 1 4-4h4v8H8a4 4 0 0 1-4-4z" />
+                    <path d="M12 0h4a4 4 0 0 1 0 8h-4V0z" />
+                    <path d="M20 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0z" />
+                  </svg>
+                  View in Figma
+                </a>
               </div>
               <div className="featured-project-button-row">
                 <button className="featured-project-case-study-button" onClick={onOpenCaseStudy}>
