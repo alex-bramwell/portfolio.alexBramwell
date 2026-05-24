@@ -139,7 +139,6 @@ export default function Hero({ onOpenArticle, onOpenDownload }) {
             <p className="hero-role-typewriter-line">
               <span className="hero-role-current-text">{currentRoleText}</span>
               <span className="typewriter-cursor" />
-              {" "}&ndash; design&nbsp;{"\u2194\uFE0E"}&nbsp;code
             </p>
             <p className="hero-description-paragraph">
               7+ years designing and shipping production SaaS interfaces. I own the full pipeline,
@@ -147,7 +146,7 @@ export default function Hero({ onOpenArticle, onOpenDownload }) {
               design systems, WCAG accessibility, and mobile-first UX.
             </p>
             <p className="hero-seeking-line">
-              Looking for a UX Engineer or Design Systems role at a product company where design and engineering share the same table.
+              Looking for a role where I shape the UX, with the frontend skills to build it when that helps, on a team where design, research and engineering share the same table.
             </p>
             <div className="hero-action-button-row">
               <MagneticButton href="#projects" className="button-filled">View my work &rarr;</MagneticButton>
