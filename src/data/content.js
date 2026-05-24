@@ -56,8 +56,8 @@ export const CONTACT_DETAILS = [
 ];
 
 export const ROLE_PHRASES = [
-  "UX Engineer",
-  "Frontend Developer",
-  "Design Systems Lead",
-  "React + TypeScript Dev",
+  "designs the interface",
+  "builds the frontend",
+  "owns the design system",
+  "ships accessible UI",
 ];
