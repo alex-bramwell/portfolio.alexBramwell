@@ -416,8 +416,13 @@
   height: 40px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-small);
-  font-size: 18px;
   margin-bottom: 16px;
+  color: var(--color-accent);
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
 }
 
 .cs-feature-title {
