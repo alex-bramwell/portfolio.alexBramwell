@@ -80,35 +80,6 @@
   }
 }
 
-.hero-availability-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border: 1px solid var(--color-success-muted);
-  background: var(--color-success-bg);
-  border-radius: var(--radius-small);
-  padding: 6px 12px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--color-success-text);
-  letter-spacing: 0.5px;
-  margin-bottom: 28px;
-}
-
-.availability-status-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--color-success);
-  animation: status-pulse 2s ease-in-out infinite;
-}
-
-@keyframes status-pulse {
-  0%, 100% { opacity: 1; }
-  50%      { opacity: 0.35; }
-}
-
 .hero-main-heading {
   font-family: var(--font-display);
   font-size: clamp(52px, 7.5vw, 96px);
@@ -311,7 +282,6 @@
 
 // CSS fallback entrance when GSAP is disabled
 [data-motion="reduced"] {
-  .hero-availability-badge,
   .hero-main-heading,
   .hero-role-typewriter-line,
   .hero-description-paragraph,

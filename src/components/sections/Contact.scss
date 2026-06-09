@@ -39,6 +39,11 @@
   animation: status-pulse 1.5s ease-in-out infinite;
 }
 
+@keyframes status-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.35; }
+}
+
 .contact-details-list {
   display: flex;
   flex-direction: column;

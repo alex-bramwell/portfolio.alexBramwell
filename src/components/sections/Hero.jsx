@@ -48,17 +48,12 @@ export default function Hero({ onOpenArticle, onOpenDownload }) {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-      tl.from(".hero-availability-badge", {
+      tl.from(".hero-main-heading", {
         opacity: 0,
-        y: 16,
-        duration: 0.6,
+        y: 40,
+        duration: 0.8,
         delay: 0.3,
       })
-        .from(
-          ".hero-main-heading",
-          { opacity: 0, y: 40, duration: 0.8 },
-          "-=0.3"
-        )
         .from(
           ".hero-role-typewriter-line",
           { opacity: 0, y: 20, duration: 0.5 },
@@ -128,10 +123,6 @@ export default function Hero({ onOpenArticle, onOpenDownload }) {
       <div className="page-container">
         <div className="hero-two-column-grid">
           <div>
-            <div className="hero-availability-badge">
-              <div className="availability-status-dot" />
-              Available for new opportunities
-            </div>
             <h1 className="hero-main-heading">
               Alex
               <span className="hero-name-accent">Bramwell</span>
