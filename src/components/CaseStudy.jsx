@@ -216,6 +216,35 @@ const SCREENS = [
   { src: "case-study/payments.png", title: "Payments", caption: "Member payments flow straight to the gym's bank account through Stripe." },
 ];
 
+const ROADMAP = [
+  {
+    status: "In development",
+    items: [
+      { title: "Workout tracking & PR logging", text: "Members log weights, times, and reps, with personal records and progress tracked automatically." },
+      { title: "Automated email & SMS", text: "Booking reminders, waitlist updates, and class changes sent without anyone lifting a finger." },
+      { title: "Billing & membership tiers", text: "Recurring subscriptions with multiple levels and clean upgrade, downgrade, and cancel flows." },
+    ],
+  },
+  {
+    status: "Planned",
+    items: [
+      { title: "QR code check-in", text: "Members scan on arrival, so attendance tracks itself." },
+      { title: "Challenges & leaderboards", text: "Gym-wide competitions, monthly challenges, and a bit of community rivalry." },
+      { title: "Custom forms", text: "Waivers, health questionnaires, and onboarding forms with digital signatures." },
+    ],
+  },
+  {
+    status: "Under consideration",
+    items: [
+      { title: "Shop loyalty points", text: "Earn and redeem points on in-gym shop purchases." },
+      { title: "Member referrals", text: "Reward members who bring new signups, with configurable incentives." },
+      { title: "Wearable integration", text: "Pull heart rate and workout data from Apple Watch, Fitbit, and Garmin." },
+      { title: "Merchandise store", text: "Sell branded gear and supplements through the gym site with integrated checkout." },
+      { title: "Community wall", text: "Member posts, photos, and achievement sharing inside the platform." },
+    ],
+  },
+];
+
 function MetricCard({ endValue, suffix, label, isReduced }) {
   return (
     <div className="cs-metric-card">
@@ -645,6 +674,37 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
               and measuring booking conversion and retention against the incumbent
               tools.
             </p>
+          </div>
+        </section>
+
+        {/* ===== ROADMAP ===== */}
+        <section className="cs-section cs-roadmap-section">
+          <div className="cs-section-inner">
+            <span className="cs-section-eyebrow">Roadmap</span>
+            <h2 className="cs-section-heading">Where it goes&nbsp;next</h2>
+            <p className="cs-lead-text">
+              The platform ships behind a live, member-votable roadmap. Here is
+              what is in flight and what is queued, with the gym's own site always
+              the place it lands.
+            </p>
+            <div className="cs-roadmap-grid">
+              {ROADMAP.map((col, ci) => (
+                <div key={col.status} className="cs-roadmap-group cs-reveal-card" data-delay={ci * 0.08}>
+                  <div className={`cs-roadmap-status cs-roadmap-status-${ci}`}>
+                    <span className="cs-roadmap-dot" aria-hidden="true" />
+                    {col.status}
+                  </div>
+                  <ul className="cs-roadmap-items">
+                    {col.items.map((item) => (
+                      <li key={item.title} className="cs-roadmap-item">
+                        <span className="cs-roadmap-item-title">{item.title}</span>
+                        <span className="cs-roadmap-item-text">{item.text}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
