@@ -15,7 +15,29 @@ const ICON_SVG_PROPS = {
   strokeLinejoin: "round",
 };
 
-const FEATURES = [
+const META = [
+  { label: "Role", value: "Solo, design + build" },
+  { label: "Timeline", value: "Ongoing side project" },
+  { label: "Scope", value: "Research, UX, UI, full-stack" },
+  { label: "Stack", value: "React, Supabase, Stripe" },
+];
+
+const PROBLEMS = [
+  {
+    label: "The website",
+    title: "A brochure that never earns its keep",
+    description:
+      "Most small gyms run a placeholder site: a logo, a class list, maybe a contact form. But 88% of people who search on a phone visit a business within a week, and the gyms that grow treat their website as an acquisition tool, not a digital flyer. A static brochure ranks poorly and converts nobody, while every transaction happens somewhere else entirely.",
+  },
+  {
+    label: "The five apps",
+    title: "Booking that lives off-brand, behind a tax",
+    description:
+      "Class booking, memberships, payments, and WOD programming get bolted on through BoxMate, GoTeamUp, or Wodify. Members are bounced to a third-party portal, or told to download a generic app with someone else's name on it. That friction pushes people away, and the owner pays a recurring per-member fee that scales worst for the smallest gyms.",
+  },
+];
+
+const DECISIONS = [
   {
     icon: (
       <svg {...ICON_SVG_PROPS}>
@@ -24,22 +46,35 @@ const FEATURES = [
         <path d="M3 11v6c0 1.66 4.03 3 9 3s9-1.34 9-3v-6" />
       </svg>
     ),
-    title: "Multi-tenant Architecture",
-    description: "Every gym gets an isolated data silo via Supabase Row-Level Security. One codebase, infinite tenants, zero config per client.",
+    title: "Multi-tenant on row-level security",
+    reasoning:
+      "One codebase serves every gym, each an isolated, fully branded tenant via Supabase RLS. This is what removes the per-member tax: infinite gyms at near-zero marginal cost, instead of a price that climbs with every member you sign.",
   },
   {
     icon: (
       <svg {...ICON_SVG_PROPS}>
-        <circle cx="13.5" cy="6.5" r="0.5" fill="currentColor" stroke="none" />
-        <circle cx="17.5" cy="10.5" r="0.5" fill="currentColor" stroke="none" />
-        <circle cx="8.5" cy="7.5" r="0.5" fill="currentColor" stroke="none" />
-        <circle cx="6.5" cy="12.5" r="0.5" fill="currentColor" stroke="none" />
-        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z" />
+        <circle cx="12" cy="12" r="10" />
+        <path d="M2 12h20" />
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
       </svg>
     ),
-    title: "Branded Storefronts",
-    description: "Each tenant gets a fully themed public site with their logo, colours, and hero imagery generated from a single config object.",
+    title: "Branded storefronts from one config",
+    reasoning:
+      "Each gym gets a themed public site, their logo, colours, and hero imagery, generated from a single config object. Booking lives on the gym's own domain, so members never leave the brand for a third-party portal, and the site itself becomes the thing search engines rank.",
   },
+  {
+    icon: (
+      <svg {...ICON_SVG_PROPS}>
+        <polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+      </svg>
+    ),
+    title: "Optimistic booking UI",
+    reasoning:
+      "Bookings, waitlists, and cancellations update instantly and reconcile in the background. The friction that drives members toward easier apps disappears, because the gym's own site is now the fastest place to book a class.",
+  },
+];
+
+const FEATURES = [
   {
     icon: (
       <svg {...ICON_SVG_PROPS}>
@@ -50,7 +85,7 @@ const FEATURES = [
       </svg>
     ),
     title: "Class Booking Engine",
-    description: "Real-time class timetable with capacity tracking, waitlists, cancellation policies, and calendar sync, all optimistically updated.",
+    description: "Real-time timetable with capacity tracking, waitlists, cancellation policies, and calendar sync, all optimistically updated.",
   },
   {
     icon: (
@@ -60,7 +95,7 @@ const FEATURES = [
       </svg>
     ),
     title: "Stripe Payments",
-    description: "Subscription billing with Stripe Checkout. Webhooks handle plan changes, failed payments, and invoice generation server-side.",
+    description: "Subscription billing with Stripe Checkout. Webhooks handle plan changes, failed payments, and invoices server-side.",
   },
   {
     icon: (
@@ -87,27 +122,25 @@ const FEATURES = [
   },
 ];
 
-const ARCH_LAYERS = [
-  { label: "React 19 + TypeScript", sub: "Component library, hooks, routing", pct: 100 },
-  { label: "SCSS Modules", sub: "Token-based theming, responsive grid", pct: 88 },
-  { label: "Supabase + RLS", sub: "Auth, Postgres, real-time subscriptions", pct: 92 },
-  { label: "Stripe API", sub: "Checkout, webhooks, subscription lifecycle", pct: 75 },
-  { label: "Docker + Vercel", sub: "Containerised dev, edge deployment", pct: 82 },
-];
-
 const METRICS = [
-  { value: 6, suffix: "", label: "Core modules" },
-  { value: 18, suffix: "+", label: "Database tables" },
+  { value: 5, suffix: "→1", label: "Apps consolidated" },
+  { value: 1, suffix: "", label: "Branded domain" },
+  { value: 6, suffix: "", label: "Modules, one codebase" },
   { value: 100, suffix: "%", label: "Solo-built" },
-  { value: 4, suffix: "", label: "User roles" },
 ];
 
 const PROCESS_STEPS = [
-  { phase: "01", title: "Research", detail: "Competitor audit of 12 gym platforms. Mapped core jobs-to-be-done for owners, coaches, and members." },
-  { phase: "02", title: "Wireframes", detail: "Low-fi flows in Figma covering onboarding, booking, payments, and admin. Validated with 3 gym owners." },
-  { phase: "03", title: "Design System", detail: "Built token-based system: colour, spacing, type scales. Every component documented in Storybook." },
+  { phase: "01", title: "Research", detail: "Audited the incumbent stack (BoxMate, GoTeamUp, Wodify) and the placeholder-website pattern. Mapped the jobs-to-be-done for owners, coaches, and members." },
+  { phase: "02", title: "Wireframes", detail: "Low-fi flows in Figma covering discovery, onboarding, booking, payments, and admin. Validated the booking journey against the friction in existing tools." },
+  { phase: "03", title: "Design System", detail: "Built a token-based system: colour, spacing, type scales, so every tenant can be rebranded from config. Components documented in Storybook." },
   { phase: "04", title: "Engineering", detail: "React 19 + TypeScript frontend, Supabase backend with RLS, Stripe integration, Docker dev environment." },
-  { phase: "05", title: "Ship & Iterate", detail: "Deployed to Vercel edge network. Continuous deployment from main branch with preview URLs per PR." },
+  { phase: "05", title: "Ship & Iterate", detail: "Deployed to Vercel edge with continuous deployment from main and preview URLs per PR." },
+];
+
+const OUTCOMES = [
+  { stat: "5 → 1", label: "tools collapsed into the gym's own website" },
+  { stat: "£0", label: "per-member fees, replaced by a flat multi-tenant model" },
+  { stat: "1 domain", label: "for discovery, booking, and payments, all on-brand" },
 ];
 
 function MetricCard({ endValue, suffix, label, isReduced }) {
@@ -229,17 +262,17 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
       triggersRef.current.push(st);
     });
 
-    // --- Architecture bars ---
-    document.querySelectorAll(".cs-arch-bar-fill").forEach((bar) => {
+    // --- Generic card reveals (problem, decision, outcome) ---
+    document.querySelectorAll(".cs-reveal-card").forEach((card) => {
       const st = ScrollTrigger.create({
-        trigger: bar.parentElement,
+        trigger: card,
         scroller,
-        start: "top 85%",
+        start: "top 88%",
         once: true,
         onEnter: () => {
-          gsap.fromTo(bar,
-            { scaleX: 0 },
-            { scaleX: 1, duration: 1, ease: "power3.out" }
+          gsap.fromTo(card,
+            { opacity: 0, y: 40, scale: 0.97 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "power3.out", delay: parseFloat(card.dataset.delay || 0) }
           );
         },
       });
@@ -257,24 +290,8 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
         onEnter: () => {
           gsap.fromTo(card,
             { opacity: 0, y: 40, rotateX: 10, scale: 0.95 },
-            { opacity: 1, y: 0, rotateX: 0, scale: 1, duration: 0.5, ease: "power3.out", delay: (i % 3) * 0.08 }
+            { opacity: 1, y: 0, rotateX: 0, scale: 1, duration: 0.5, ease: "power3.out", delay: (i % 4) * 0.06 }
           );
-        },
-      });
-      triggersRef.current.push(st);
-    });
-
-    // --- SVG connector draw ---
-    document.querySelectorAll(".cs-svg-connector path").forEach((path) => {
-      const length = path.getTotalLength();
-      gsap.set(path, { strokeDasharray: length, strokeDashoffset: length });
-      const st = ScrollTrigger.create({
-        trigger: path.closest(".cs-arch-section"),
-        scroller,
-        start: "top 60%",
-        once: true,
-        onEnter: () => {
-          gsap.to(path, { strokeDashoffset: 0, duration: 1.5, ease: "power2.out" });
         },
       });
       triggersRef.current.push(st);
@@ -322,8 +339,9 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
             <span className="cs-hero-eyebrow">Case Study</span>
             <h1 className="cs-hero-title">NoSweat<br />Fitness</h1>
             <p className="cs-hero-subtitle">
-              Multi-tenant SaaS platform for gyms, from Figma wireframes
-              to production React, built end-to-end as a solo project.
+              Small gyms juggle five apps and a dead-weight website. NoSweat makes
+              the website the whole business: discovery, booking, payments, and
+              programming on the gym's own brand, not a third party's app.
             </p>
             <div className="cs-hero-chips">
               {["React 19", "TypeScript", "SCSS Modules", "Supabase", "Stripe", "Docker", "Vercel"].map((t) => (
@@ -336,6 +354,50 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
             </div>
           </div>
         </div>
+
+        {/* ===== METADATA ===== */}
+        <div className="cs-meta-strip">
+          {META.map((m) => (
+            <div key={m.label} className="cs-meta-item">
+              <span className="cs-meta-label">{m.label}</span>
+              <span className="cs-meta-value">{m.value}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* ===== PROBLEM ===== */}
+        <section className="cs-section cs-problem-section">
+          <div className="cs-section-inner">
+            <span className="cs-section-eyebrow">The Problem</span>
+            <h2 className="cs-section-heading">Two failures, bundled&nbsp;together</h2>
+            <p className="cs-lead-text">
+              A small gym today runs on a stack of stitched-together tools, and the
+              split creates two distinct failures, one in front of new members and
+              one behind the existing ones.
+            </p>
+            <div className="cs-problem-grid">
+              {PROBLEMS.map((p, i) => (
+                <div key={p.label} className="cs-problem-card cs-reveal-card" data-delay={i * 0.08}>
+                  <span className="cs-problem-label">{p.label}</span>
+                  <h3 className="cs-problem-title">{p.title}</h3>
+                  <p className="cs-problem-description">{p.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ===== OBJECTIVE ===== */}
+        <section className="cs-section cs-objective-section">
+          <div className="cs-section-inner">
+            <span className="cs-section-eyebrow">Objective</span>
+            <p className="cs-objective-text">
+              Replace the brochure site and the five-app stack with one branded
+              property the gym actually owns, with zero booking friction and no
+              per-member tax.
+            </p>
+          </div>
+        </section>
 
         {/* ===== METRICS ===== */}
         <div className="cs-metrics-strip">
@@ -378,29 +440,18 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
           </div>
         </section>
 
-        {/* ===== ARCHITECTURE ===== */}
-        <section className="cs-section cs-arch-section">
+        {/* ===== KEY DECISIONS ===== */}
+        <section className="cs-section cs-decisions-section">
           <div className="cs-section-inner">
-            <span className="cs-section-eyebrow">Architecture</span>
-            <h2 className="cs-section-heading">Stack &amp; infrastructure</h2>
-            <div className="cs-arch-diagram">
-              <svg className="cs-svg-connector" viewBox="0 0 600 280" preserveAspectRatio="none">
-                <path d="M30 20 Q300 140 570 20" fill="none" stroke="var(--color-accent)" strokeWidth="1.5" opacity="0.3" />
-                <path d="M30 80 Q300 200 570 80" fill="none" stroke="var(--color-accent)" strokeWidth="1" opacity="0.2" />
-                <path d="M30 140 Q300 260 570 140" fill="none" stroke="var(--color-accent)" strokeWidth="1" opacity="0.15" />
-              </svg>
-              {ARCH_LAYERS.map((layer) => (
-                <div key={layer.label} className="cs-arch-row">
-                  <div className="cs-arch-label">
-                    <span className="cs-arch-name">{layer.label}</span>
-                    <span className="cs-arch-sub">{layer.sub}</span>
-                  </div>
-                  <div className="cs-arch-bar">
-                    <div
-                      className="cs-arch-bar-fill"
-                      style={{ "--bar-width": `${layer.pct}%` }}
-                    />
-                    <span className="cs-arch-pct">{layer.pct}%</span>
+            <span className="cs-section-eyebrow">Key Decisions</span>
+            <h2 className="cs-section-heading">How the problem shaped the&nbsp;build</h2>
+            <div className="cs-decisions-list">
+              {DECISIONS.map((d, i) => (
+                <div key={d.title} className="cs-decision-card cs-reveal-card" data-delay={i * 0.06}>
+                  <span className="cs-decision-icon">{d.icon}</span>
+                  <div className="cs-decision-body">
+                    <h3 className="cs-decision-title">{d.title}</h3>
+                    <p className="cs-decision-reasoning">{d.reasoning}</p>
                   </div>
                 </div>
               ))}
@@ -412,7 +463,7 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
         <section className="cs-section cs-features-section">
           <div className="cs-section-inner">
             <span className="cs-section-eyebrow">Features</span>
-            <h2 className="cs-section-heading">What it does</h2>
+            <h2 className="cs-section-heading">What lands on the gym's&nbsp;site</h2>
             <div className="cs-features-grid" style={{ perspective: "800px" }}>
               {FEATURES.map((f) => (
                 <div key={f.title} className="cs-feature-card">
@@ -422,6 +473,30 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* ===== RESULTS ===== */}
+        <section className="cs-section cs-results-section">
+          <div className="cs-section-inner">
+            <span className="cs-section-eyebrow">Outcome</span>
+            <h2 className="cs-section-heading">One property, not&nbsp;five subscriptions</h2>
+            <div className="cs-outcome-grid">
+              {OUTCOMES.map((o, i) => (
+                <div key={o.label} className="cs-outcome-card cs-reveal-card" data-delay={i * 0.08}>
+                  <span className="cs-outcome-stat">{o.stat}</span>
+                  <span className="cs-outcome-label">{o.label}</span>
+                </div>
+              ))}
+            </div>
+            <p className="cs-results-note">
+              Built as a working demonstration rather than a live commercial product,
+              NoSweat proves the model end to end: the gym owner gets a fast,
+              search-ready website and the full operational stack on one property
+              they own outright. The next step is putting it in front of a real box
+              and measuring booking conversion and retention against the incumbent
+              tools.
+            </p>
           </div>
         </section>
 
