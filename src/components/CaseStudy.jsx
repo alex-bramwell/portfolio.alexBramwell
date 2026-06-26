@@ -6,6 +6,8 @@ import "./CaseStudy.scss";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const BASE = import.meta.env.BASE_URL;
+
 const ICON_SVG_PROPS = {
   viewBox: "0 0 24 24",
   fill: "none",
@@ -141,6 +143,13 @@ const OUTCOMES = [
   { stat: "5 → 1", label: "tools collapsed into the gym's own website" },
   { stat: "£0", label: "per-member fees, replaced by a flat multi-tenant model" },
   { stat: "1 domain", label: "for discovery, booking, and payments, all on-brand" },
+];
+
+const SCREENS = [
+  { src: "case-study/site-builder.jpg", title: "Site builder", caption: "Colour, type, and content edited live, no code. Every tenant rebrands from one config object." },
+  { src: "case-study/schedule.jpg", title: "Class schedule", caption: "Booking, waitlists, and capacity on the gym's own domain, never a third-party portal." },
+  { src: "case-study/dashboard.png", title: "Owner dashboard", caption: "A guided setup: logo, brand colours, classes, payments, coaches, and members." },
+  { src: "case-study/payments.png", title: "Payments", caption: "Member payments flow straight to the gym's bank account through Stripe." },
 ];
 
 function MetricCard({ endValue, suffix, label, isReduced }) {
@@ -399,6 +408,19 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
           </div>
         </section>
 
+        {/* ===== SHOWCASE ===== */}
+        <section className="cs-showcase-section">
+          <div className="cs-showcase">
+            <figure className="cs-showcase-desktop cs-reveal-card">
+              <img src={BASE + "case-study/storefront.jpg"} alt="A gym's branded NoSweat storefront on desktop" loading="lazy" />
+            </figure>
+            <figure className="cs-showcase-mobile cs-reveal-card" data-delay="0.12">
+              <img src={BASE + "case-study/storefront-mobile.jpg"} alt="The same storefront on mobile" loading="lazy" />
+            </figure>
+          </div>
+          <p className="cs-showcase-caption">One branded site, every device, all on the gym's own domain.</p>
+        </section>
+
         {/* ===== METRICS ===== */}
         <div className="cs-metrics-strip">
           {METRICS.map((m) => (
@@ -471,6 +493,27 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
                   <h3 className="cs-feature-title">{f.title}</h3>
                   <p className="cs-feature-description">{f.description}</p>
                 </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ===== SCREENS ===== */}
+        <section className="cs-section cs-screens-section">
+          <div className="cs-section-inner">
+            <span className="cs-section-eyebrow">Screens</span>
+            <h2 className="cs-section-heading">Inside the&nbsp;build</h2>
+            <div className="cs-screens-grid">
+              {SCREENS.map((s, i) => (
+                <figure key={s.src} className="cs-screen-card cs-reveal-card" data-delay={(i % 2) * 0.08}>
+                  <div className="cs-screen-frame">
+                    <img src={BASE + s.src} alt={s.title} loading="lazy" />
+                  </div>
+                  <figcaption className="cs-screen-caption">
+                    <span className="cs-screen-title">{s.title}</span>
+                    <span className="cs-screen-text">{s.caption}</span>
+                  </figcaption>
+                </figure>
               ))}
             </div>
           </div>
