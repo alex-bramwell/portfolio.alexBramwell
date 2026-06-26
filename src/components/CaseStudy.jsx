@@ -76,6 +76,70 @@ const DECISIONS = [
   },
 ];
 
+const ENGINEERING = [
+  {
+    title: "Isolation in the database, not the app",
+    text: "Row-Level Security policies live in Postgres, so a forgotten WHERE clause can never leak one gym's data to another. The boundary holds even if the app layer has a bug.",
+  },
+  {
+    title: "Realtime, optimistic timetable",
+    text: "Supabase subscriptions push booking changes to every open device at once. The UI updates optimistically and reconciles against the server, so it feels instant without going stale.",
+  },
+  {
+    title: "Stripe webhooks as the source of truth",
+    text: "Subscription state, failed payments, and plan changes are resolved server-side from webhooks, never trusted from the client. Money state stays correct even if a browser closes mid-flow.",
+  },
+];
+
+function ArchDiagram() {
+  return (
+    <svg className="cs-arch-svg" viewBox="0 0 760 470" role="img"
+      aria-label="One React codebase routed through a Supabase row-level-security gateway into isolated per-gym data silos, with Stripe attached to the gateway">
+      {/* connectors (animated draw-on) */}
+      <path className="cs-arch-link" d="M380 96 L380 168" />
+      <path className="cs-arch-link" d="M380 240 C380 300 170 300 170 352" />
+      <path className="cs-arch-link" d="M380 240 L380 352" />
+      <path className="cs-arch-link" d="M380 240 C380 300 590 300 590 352" />
+      <path className="cs-arch-link cs-arch-link-side" d="M590 205 L606 205" />
+
+      {/* client */}
+      <g className="cs-arch-node">
+        <rect x="270" y="32" width="220" height="64" rx="10" />
+        <text className="cs-arch-node-title" x="380" y="60" textAnchor="middle">One React codebase</text>
+        <text className="cs-arch-node-sub" x="380" y="80" textAnchor="middle">REACT 19 · TYPESCRIPT</text>
+      </g>
+
+      {/* RLS gateway (accented, the key layer) */}
+      <g className="cs-arch-node cs-arch-node-accent">
+        <rect x="170" y="170" width="420" height="70" rx="10" />
+        <text className="cs-arch-node-title" x="380" y="201" textAnchor="middle">Supabase · Row-Level Security</text>
+        <text className="cs-arch-node-sub" x="380" y="221" textAnchor="middle">EVERY QUERY SCOPED TO A TENANT</text>
+      </g>
+
+      {/* stripe */}
+      <g className="cs-arch-node">
+        <rect x="606" y="176" width="126" height="58" rx="10" />
+        <text className="cs-arch-node-title cs-arch-node-title-sm" x="669" y="201" textAnchor="middle">Stripe</text>
+        <text className="cs-arch-node-sub" x="669" y="219" textAnchor="middle">WEBHOOKS</text>
+      </g>
+
+      {/* tenants */}
+      {[
+        { x: 95, cx: 170, label: "Gym A" },
+        { x: 305, cx: 380, label: "Gym B" },
+        { x: 515, cx: 590, label: "Gym C" },
+      ].map((t) => (
+        <g className="cs-arch-node cs-arch-tenant" key={t.label}>
+          <rect x={t.x} y="352" width="150" height="84" rx="10" />
+          <text className="cs-arch-node-title cs-arch-node-title-sm" x={t.cx} y="388" textAnchor="middle">{t.label}</text>
+          <text className="cs-arch-node-sub" x={t.cx} y="408" textAnchor="middle">ISOLATED SILO</text>
+        </g>
+      ))}
+      <text className="cs-arch-infinity" x="685" y="400" textAnchor="middle">× &#8734;</text>
+    </svg>
+  );
+}
+
 const FEATURES = [
   {
     icon: (
@@ -266,6 +330,22 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
             { opacity: 0, x: i % 2 === 0 ? -40 : 40, rotateY: i % 2 === 0 ? -8 : 8 },
             { opacity: 1, x: 0, rotateY: 0, duration: 0.6, ease: "power3.out", delay: 0.05 }
           );
+        },
+      });
+      triggersRef.current.push(st);
+    });
+
+    // --- Architecture connector draw-on ---
+    document.querySelectorAll(".cs-arch-link").forEach((path) => {
+      const length = path.getTotalLength();
+      gsap.set(path, { strokeDasharray: length, strokeDashoffset: length });
+      const st = ScrollTrigger.create({
+        trigger: ".cs-architecture-section",
+        scroller,
+        start: "top 60%",
+        once: true,
+        onEnter: () => {
+          gsap.to(path, { strokeDashoffset: 0, duration: 1.2, ease: "power2.out", delay: 0.1 });
         },
       });
       triggersRef.current.push(st);
@@ -475,6 +555,31 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
                     <h3 className="cs-decision-title">{d.title}</h3>
                     <p className="cs-decision-reasoning">{d.reasoning}</p>
                   </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ===== ARCHITECTURE ===== */}
+        <section className="cs-section cs-architecture-section">
+          <div className="cs-section-inner">
+            <span className="cs-section-eyebrow">Architecture</span>
+            <h2 className="cs-section-heading">One codebase, every gym&nbsp;isolated</h2>
+            <p className="cs-lead-text">
+              Multi-tenancy is what makes the economics work. A single React app
+              serves every gym, but each tenant's data is fenced off in Postgres
+              at the row level, so the platform scales to any number of gyms at
+              near-zero marginal cost.
+            </p>
+            <div className="cs-arch-diagram cs-reveal-card">
+              <ArchDiagram />
+            </div>
+            <div className="cs-engineering-grid">
+              {ENGINEERING.map((e, i) => (
+                <div key={e.title} className="cs-engineering-card cs-reveal-card" data-delay={(i % 3) * 0.06}>
+                  <h3 className="cs-engineering-title">{e.title}</h3>
+                  <p className="cs-engineering-text">{e.text}</p>
                 </div>
               ))}
             </div>
