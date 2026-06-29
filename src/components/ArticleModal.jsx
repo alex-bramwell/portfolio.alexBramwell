@@ -3,7 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useTheme } from "../context/ThemeContext";
 import "./ArticleModal.scss";
-import { mapSteps, filterSteps, findSteps, spreadSteps, destructureSteps, functionSteps, variablesSteps, conditionalSteps, imperativeSteps, eventSteps, listRenderSteps, conditionalRenderSteps, propsSteps, stateSteps, useEffectSteps, keysSteps, nestingSteps, mixinSteps, partialsSteps, semanticSteps, contrastSteps, focusSteps, nosweatArchSteps, tenantFlowSteps, paymentFlowSteps } from "../data/diagramSteps";
+import { mapSteps, filterSteps, findSteps, spreadSteps, destructureSteps, functionSteps, variablesSteps, conditionalSteps, imperativeSteps, eventSteps, listRenderSteps, conditionalRenderSteps, propsSteps, stateSteps, useEffectSteps, keysSteps, nestingSteps, mixinSteps, partialsSteps, semanticSteps, contrastSteps, focusSteps, nosweatArchSteps, tenantFlowSteps, paymentFlowSteps, animWorkflowSteps } from "../data/diagramSteps";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -1608,6 +1608,46 @@ function AnimationIllustration() {
   );
 }
 
+const InteractiveAnimWorkflow = (
+  <svg viewBox="0 0 520 180" fill="none">
+    <text className="idg-title" x="14" y="16" fill="var(--color-text-disabled)" fontSize="10" fontFamily="var(--font-mono)">Figma to SVG to GSAP, the three-step workflow</text>
+
+    {/* Step 1: Figma frame */}
+    <text className="idg-input" x="84" y="36" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)" letterSpacing="1">1 · FIGMA</text>
+    <rect className="idg-input" x="14" y="44" width="140" height="98" rx="6" stroke="var(--color-border)" strokeWidth="1" fill="none" />
+    <rect className="idg-input" x="28" y="58" width="112" height="14" rx="3" fill="var(--color-accent-dim)" />
+    <rect className="idg-input" x="28" y="82" width="50" height="26" rx="3" stroke="var(--color-border)" strokeWidth="1" fill="none" />
+    <rect className="idg-input" x="90" y="82" width="50" height="26" rx="3" stroke="var(--color-border)" strokeWidth="1" fill="none" />
+    <circle className="idg-input" cx="40" cy="124" r="6" stroke="var(--color-border)" strokeWidth="1" fill="none" />
+
+    {/* Arrow 1 */}
+    <line className="idg-arrow" x1="158" y1="93" x2="182" y2="93" stroke="var(--color-accent)" strokeWidth="1.5" />
+    <polygon className="idg-arrow" points="180,89 188,93 180,97" fill="var(--color-accent)" />
+
+    {/* Step 2: SVG in React */}
+    <text className="idg-process" x="256" y="36" textAnchor="middle" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)" letterSpacing="1">2 · SVG IN REACT</text>
+    <rect className="idg-process" x="192" y="44" width="128" height="98" rx="6" stroke="var(--color-accent-border)" strokeWidth="1" fill="none" />
+    <text className="idg-process" x="204" y="66" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">{'<g class="title">'}</text>
+    <text className="idg-process" x="204" y="84" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">{'<g class="box">'}</text>
+    <text className="idg-process" x="204" y="102" fill="var(--color-text-secondary)" fontSize="9" fontFamily="var(--font-mono)">{'<g class="box">'}</text>
+    <text className="idg-process" x="204" y="124" fill="var(--color-text-disabled)" fontSize="8" fontFamily="var(--font-mono)">coords baked in</text>
+
+    {/* Arrow 2 (revealed with the output) */}
+    <line className="idg-output" x1="324" y1="93" x2="348" y2="93" stroke="var(--color-accent)" strokeWidth="1.5" />
+    <polygon className="idg-output" points="346,89 354,93 346,97" fill="var(--color-accent)" />
+
+    {/* Step 3: GSAP entrance */}
+    <text className="idg-output" x="428" y="36" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontFamily="var(--font-mono)" letterSpacing="1">3 · GSAP ENTRANCE</text>
+    <rect className="idg-output" x="358" y="44" width="148" height="98" rx="6" stroke="var(--color-accent)" strokeWidth="1.5" fill="var(--color-accent-dim)" />
+    <rect className="idg-output" x="372" y="58" width="120" height="14" rx="3" fill="var(--color-accent)" opacity="0.5" />
+    <rect className="idg-output" x="372" y="82" width="52" height="26" rx="3" stroke="var(--color-accent)" strokeWidth="1.5" fill="none" />
+    <rect className="idg-output" x="438" y="82" width="52" height="26" rx="3" stroke="var(--color-accent)" strokeWidth="1.5" fill="none" />
+    <text className="idg-output" x="432" y="128" textAnchor="middle" fill="var(--color-accent)" fontSize="8" fontFamily="var(--font-mono)">.from() timeline</text>
+
+    <text className="idg-note" x="260" y="168" textAnchor="middle" fill="var(--color-text-disabled)" fontSize="9" fontFamily="var(--font-mono)">Figma sets the destination. GSAP describes the journey.</text>
+  </svg>
+);
+
 function LivingPortfolioIllustration() {
   const svgRef = useRef(null);
   const { isReduced } = useTheme();
@@ -3172,18 +3212,21 @@ These are the core building blocks of JavaScript. Every framework, library, and 
     illustration: AnimationIllustration,
     sections: [
       {
-        heading: "The workflow: Figma to code to animation",
-        body: `Every animation on this site started the same way: as a static design in Figma. Not as code, not as a GSAP timeline, not as coordinates on a grid. As a picture of what the finished state should look like.
+        heading: "How every animation here is made",
+        body: `Most people assume animation starts with code. Mine starts with a picture. Every animation on this site begins as a still design in Figma, a snapshot of what the finished thing should look like, with no motion involved at all.
 
-The process has three steps, and the first two have nothing to do with animation.
+From there it is three steps, and only the last one touches animation.
 
-Step 1: design the final frame in Figma. Place the boxes, the arrows, the labels, the layout. This is where all the visual decisions happen. Figma handles the coordinates, the spacing, the alignment. You are just arranging shapes on a canvas.
+Step 1, Figma: arrange the boxes, arrows, and labels on a canvas. This is where every visual decision is made, and Figma works out the exact positions, spacing, and alignment for me.
 
-Step 2: export the SVG. Select the frame in Figma, right-click, "Copy as SVG." Paste it into a React component. Figma gives you the full SVG markup with every coordinate, colour, and size already calculated. You never type a coordinate yourself.
+Step 2, SVG: select the frame, copy it as SVG, and paste it into a React component. The markup arrives with every coordinate already calculated, so I never type a position by hand.
 
-Step 3: decide how things arrive. This is the only animation step. You look at the finished SVG and ask: what appears first? What appears second? What slides in, what fades in, what pops? Then you write a short GSAP timeline that describes the entrances. That is it.
+Step 3, GSAP: look at the finished design and decide how each part should arrive. What fades in, what slides, what pops. A short timeline describes those entrances, and that is the only real animation work.
 
-The mental model is simple. Figma gives you the destination. [GSAP](https://gsap.com/docs/v3/GSAP/) describes the journey to get there.`,
+Figma sets the destination. [GSAP](https://gsap.com/docs/v3/GSAP/) just describes the journey to it. Step through it below.
+
+{{interactive:0}}`,
+        interactives: [{ diagram: InteractiveAnimWorkflow, steps: animWorkflowSteps }],
       },
       {
         heading: "Step 1: designing in Figma",
@@ -3233,7 +3276,7 @@ The "-=0.2" overlap means the next animation starts 0.2 seconds before the previ
       },
       {
         heading: "The five patterns I reuse everywhere",
-        body: `Every animation on this site is one of five patterns. Once you know them, you can build any animation you see here.
+        body: `Behind all of it sit just five patterns. Once you know them, you can build any animation you see here.
 
 1. Entrance timelines: a [gsap.timeline()](https://gsap.com/docs/v3/GSAP/gsap.timeline()) with chained .from() calls and overlap. Used for the hero section, navigation menu, contact modal, and case study. The elements cascade in order.
 
@@ -3245,7 +3288,7 @@ The "-=0.2" overlap means the next animation starts 0.2 seconds before the previ
 
 5. Modal choreography: a timeline combining opacity, scale, rotateX, and either y-translation or clipPath for the reveal. Used for the contact modal, case study, and article modals.
 
-Every animation on this site is one of these five. The variety comes from mixing different properties (opacity + y for a slide, opacity + scale for a pop, opacity + scaleX for an arrow drawing in), not from different techniques.`,
+The variety comes from mixing different properties (opacity + y for a slide, opacity + scale for a pop, opacity + scaleX for an arrow drawing in), not from different techniques.`,
       },
       {
         heading: "Easing: why animations feel right or wrong",
@@ -3289,7 +3332,7 @@ The other performance decision was lazy-loading. The article modal, case study, 
 Easing functions also matter for perceived performance. "power3.out" starts fast and slows down, making a 0.5 second animation feel snappy. A linear easing at the same duration feels sluggish. The animation is the same length, but the speed curve tricks your brain into thinking it was faster.`,
       },
       {
-        heading: "The honest summary",
+        heading: "The short version",
         body: `The process is simpler than it looks. Design the end state in Figma. Export the SVG. Group elements by when they should appear. Write a short GSAP timeline with .from() calls and overlaps. Pick an easing. Check reduced motion. Done.
 
 I do not calculate coordinates. Figma does that. I do not work out timing with formulas. I adjust by feel, scrubbing durations between 0.3 and 0.6 seconds and overlaps between 0.1 and 0.3 until it looks right. I do not memorise easing curves. I use power3.out for almost everything and only reach for elastic or back easing when something needs to feel playful.
