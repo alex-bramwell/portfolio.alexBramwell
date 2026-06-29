@@ -199,7 +199,7 @@ const PROCESS_STEPS = [
   { phase: "01", title: "Research", detail: "Audited the incumbent stack (BoxMate, GoTeamUp, Wodify) and the placeholder-website pattern. Mapped the jobs-to-be-done for owners, coaches, and members.", link: { modal: "research", label: "View the research" } },
   { phase: "02", title: "Wireframes", detail: "Low-fi flows in Balsamiq covering discovery, onboarding, booking, payments, and admin. Validated the booking journey against the friction in existing tools.", link: { href: "https://balsamiq.cloud/sdm033s/pdth810", label: "View the wireframes" } },
   { phase: "03", title: "Design System", detail: "Built a token-based system: colour, spacing, type scales, so every tenant can be rebranded from config. Components documented in Storybook.", links: [{ href: "FIGMA_URL", label: "Open the Figma" }, { href: "STORYBOOK_URL", label: "Browse the Storybook" }] },
-  { phase: "04", title: "Engineering", detail: "React 19 + TypeScript frontend, Supabase backend with RLS, Stripe integration, Docker dev environment.", links: [{ modal: "stack", label: "Stack & why" }, { modal: "sitemap", label: "View the sitemap" }] },
+  { phase: "04", title: "Engineering", detail: "React 19 + TypeScript frontend, Supabase backend with RLS, Stripe integration, Docker dev environment.", links: [{ modal: "stack", label: "Stack & why" }, { modal: "sitemap", label: "View the sitemap" }, { modal: "ai", label: "AI dev guardrails" }] },
   { phase: "05", title: "Ship & Iterate", detail: "Deployed to Vercel edge with continuous deployment from main and preview URLs per PR." },
 ];
 
@@ -356,6 +356,39 @@ const INFRA = [
       "A preview deployment per pull request gives every change its own live URL to review before it goes live.",
       "An edge CDN serves the frontend fast worldwide, and the Domains API is what powers each gym's custom domain.",
     ],
+  },
+];
+
+const AI_GUARDRAILS = [
+  {
+    title: "Ship only on command",
+    summary: "The assistant works and verifies locally and never deploys on its own. Nothing reaches production until I say go live.",
+    rules: ["Local-first: lint, build, and screenshot before anything", "No push, PR, or merge to main without my say-so", "Production deploys stay a deliberate, human step"],
+  },
+  {
+    title: "Guardrails against tech debt",
+    summary: "Boundaries enforced by ESLint and CI on every change, so AI-written code stays as clean as hand-written code.",
+    rules: ["Strict backend and frontend import boundary", "Reuse shared singletons, never re-instantiate clients", "No debug logging, dead code, or duplication committed"],
+  },
+  {
+    title: "Git guardrails",
+    summary: "A defined branching and commit discipline so the history stays clean, traceable, and indistinguishable from mine.",
+    rules: ["Two-step promotion: feature or fix to develop to main", "Conventional prefixes and explicit merge commits, never squash", "No Claude, AI, or Co-Authored-By references in commits"],
+  },
+  {
+    title: "Respect the architecture",
+    summary: "The assistant works inside the multi-tenant structure I designed instead of inventing parallel patterns beside it.",
+    rules: ["One backend source of truth in the api directory", "Feature gating through the existing flag system", "Tenant data flows through the established contexts"],
+  },
+  {
+    title: "Two visual contexts, always",
+    summary: "The app has a dark platform site and per-gym branded sites, so the assistant must know which one it is touching.",
+    rules: ["Always use CSS custom properties, never hardcoded colour", "Shared components must adapt to both themes", "Per-tenant branding injected at runtime stays intact"],
+  },
+  {
+    title: "Naming and database discipline",
+    summary: "Conventions that keep the codebase legible and database changes safe and traceable.",
+    rules: ["Semantic class names: what it is, not how it looks", "Numbered migration files written directly, never manual SQL", "Docs updated in the same change as the code"],
   },
 ];
 
@@ -629,6 +662,73 @@ function StackModal({ isOpen, onClose }) {
   );
 }
 
+function AIModal({ isOpen, onClose }) {
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="cs-research-overlay" onClick={onClose}>
+      <div className="cs-research-modal" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label="AI development guardrails">
+        <button className="cs-research-close" onClick={onClose} aria-label="Close AI guardrails">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+
+        <span className="cs-research-eyebrow">Engineering / 04</span>
+        <h2 className="cs-research-title">Tailoring the AI workflow</h2>
+        <p className="cs-research-lead">
+          I do not just prompt a general model. A <code className="cs-inline-code">CLAUDE.md</code> file at the repo root acts as a project constitution: it narrows a general-purpose assistant down to this codebase's conventions, boundaries, and review gates, so AI help speeds me up without eroding quality or control. These are the rules I set.
+        </p>
+
+        <div className="cs-guardrails">
+          {AI_GUARDRAILS.map((g) => (
+            <div className="cs-guardrail" key={g.title}>
+              <h3 className="cs-guardrail-title">{g.title}</h3>
+              <p className="cs-guardrail-summary">{g.summary}</p>
+              <ul className="cs-guardrail-rules">
+                {g.rules.map((r) => <li key={r}>{r}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        <div className="cs-ai-download">
+          <div className="cs-ai-download-text">
+            <h3 className="cs-ai-download-heading">Take the file</h3>
+            <p className="cs-ai-download-lead">
+              This is the actual <code className="cs-inline-code">CLAUDE.md</code> from the project. It briefs the assistant on what it is working on and the areas it can help with:
+            </p>
+            <ul className="cs-ai-download-list">
+              <li>Project overview and tech stack</li>
+              <li>Git flow and commit discipline</li>
+              <li>Engineering conventions and tech-debt guardrails</li>
+              <li>Dev and prod workflow, Docker, and CI/CD</li>
+              <li>Architecture, routing, and multi-tenancy</li>
+              <li>Design system, theming, and naming</li>
+              <li>Application workflows and user journeys</li>
+            </ul>
+          </div>
+          <a className="cs-ai-download-btn" href={BASE + "nosweat-claude.md"} download="CLAUDE.md">
+            Download CLAUDE.md &darr;
+          </a>
+        </div>
+
+        <p className="cs-ai-download-note">
+          <strong>Adapting it to your stack:</strong> this file is tuned to this project's exact setup, React and TypeScript on the frontend, Supabase and Postgres with Vercel serverless functions on the backend, Stripe for payments, and Docker for local dev. If yours differs, treat it as a structure to adapt rather than a drop-in. The principles carry over to any stack, like clear backend and frontend boundaries, semantic naming, writing in your own voice, and ship-on-command. The sections to rewrite for your tools are <em>Tech Stack</em>, the backend boundary in <em>Engineering Conventions</em>, <em>Dev vs Prod Workflow</em>, and <em>CI/CD</em>.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
   const overlayRef = useRef(null);
   const scrollContainerRef = useRef(null);
@@ -638,11 +738,13 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
   const [isResearchOpen, setIsResearchOpen] = useState(false);
   const [isSitemapOpen, setIsSitemapOpen] = useState(false);
   const [isStackOpen, setIsStackOpen] = useState(false);
+  const [isAiOpen, setIsAiOpen] = useState(false);
 
   const openModal = (which) => {
     if (which === "research") setIsResearchOpen(true);
     if (which === "sitemap") setIsSitemapOpen(true);
     if (which === "stack") setIsStackOpen(true);
+    if (which === "ai") setIsAiOpen(true);
   };
 
   const cleanup = useCallback(() => {
@@ -827,6 +929,7 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
       <ResearchModal isOpen={isResearchOpen} onClose={() => setIsResearchOpen(false)} />
       <SitemapModal isOpen={isSitemapOpen} onClose={() => setIsSitemapOpen(false)} />
       <StackModal isOpen={isStackOpen} onClose={() => setIsStackOpen(false)} />
+      <AIModal isOpen={isAiOpen} onClose={() => setIsAiOpen(false)} />
       <div className="cs-scroll-container" ref={scrollContainerRef}>
         <button className="cs-close-button" onClick={handleClose} aria-label="Close case study">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
