@@ -1066,6 +1066,178 @@
 }
 
 
+// ===== INFO TOOLTIP =====
+.cs-infotip {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+  margin-left: 6px;
+}
+
+.cs-infotip-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  background: none;
+  border: 1px solid var(--color-accent-border);
+  border-radius: 50%;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  font-style: italic;
+  line-height: 1;
+  color: var(--color-accent);
+  cursor: pointer;
+  transition: background 200ms ease, color 200ms ease;
+
+  &:hover {
+    background: var(--color-accent);
+    color: #111;
+  }
+}
+
+.cs-infotip-bubble {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  z-index: 5;
+  width: max-content;
+  max-width: 280px;
+  padding: 12px 14px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--color-text-primary);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 180ms ease, transform 180ms ease;
+  pointer-events: none;
+
+  @media (max-width: $breakpoint-mobile) {
+    left: 0;
+    transform: translateY(4px);
+    max-width: min(280px, 70vw);
+  }
+}
+
+.cs-infotip:hover .cs-infotip-bubble,
+.cs-infotip-bubble[data-open="true"] {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+
+  @media (max-width: $breakpoint-mobile) {
+    transform: translateY(0);
+  }
+}
+
+
+// ===== CI/CD PIPELINE (ship modal) =====
+.cs-pipeline {
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 13px;
+    top: 14px;
+    bottom: 14px;
+    width: 2px;
+    background: var(--color-border);
+  }
+}
+
+.cs-pipeline-step {
+  position: relative;
+  display: flex;
+  gap: 16px;
+
+  &:not(:last-child) { margin-bottom: 18px; }
+}
+
+.cs-pipeline-num {
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--color-surface);
+  border: 2px solid var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.cs-pipeline-body {
+  padding-top: 3px;
+}
+
+.cs-pipeline-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.cs-pipeline-stage {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.cs-pipeline-tag {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 999px;
+
+  &[data-tag="CI"] {
+    background: var(--color-accent-alt-dim);
+    color: var(--color-accent-alt);
+    border: 1px solid var(--color-accent-alt-border);
+  }
+
+  &[data-tag="CD"] {
+    background: var(--color-accent-dim);
+    color: var(--color-accent);
+    border: 1px solid var(--color-accent-border);
+  }
+
+  &[data-tag="Gate"] {
+    background: var(--color-surface);
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+  }
+}
+
+.cs-pipeline-desc {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  max-width: 540px;
+}
+
+
 // ===== METADATA STRIP =====
 .cs-meta-strip {
   display: grid;

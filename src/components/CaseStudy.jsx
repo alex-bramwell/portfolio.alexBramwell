@@ -200,7 +200,7 @@ const PROCESS_STEPS = [
   { phase: "02", title: "Wireframes", detail: "Low-fi flows in Balsamiq covering discovery, onboarding, booking, payments, and admin. Validated the booking journey against the friction in existing tools.", link: { href: "https://balsamiq.cloud/sdm033s/pdth810", label: "View the wireframes" } },
   { phase: "03", title: "Design System", detail: "Built a token-based system: colour, spacing, type scales, so every tenant can be rebranded from config. Components documented in Storybook.", links: [{ href: "FIGMA_URL", label: "Open the Figma" }, { href: "STORYBOOK_URL", label: "Browse the Storybook" }] },
   { phase: "04", title: "Engineering", detail: "React 19 + TypeScript frontend, Supabase backend with RLS, Stripe integration, Docker dev environment.", links: [{ modal: "stack", label: "Stack & why" }, { modal: "sitemap", label: "View the sitemap" }, { modal: "ai", label: "AI dev guardrails" }] },
-  { phase: "05", title: "Ship & Iterate", detail: "Deployed to Vercel edge with continuous deployment from main and preview URLs per PR." },
+  { phase: "05", title: "Ship & Iterate", detail: "Deployed to Vercel edge with continuous deployment from main and preview URLs per PR.", info: "In plain terms: every time approved work lands on the main branch, the live site updates itself automatically, with no manual upload. And every proposed change gets its own private preview link first, so it can be checked in isolation before it ever reaches the real site.", links: [{ modal: "cicd", label: "The CI/CD pipeline" }] },
 ];
 
 // --- Research dossier (opened from Process step 01) ---
@@ -390,6 +390,15 @@ const AI_GUARDRAILS = [
     summary: "Conventions that keep the codebase legible and database changes safe and traceable.",
     rules: ["Semantic class names: what it is, not how it looks", "Numbered migration files written directly, never manual SQL", "Docs updated in the same change as the code"],
   },
+];
+
+const PIPELINE = [
+  { stage: "Open a PR", tag: "CI", desc: "Push a feature or fix branch and open a pull request. Nothing reaches the live site yet." },
+  { stage: "Preview URL", tag: "CD", desc: "Vercel spins up a private preview deploy for that PR, a live link to test the change in isolation." },
+  { stage: "Automated checks", tag: "CI", desc: "GitHub Actions runs lint, build, and guardrail greps on the PR. Zero errors are required, or it cannot merge." },
+  { stage: "Merge & promote", tag: "Gate", desc: "Approved work merges to develop, then main, with explicit merge commits so the history stays readable." },
+  { stage: "Auto-deploy", tag: "CD", desc: "Landing on main deploys the frontend and api functions to Vercel, and Supabase migrations run automatically." },
+  { stage: "Live & iterate", tag: "CD", desc: "The site updates itself with no manual upload, then the loop begins again on the next change." },
 ];
 
 const OUTCOMES = [
@@ -729,6 +738,70 @@ function AIModal({ isOpen, onClose }) {
   );
 }
 
+function InfoTip({ text }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <span className="cs-infotip">
+      <button
+        type="button"
+        className="cs-infotip-btn"
+        aria-label="Explain in simpler terms"
+        aria-expanded={open}
+        onClick={() => setOpen((o) => !o)}
+        onBlur={() => setOpen(false)}
+      >
+        i
+      </button>
+      <span className="cs-infotip-bubble" role="tooltip" data-open={open}>{text}</span>
+    </span>
+  );
+}
+
+function CicdModal({ isOpen, onClose }) {
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="cs-research-overlay" onClick={onClose}>
+      <div className="cs-research-modal" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label="CI/CD pipeline">
+        <button className="cs-research-close" onClick={onClose} aria-label="Close pipeline">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+
+        <span className="cs-research-eyebrow">Ship &amp; Iterate / 05</span>
+        <h2 className="cs-research-title">The CI/CD pipeline</h2>
+        <p className="cs-research-lead">
+          Two halves working together. <strong>CI</strong> verifies every change before it is allowed to merge; <strong>CD</strong> deploys it automatically once it lands. No manual steps, no broken code reaching the live site.
+        </p>
+
+        <div className="cs-pipeline">
+          {PIPELINE.map((p, i) => (
+            <div className="cs-pipeline-step" key={p.stage}>
+              <span className="cs-pipeline-num">{i + 1}</span>
+              <div className="cs-pipeline-body">
+                <div className="cs-pipeline-head">
+                  <h3 className="cs-pipeline-stage">{p.stage}</h3>
+                  <span className="cs-pipeline-tag" data-tag={p.tag}>{p.tag}</span>
+                </div>
+                <p className="cs-pipeline-desc">{p.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
   const overlayRef = useRef(null);
   const scrollContainerRef = useRef(null);
@@ -739,12 +812,14 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
   const [isSitemapOpen, setIsSitemapOpen] = useState(false);
   const [isStackOpen, setIsStackOpen] = useState(false);
   const [isAiOpen, setIsAiOpen] = useState(false);
+  const [isCicdOpen, setIsCicdOpen] = useState(false);
 
   const openModal = (which) => {
     if (which === "research") setIsResearchOpen(true);
     if (which === "sitemap") setIsSitemapOpen(true);
     if (which === "stack") setIsStackOpen(true);
     if (which === "ai") setIsAiOpen(true);
+    if (which === "cicd") setIsCicdOpen(true);
   };
 
   const cleanup = useCallback(() => {
@@ -930,6 +1005,7 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
       <SitemapModal isOpen={isSitemapOpen} onClose={() => setIsSitemapOpen(false)} />
       <StackModal isOpen={isStackOpen} onClose={() => setIsStackOpen(false)} />
       <AIModal isOpen={isAiOpen} onClose={() => setIsAiOpen(false)} />
+      <CicdModal isOpen={isCicdOpen} onClose={() => setIsCicdOpen(false)} />
       <div className="cs-scroll-container" ref={scrollContainerRef}>
         <button className="cs-close-button" onClick={handleClose} aria-label="Close case study">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -1051,7 +1127,10 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
                   <div className="cs-process-step-marker">{step.phase}</div>
                   <div className="cs-process-step-body">
                     <h3 className="cs-process-step-title">{step.title}</h3>
-                    <p className="cs-process-step-detail">{step.detail}</p>
+                    <p className="cs-process-step-detail">
+                      {step.detail}
+                      {step.info && <InfoTip text={step.info} />}
+                    </p>
                     {step.link && step.link.modal && (
                       <button type="button" className="cs-process-step-link" onClick={() => openModal(step.link.modal)}>
                         {step.link.label} &rarr;
