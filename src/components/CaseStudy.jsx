@@ -199,7 +199,7 @@ const PROCESS_STEPS = [
   { phase: "01", title: "Research", detail: "Audited the incumbent stack (BoxMate, GoTeamUp, Wodify) and the placeholder-website pattern. Mapped the jobs-to-be-done for owners, coaches, and members.", link: { modal: "research", label: "View the research" } },
   { phase: "02", title: "Wireframes", detail: "Low-fi flows in Balsamiq covering discovery, onboarding, booking, payments, and admin. Validated the booking journey against the friction in existing tools.", link: { href: "https://balsamiq.cloud/sdm033s/pdth810", label: "View the wireframes" } },
   { phase: "03", title: "Design System", detail: "Built a token-based system: colour, spacing, type scales, so every tenant can be rebranded from config. Components documented in Storybook.", links: [{ href: "FIGMA_URL", label: "Open the Figma" }, { href: "STORYBOOK_URL", label: "Browse the Storybook" }] },
-  { phase: "04", title: "Engineering", detail: "React 19 + TypeScript frontend, Supabase backend with RLS, Stripe integration, Docker dev environment.", links: [{ modal: "sitemap", label: "View the sitemap" }] },
+  { phase: "04", title: "Engineering", detail: "React 19 + TypeScript frontend, Supabase backend with RLS, Stripe integration, Docker dev environment.", links: [{ modal: "stack", label: "Stack & why" }, { modal: "sitemap", label: "View the sitemap" }] },
   { phase: "05", title: "Ship & Iterate", detail: "Deployed to Vercel edge with continuous deployment from main and preview URLs per PR." },
 ];
 
@@ -321,6 +321,40 @@ const SITEMAP = [
       { label: "Password reset" },
       { label: "Onboarding" },
       { label: "404 / error" },
+    ],
+  },
+];
+
+const STACK = [
+  {
+    side: "Frontend",
+    tech: ["React 19", "TypeScript 5.9", "Vite 7", "SCSS modules", "React Router 7"],
+    why: "React with TypeScript gives a component model and type safety that scale across a large multi-tenant app, catching whole classes of error at build time instead of in production. Vite keeps the dev loop fast with instant hot reload and quick builds. SCSS modules scope every style and lean on CSS custom properties, which is what lets each gym be rebranded at runtime without touching code. React Router handles the nested two-shell routing that separates the platform site from the tenant sites.",
+  },
+  {
+    side: "Backend",
+    tech: ["Supabase", "Postgres", "Vercel functions", "Stripe"],
+    why: "Supabase bundles Postgres, Auth, and Storage so I am not rebuilding plumbing, and its row-level security is what makes multi-tenancy both safe and cheap: every query is scoped to a tenant at the database, not in app code. Vercel serverless functions sit next to the frontend with no server to manage and scale on demand. Stripe handles payments and, through Connect, routes money straight to each gym's own bank account rather than pooling it.",
+  },
+];
+
+const INFRA = [
+  {
+    name: "Why Supabase",
+    points: [
+      "Postgres, Auth, and Storage in one managed service, so there is no separate auth provider or file host to wire up.",
+      "Row-level security enforces multi-tenancy in the database itself: every query is scoped to a tenant by policy, so an app-layer bug cannot leak one gym's data to another.",
+      "It is real Postgres, which means standard SQL, proper migrations, and no lock-in to a proprietary query language.",
+      "Realtime subscriptions are built in, and the whole stack runs locally through the Supabase CLI, so dev matches prod.",
+    ],
+  },
+  {
+    name: "Why Vercel",
+    points: [
+      "Zero-ops deploys: a push to main ships the frontend and the api functions automatically, with no servers to provision or patch.",
+      "Serverless functions scale to zero and back on demand, so the bill tracks real usage, which suits a young product.",
+      "A preview deployment per pull request gives every change its own live URL to review before it goes live.",
+      "An edge CDN serves the frontend fast worldwide, and the Domains API is what powers each gym's custom domain.",
     ],
   },
 ];
@@ -524,6 +558,77 @@ function SitemapModal({ isOpen, onClose }) {
   );
 }
 
+function StackModal({ isOpen, onClose }) {
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="cs-research-overlay" onClick={onClose}>
+      <div className="cs-research-modal" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label="Stack choices">
+        <button className="cs-research-close" onClick={onClose} aria-label="Close stack choices">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+
+        <span className="cs-research-eyebrow">Engineering / 04</span>
+        <h2 className="cs-research-title">The stack, and why</h2>
+        <p className="cs-research-lead">
+          Two halves, each chosen to serve the multi-tenant model: one codebase, many fully branded gyms, at near-zero marginal cost.
+        </p>
+
+        <div className="cs-stack">
+          {STACK.map((s) => (
+            <div className="cs-stack-box" key={s.side}>
+              <span className="cs-stack-side">{s.side}</span>
+              <div className="cs-stack-tech">
+                {s.tech.map((t) => <span className="cs-stack-chip" key={t}>{t}</span>)}
+              </div>
+              <p className="cs-stack-why">{s.why}</p>
+            </div>
+          ))}
+        </div>
+
+        <h3 className="cs-research-subhead">Why this infrastructure</h3>
+        <div className="cs-infra">
+          {INFRA.map((i) => (
+            <div className="cs-infra-box" key={i.name}>
+              <span className="cs-infra-title">{i.name}</span>
+              <ul className="cs-infra-points">
+                {i.points.map((p) => <li key={p}>{p}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        <div className="cs-stack-note">
+          <span className="cs-stack-note-label">A styling opinion</span>
+          <p className="cs-stack-note-text">
+            I reach for SCSS modules over a utility framework like Tailwind. Class names should say what an element <em>is</em>, not how it looks, so the markup stays readable and the design tokens live in one place instead of scattered across utility strings in the JSX. It is a design-engineering preference: the code reads like the design, and the next person can follow it.
+          </p>
+          <div className="cs-stack-compare">
+            <div className="cs-stack-compare-row">
+              <span className="cs-stack-compare-tag">Utility</span>
+              <code>{'<div class="flex gap-4 p-6 rounded-xl bg-zinc-900">'}</code>
+            </div>
+            <div className="cs-stack-compare-row cs-stack-compare-row-good">
+              <span className="cs-stack-compare-tag">Semantic</span>
+              <code>{'<div class="scheduleGrid">'}</code>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
   const overlayRef = useRef(null);
   const scrollContainerRef = useRef(null);
@@ -532,10 +637,12 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
   const { isReduced } = useTheme();
   const [isResearchOpen, setIsResearchOpen] = useState(false);
   const [isSitemapOpen, setIsSitemapOpen] = useState(false);
+  const [isStackOpen, setIsStackOpen] = useState(false);
 
   const openModal = (which) => {
     if (which === "research") setIsResearchOpen(true);
     if (which === "sitemap") setIsSitemapOpen(true);
+    if (which === "stack") setIsStackOpen(true);
   };
 
   const cleanup = useCallback(() => {
@@ -719,6 +826,7 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
     <div className="cs-overlay" ref={overlayRef}>
       <ResearchModal isOpen={isResearchOpen} onClose={() => setIsResearchOpen(false)} />
       <SitemapModal isOpen={isSitemapOpen} onClose={() => setIsSitemapOpen(false)} />
+      <StackModal isOpen={isStackOpen} onClose={() => setIsStackOpen(false)} />
       <div className="cs-scroll-container" ref={scrollContainerRef}>
         <button className="cs-close-button" onClick={handleClose} aria-label="Close case study">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
