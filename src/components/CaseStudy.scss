@@ -1238,6 +1238,98 @@
 }
 
 
+.cs-metric-card-clickable {
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-bottom: none;
+  border-right: 1px solid var(--color-border);
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  transition: background 200ms ease;
+
+  &:hover {
+    background: var(--color-surface);
+
+    .cs-metric-hint { opacity: 1; }
+    .cs-metric-value { text-shadow: 0 0 24px var(--color-accent-dim); }
+  }
+}
+
+.cs-metric-hint {
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  opacity: 0.55;
+  transition: opacity 200ms ease;
+}
+
+
+// ===== SIX MODULES (metric modal) =====
+.cs-modules {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+
+  @media (max-width: $breakpoint-mobile) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cs-module {
+  display: flex;
+  gap: 16px;
+  padding: 20px;
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+}
+
+.cs-module-num {
+  flex-shrink: 0;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1;
+  color: var(--color-accent);
+}
+
+.cs-module-name {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+  margin-bottom: 6px;
+}
+
+.cs-module-desc {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  margin-bottom: 10px;
+}
+
+.cs-module-replaces {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+
 // ===== METADATA STRIP =====
 .cs-meta-strip {
   display: grid;

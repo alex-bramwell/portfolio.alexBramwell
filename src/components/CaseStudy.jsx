@@ -191,7 +191,7 @@ const FEATURES = [
 const METRICS = [
   { value: 5, suffix: "→1", label: "Apps consolidated" },
   { value: 1, suffix: "", label: "Branded domain" },
-  { value: 6, suffix: "", label: "Modules, one codebase" },
+  { value: 6, suffix: "", label: "Modules, one codebase", modal: "modules" },
   { value: 100, suffix: "%", label: "Solo-built" },
 ];
 
@@ -401,6 +401,15 @@ const PIPELINE = [
   { stage: "Live & iterate", tag: "CD", desc: "The site updates itself with no manual upload, then the loop begins again on the next change." },
 ];
 
+const MODULES = [
+  { name: "Class booking & schedule", replaces: "BoxMate", desc: "A live timetable with bookings, waitlists, and capacity, all on the gym's own domain." },
+  { name: "Memberships, passes & trials", replaces: "GoTeamUp", desc: "Recurring memberships plus one-off day passes and free trials, sold on-site." },
+  { name: "Payments", replaces: "Third-party add-ons", desc: "Card payments and payouts straight to the gym's own bank through Stripe Connect." },
+  { name: "WOD programming", replaces: "Wodify", desc: "A daily workout builder and movement library for coaches to publish sessions." },
+  { name: "Coaches & analytics", replaces: "Wodify", desc: "Coach profiles, a coach dashboard, and training analytics in one place." },
+  { name: "Branded site builder", replaces: "Placeholder website", desc: "No-code branding: logo, colours, content, and a custom domain from one config." },
+];
+
 const OUTCOMES = [
   { stat: "5 → 1", label: "tools collapsed into the gym's own website" },
   { stat: "£0", label: "per-member fees, replaced by a flat multi-tenant model" },
@@ -443,14 +452,19 @@ const ROADMAP = [
   },
 ];
 
-function MetricCard({ endValue, suffix, label, isReduced }) {
+function MetricCard({ endValue, suffix, label, isReduced, onClick }) {
+  const Tag = onClick ? "button" : "div";
   return (
-    <div className="cs-metric-card">
+    <Tag
+      className={`cs-metric-card${onClick ? " cs-metric-card-clickable" : ""}`}
+      {...(onClick ? { type: "button", onClick } : {})}
+    >
       <span className="cs-metric-value" data-end={endValue} data-suffix={suffix}>
         {isReduced ? endValue + suffix : "0" + suffix}
       </span>
       <span className="cs-metric-label">{label}</span>
-    </div>
+      {onClick && <span className="cs-metric-hint">View &rarr;</span>}
+    </Tag>
   );
 }
 
@@ -802,6 +816,49 @@ function CicdModal({ isOpen, onClose }) {
   );
 }
 
+function ModulesModal({ isOpen, onClose }) {
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="cs-research-overlay" onClick={onClose}>
+      <div className="cs-research-modal" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label="The six modules">
+        <button className="cs-research-close" onClick={onClose} aria-label="Close modules">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+
+        <span className="cs-research-eyebrow">By the numbers</span>
+        <h2 className="cs-research-title">Six modules, one codebase</h2>
+        <p className="cs-research-lead">
+          Each module replaces a tool a gym used to pay for separately. Together they collapse a stack of separate apps into a single branded site.
+        </p>
+
+        <div className="cs-modules">
+          {MODULES.map((m, i) => (
+            <div className="cs-module" key={m.name}>
+              <span className="cs-module-num">{String(i + 1).padStart(2, "0")}</span>
+              <div className="cs-module-body">
+                <h3 className="cs-module-name">{m.name}</h3>
+                <p className="cs-module-desc">{m.desc}</p>
+                <span className="cs-module-replaces">Replaces {m.replaces}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
   const overlayRef = useRef(null);
   const scrollContainerRef = useRef(null);
@@ -813,6 +870,7 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
   const [isStackOpen, setIsStackOpen] = useState(false);
   const [isAiOpen, setIsAiOpen] = useState(false);
   const [isCicdOpen, setIsCicdOpen] = useState(false);
+  const [isModulesOpen, setIsModulesOpen] = useState(false);
 
   const openModal = (which) => {
     if (which === "research") setIsResearchOpen(true);
@@ -820,6 +878,7 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
     if (which === "stack") setIsStackOpen(true);
     if (which === "ai") setIsAiOpen(true);
     if (which === "cicd") setIsCicdOpen(true);
+    if (which === "modules") setIsModulesOpen(true);
   };
 
   const cleanup = useCallback(() => {
@@ -1006,6 +1065,7 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
       <StackModal isOpen={isStackOpen} onClose={() => setIsStackOpen(false)} />
       <AIModal isOpen={isAiOpen} onClose={() => setIsAiOpen(false)} />
       <CicdModal isOpen={isCicdOpen} onClose={() => setIsCicdOpen(false)} />
+      <ModulesModal isOpen={isModulesOpen} onClose={() => setIsModulesOpen(false)} />
       <div className="cs-scroll-container" ref={scrollContainerRef}>
         <button className="cs-close-button" onClick={handleClose} aria-label="Close case study">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -1097,7 +1157,7 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
         {/* ===== METRICS ===== */}
         <div className="cs-metrics-strip">
           {METRICS.map((m) => (
-            <MetricCard key={m.label} endValue={m.value} suffix={m.suffix} label={m.label} isReduced={isReduced} />
+            <MetricCard key={m.label} endValue={m.value} suffix={m.suffix} label={m.label} isReduced={isReduced} onClick={m.modal ? () => openModal(m.modal) : undefined} />
           ))}
         </div>
 
