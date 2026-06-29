@@ -199,7 +199,7 @@ const PROCESS_STEPS = [
   { phase: "01", title: "Research", detail: "Audited the incumbent stack (BoxMate, GoTeamUp, Wodify) and the placeholder-website pattern. Mapped the jobs-to-be-done for owners, coaches, and members.", link: { modal: "research", label: "View the research" } },
   { phase: "02", title: "Wireframes", detail: "Low-fi flows in Balsamiq covering discovery, onboarding, booking, payments, and admin. Validated the booking journey against the friction in existing tools.", link: { href: "https://balsamiq.cloud/sdm033s/pdth810", label: "View the wireframes" } },
   { phase: "03", title: "Design System", detail: "Built a token-based system: colour, spacing, type scales, so every tenant can be rebranded from config. Components documented in Storybook.", links: [{ href: "FIGMA_URL", label: "Open the Figma" }, { href: "STORYBOOK_URL", label: "Browse the Storybook" }] },
-  { phase: "04", title: "Engineering", detail: "React 19 + TypeScript frontend, Supabase backend with RLS, Stripe integration, Docker dev environment." },
+  { phase: "04", title: "Engineering", detail: "React 19 + TypeScript frontend, Supabase backend with RLS, Stripe integration, Docker dev environment.", links: [{ modal: "sitemap", label: "View the sitemap" }] },
   { phase: "05", title: "Ship & Iterate", detail: "Deployed to Vercel edge with continuous deployment from main and preview URLs per PR." },
 ];
 
@@ -270,6 +270,58 @@ const JOBS = [
     persona: "Member",
     job: "When I want to train, I want to book and pay on my gym's own site, so I am not bounced to a generic third-party app with someone else's name on it.",
     pains: ["Yet another app to download", "Off-brand, impersonal portal", "Friction between deciding and booking"],
+  },
+];
+
+// --- Sitemap (opened from Process step 04) ---
+const SITEMAP = [
+  {
+    area: "Public site",
+    note: "Per tenant, fully branded",
+    pages: [
+      { label: "Home" },
+      { label: "Classes & schedule" },
+      { label: "Memberships & pricing" },
+      { label: "Coaches" },
+      { label: "About" },
+      { label: "Contact" },
+      { label: "Join / sign up" },
+    ],
+  },
+  {
+    area: "Member area",
+    note: "Authenticated",
+    pages: [
+      { label: "Dashboard" },
+      { label: "Book a class" },
+      { label: "My bookings", children: ["Upcoming", "Waitlist", "History"] },
+      { label: "Membership & billing" },
+      { label: "Profile & settings" },
+    ],
+  },
+  {
+    area: "Owner admin",
+    note: "Tenant management",
+    pages: [
+      { label: "Setup dashboard" },
+      { label: "Site builder", children: ["Brand & colours", "Content", "Domain"] },
+      { label: "Classes", children: ["Schedule", "Capacity & waitlists"] },
+      { label: "Members" },
+      { label: "Coaches" },
+      { label: "Payments", children: ["Stripe Connect", "Transactions", "Payouts"] },
+      { label: "Settings" },
+    ],
+  },
+  {
+    area: "Auth & system",
+    note: "Shared",
+    pages: [
+      { label: "Log in" },
+      { label: "Sign up" },
+      { label: "Password reset" },
+      { label: "Onboarding" },
+      { label: "404 / error" },
+    ],
   },
 ];
 
@@ -421,6 +473,57 @@ function ResearchModal({ isOpen, onClose }) {
   );
 }
 
+function SitemapModal({ isOpen, onClose }) {
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="cs-research-overlay" onClick={onClose}>
+      <div className="cs-research-modal" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label="Sitemap">
+        <button className="cs-research-close" onClick={onClose} aria-label="Close sitemap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+
+        <span className="cs-research-eyebrow">Engineering / 04</span>
+        <h2 className="cs-research-title">Full sitemap</h2>
+        <p className="cs-research-lead">
+          Every route in the platform, grouped by who it serves. One codebase renders all of it, scoped to a tenant by row-level security.
+        </p>
+
+        <div className="cs-sitemap">
+          {SITEMAP.map((area) => (
+            <div className="cs-sitemap-area" key={area.area}>
+              <span className="cs-sitemap-area-title">{area.area}</span>
+              <span className="cs-sitemap-area-note">{area.note}</span>
+              <ul className="cs-sitemap-list">
+                {area.pages.map((p) => (
+                  <li key={p.label}>
+                    {p.label}
+                    {p.children && (
+                      <ul className="cs-sitemap-sublist">
+                        {p.children.map((c) => <li key={c}>{c}</li>)}
+                      </ul>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
   const overlayRef = useRef(null);
   const scrollContainerRef = useRef(null);
@@ -428,9 +531,11 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
   const triggersRef = useRef([]);
   const { isReduced } = useTheme();
   const [isResearchOpen, setIsResearchOpen] = useState(false);
+  const [isSitemapOpen, setIsSitemapOpen] = useState(false);
 
   const openModal = (which) => {
     if (which === "research") setIsResearchOpen(true);
+    if (which === "sitemap") setIsSitemapOpen(true);
   };
 
   const cleanup = useCallback(() => {
@@ -613,6 +718,7 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
   return (
     <div className="cs-overlay" ref={overlayRef}>
       <ResearchModal isOpen={isResearchOpen} onClose={() => setIsResearchOpen(false)} />
+      <SitemapModal isOpen={isSitemapOpen} onClose={() => setIsSitemapOpen(false)} />
       <div className="cs-scroll-container" ref={scrollContainerRef}>
         <button className="cs-close-button" onClick={handleClose} aria-label="Close case study">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
