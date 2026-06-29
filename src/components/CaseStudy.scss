@@ -620,6 +620,86 @@
 }
 
 
+// ===== SITEMAP (engineering modal) =====
+.cs-sitemap {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  align-items: start;
+
+  @media (max-width: $breakpoint-tablet) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cs-sitemap-area {
+  padding: 20px;
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+}
+
+.cs-sitemap-area-title {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+  color: var(--color-text-primary);
+}
+
+.cs-sitemap-area-note {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin: 4px 0 14px;
+}
+
+.cs-sitemap-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  > li {
+    position: relative;
+    padding: 5px 0 5px 16px;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--color-text-primary);
+
+    &::before {
+      content: "/";
+      position: absolute;
+      left: 0;
+      font-family: var(--font-mono);
+      color: var(--color-accent);
+    }
+  }
+}
+
+.cs-sitemap-sublist {
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 2px 4px;
+  border-left: 1px solid var(--color-border);
+
+  li {
+    padding: 3px 0 3px 12px;
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--color-text-secondary);
+  }
+}
+
+
 // ===== METADATA STRIP =====
 .cs-meta-strip {
   display: grid;
