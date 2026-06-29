@@ -32,7 +32,7 @@ const PROBLEMS = [
       "Most small gyms run a placeholder site: a logo, a class list, maybe a contact form. But 88% of people who search on a phone visit a business within a week, and the gyms that grow treat their website as an acquisition tool, not a digital flyer. A static brochure ranks poorly and converts nobody, while every transaction happens somewhere else entirely.",
   },
   {
-    label: "The five apps",
+    label: "The bolted-on apps",
     title: "Booking that lives off-brand, behind a tax",
     description:
       "Class booking, memberships, payments, and WOD programming get bolted on through BoxMate, GoTeamUp, or Wodify. Members are bounced to a third-party portal, or told to download a generic app with someone else's name on it. That friction pushes people away, and the owner pays a recurring per-member fee that scales worst for the smallest gyms.",
@@ -51,6 +51,8 @@ const DECISIONS = [
     title: "Multi-tenant on row-level security",
     reasoning:
       "One codebase serves every gym, each an isolated, fully branded tenant via Supabase RLS. This is what removes the per-member tax: infinite gyms at near-zero marginal cost, instead of a price that climbs with every member you sign.",
+    plain:
+      "One website quietly powers every gym, and each gym only ever sees its own members and data. That is what lets the price stay flat instead of growing with every member.",
   },
   {
     icon: (
@@ -63,6 +65,8 @@ const DECISIONS = [
     title: "Branded storefronts from one config",
     reasoning:
       "Each gym gets a themed public site, their logo, colours, and hero imagery, generated from a single config object. Booking lives on the gym's own domain, so members never leave the brand for a third-party portal, and the site itself becomes the thing search engines rank.",
+    plain:
+      "Every gym gets its own good-looking site with its own logo and colours, and members book right there rather than being sent off to a separate, generic app.",
   },
   {
     icon: (
@@ -70,9 +74,11 @@ const DECISIONS = [
         <polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
       </svg>
     ),
-    title: "Optimistic booking UI",
+    title: "Booking fast enough to keep members",
     reasoning:
-      "Bookings, waitlists, and cancellations update instantly and reconcile in the background. The friction that drives members toward easier apps disappears, because the gym's own site is now the fastest place to book a class.",
+      "Members drift to whichever app books a class with the least friction, so booking was the one flow worth over-investing in. Bookings, waitlists, and cancellations update instantly and stay live across every device, which makes the gym's own site the quickest place to book rather than a slower, on-brand version of a third-party portal. Elsewhere good-enough was fine; here it had to be the best moment in the member's day.",
+    plain:
+      "Booking is where gyms usually lose members to slicker apps, so I made it the single fastest, most polished part of the whole product.",
   },
 ];
 
@@ -1081,7 +1087,7 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
             <span className="cs-hero-eyebrow">Case Study</span>
             <h1 className="cs-hero-title">NoSweat<br />Fitness</h1>
             <p className="cs-hero-subtitle">
-              Small gyms juggle five apps and a dead-weight website. NoSweat makes
+              Small gyms juggle a stack of separate apps and a dead-weight website. NoSweat makes
               the website the whole business: discovery, booking, payments, and
               programming on the gym's own brand, not a third party's app.
             </p>
@@ -1134,7 +1140,7 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
           <div className="cs-section-inner">
             <span className="cs-section-eyebrow">Objective</span>
             <p className="cs-objective-text">
-              Replace the brochure site and the five-app stack with one branded
+              Replace the brochure site and the stack of bolted-on apps with one branded
               property the gym actually owns, with zero booking friction and no
               per-member tax.
             </p>
@@ -1229,6 +1235,12 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
                   <div className="cs-decision-body">
                     <h3 className="cs-decision-title">{d.title}</h3>
                     <p className="cs-decision-reasoning">{d.reasoning}</p>
+                    {d.plain && (
+                      <p className="cs-decision-plain">
+                        <span className="cs-decision-plain-label">In plain terms</span>
+                        {d.plain}
+                      </p>
+                    )}
                   </div>
                 </div>
               ))}
