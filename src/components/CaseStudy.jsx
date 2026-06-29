@@ -1210,9 +1210,15 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
                     {step.links && (
                       <div className="cs-process-step-links">
                         {step.links.map((l) => (
-                          <a key={l.label} className="cs-process-step-link" href={l.href} target="_blank" rel="noopener">
-                            {l.label} &rarr;
-                          </a>
+                          l.modal ? (
+                            <button key={l.label} type="button" className="cs-process-step-link" onClick={() => openModal(l.modal)}>
+                              {l.label} &rarr;
+                            </button>
+                          ) : (
+                            <a key={l.label} className="cs-process-step-link" href={l.href} target="_blank" rel="noopener">
+                              {l.label} &rarr;
+                            </a>
+                          )
                         ))}
                       </div>
                     )}
