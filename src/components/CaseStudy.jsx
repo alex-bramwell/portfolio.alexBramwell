@@ -197,8 +197,8 @@ const METRICS = [
 
 const PROCESS_STEPS = [
   { phase: "01", title: "Research", detail: "Audited the incumbent stack (BoxMate, GoTeamUp, Wodify) and the placeholder-website pattern. Mapped the jobs-to-be-done for owners, coaches, and members." },
-  { phase: "02", title: "Wireframes", detail: "Low-fi flows in Figma covering discovery, onboarding, booking, payments, and admin. Validated the booking journey against the friction in existing tools." },
-  { phase: "03", title: "Design System", detail: "Built a token-based system: colour, spacing, type scales, so every tenant can be rebranded from config. Components documented in Storybook." },
+  { phase: "02", title: "Wireframes", detail: "Low-fi flows in Balsamiq covering discovery, onboarding, booking, payments, and admin. Validated the booking journey against the friction in existing tools.", link: { href: "https://balsamiq.cloud/sdm033s/pdth810", label: "View the wireframes" } },
+  { phase: "03", title: "Design System", detail: "Built a token-based system: colour, spacing, type scales, so every tenant can be rebranded from config. Components documented in Storybook.", links: [{ href: "FIGMA_URL", label: "Open the Figma" }, { href: "STORYBOOK_URL", label: "Browse the Storybook" }] },
   { phase: "04", title: "Engineering", detail: "React 19 + TypeScript frontend, Supabase backend with RLS, Stripe integration, Docker dev environment." },
   { phase: "05", title: "Ship & Iterate", detail: "Deployed to Vercel edge with continuous deployment from main and preview URLs per PR." },
 ];
@@ -564,6 +564,20 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
                   <div className="cs-process-step-body">
                     <h3 className="cs-process-step-title">{step.title}</h3>
                     <p className="cs-process-step-detail">{step.detail}</p>
+                    {step.link && step.link.href && (
+                      <a className="cs-process-step-link" href={step.link.href} target="_blank" rel="noopener">
+                        {step.link.label} &rarr;
+                      </a>
+                    )}
+                    {step.links && (
+                      <div className="cs-process-step-links">
+                        {step.links.map((l) => (
+                          <a key={l.label} className="cs-process-step-link" href={l.href} target="_blank" rel="noopener">
+                            {l.label} &rarr;
+                          </a>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
