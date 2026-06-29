@@ -326,6 +326,300 @@
   gap: 20px;
 }
 
+// ===== RESEARCH DOSSIER MODAL =====
+.cs-research-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(16px, 5vh, 64px) 16px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(6px);
+  overflow-y: auto;
+  animation: cs-research-fade 0.25s ease;
+}
+
+@keyframes cs-research-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.cs-research-modal {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  margin: auto;
+  padding: clamp(24px, 4vw, 48px);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  animation: cs-research-rise 0.3s ease;
+}
+
+@keyframes cs-research-rise {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.cs-research-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+}
+
+.cs-research-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.cs-research-title {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 4vw, 38px);
+  font-weight: 700;
+  letter-spacing: -1px;
+  margin: 6px 0 28px;
+}
+
+.cs-research-subhead {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin: 36px 0 8px;
+}
+
+.cs-research-lead {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  max-width: 620px;
+  margin-bottom: 18px;
+}
+
+.cs-audit-table {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  overflow: hidden;
+}
+
+.cs-audit-row {
+  display: grid;
+  grid-template-columns: 0.8fr 1fr 1.4fr 1.4fr 1.2fr;
+  gap: 16px;
+  padding: 14px 18px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+  border-bottom: 1px solid var(--color-border);
+
+  &:last-child { border-bottom: none; }
+
+  @media (max-width: $breakpoint-tablet) {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 16px;
+  }
+}
+
+.cs-audit-head {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  background: var(--color-background);
+
+  @media (max-width: $breakpoint-tablet) {
+    display: none;
+  }
+}
+
+.cs-audit-tool {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.cs-audit-gap {
+  color: var(--color-accent);
+}
+
+.cs-jobs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+
+  @media (max-width: $breakpoint-tablet) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cs-job-card {
+  padding: 20px;
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+}
+
+.cs-job-persona {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 10px;
+}
+
+.cs-job-statement {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  margin-bottom: 14px;
+}
+
+.cs-job-pains {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    position: relative;
+    padding-left: 16px;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+    margin-bottom: 6px;
+
+    &::before {
+      content: "—";
+      position: absolute;
+      left: 0;
+      color: var(--color-accent);
+    }
+  }
+}
+
+// ===== JOURNEY MAP (research modal) =====
+.cs-journey {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+
+  @media (max-width: $breakpoint-tablet) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cs-journey-stage {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+}
+
+.cs-journey-stage-name {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin-bottom: 10px;
+}
+
+.cs-journey-doing {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--color-text-primary);
+  margin-bottom: 12px;
+}
+
+.cs-journey-mood {
+  align-self: flex-start;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #111;
+  margin-bottom: 8px;
+}
+
+.cs-journey-pain {
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  margin-top: auto;
+}
+
+// ===== INSIGHT STATEMENTS (research modal) =====
+.cs-insights {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cs-insight {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  padding: 20px;
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+}
+
+.cs-insight-num {
+  flex-shrink: 0;
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1;
+  color: var(--color-accent);
+}
+
+.cs-insight-text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+}
+
+
 // ===== METADATA STRIP =====
 .cs-meta-strip {
   display: grid;
