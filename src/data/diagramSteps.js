@@ -214,3 +214,13 @@ export const paymentFlowSteps = [
   { show: [S.T, S.I, S.A, S.P, S.O], highlight: [S.O], text: "A webhook fires back to the API. It matches the Stripe account to the correct gym and updates the booking record." },
   { show: [S.T, S.I, S.A, S.P, S.O, S.N], highlight: [], text: null },
 ];
+
+// ===== ANIMATION WORKFLOW =====
+
+export const animWorkflowSteps = [
+  { show: [S.T], highlight: [S.T], text: "Every animation here is built in three steps. The first two have nothing to do with motion." },
+  { show: [S.T, S.I], highlight: [S.I], text: "Step 1: design the finished frame in Figma. Just shapes on a canvas, no code and no animation yet." },
+  { show: [S.T, S.I, S.A, S.P], highlight: [S.P], text: "Step 2: copy the frame as SVG and paste it into React. Figma has already worked out every position, so you never type a coordinate." },
+  { show: [S.T, S.I, S.A, S.P, S.O], highlight: [S.O], text: "Step 3: a short GSAP timeline decides how each group arrives, fading, sliding, or popping into the place Figma already set." },
+  { show: [S.T, S.I, S.A, S.P, S.O, S.N], highlight: [], text: null },
+];
