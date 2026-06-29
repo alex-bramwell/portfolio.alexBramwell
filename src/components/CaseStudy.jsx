@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback } from "react";
+import { useRef, useEffect, useCallback, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useTheme } from "../context/ThemeContext";
@@ -196,11 +196,81 @@ const METRICS = [
 ];
 
 const PROCESS_STEPS = [
-  { phase: "01", title: "Research", detail: "Audited the incumbent stack (BoxMate, GoTeamUp, Wodify) and the placeholder-website pattern. Mapped the jobs-to-be-done for owners, coaches, and members." },
+  { phase: "01", title: "Research", detail: "Audited the incumbent stack (BoxMate, GoTeamUp, Wodify) and the placeholder-website pattern. Mapped the jobs-to-be-done for owners, coaches, and members.", link: { modal: "research", label: "View the research" } },
   { phase: "02", title: "Wireframes", detail: "Low-fi flows in Balsamiq covering discovery, onboarding, booking, payments, and admin. Validated the booking journey against the friction in existing tools.", link: { href: "https://balsamiq.cloud/sdm033s/pdth810", label: "View the wireframes" } },
   { phase: "03", title: "Design System", detail: "Built a token-based system: colour, spacing, type scales, so every tenant can be rebranded from config. Components documented in Storybook.", links: [{ href: "FIGMA_URL", label: "Open the Figma" }, { href: "STORYBOOK_URL", label: "Browse the Storybook" }] },
   { phase: "04", title: "Engineering", detail: "React 19 + TypeScript frontend, Supabase backend with RLS, Stripe integration, Docker dev environment." },
   { phase: "05", title: "Ship & Iterate", detail: "Deployed to Vercel edge with continuous deployment from main and preview URLs per PR." },
+];
+
+// --- Research dossier (opened from Process step 01) ---
+const AUDIT = [
+  {
+    tool: "BoxMate",
+    pricing: "Per-member monthly fee",
+    branding: "Generic app, the gym's name buried inside someone else's product",
+    booking: "Members pushed to a separate portal to book and pay",
+    gap: "The gym never owns the experience or the data",
+  },
+  {
+    tool: "GoTeamUp",
+    pricing: "Per-member monthly fee",
+    branding: "Off-brand member portal on a shared subdomain",
+    booking: "Booking and payments live away from the gym's own site",
+    gap: "Cost scales worst for the smallest gyms",
+  },
+  {
+    tool: "Wodify",
+    pricing: "Per-member monthly fee",
+    branding: "Generic app, heavy WOD-programming focus",
+    booking: "Capable but complex, more than a small box needs",
+    gap: "Overbuilt and still off-brand",
+  },
+  {
+    tool: "Placeholder website",
+    pricing: "Cheap or free",
+    branding: "On-brand, but static",
+    booking: "None, every transaction happens elsewhere",
+    gap: "Ranks poorly, converts nobody",
+  },
+];
+
+const MOODS = {
+  4: { label: "Keen", color: "#7ed957" },
+  3: { label: "Unsure", color: "#e8c547" },
+  2: { label: "Friction", color: "#f0883e" },
+  1: { label: "Lost", color: "#f25f5c" },
+};
+
+const JOURNEY = [
+  { stage: "Discover", mood: 4, doing: "Finds the gym on Google or Instagram and lands on a static placeholder site.", pain: "Looks tidy but does nothing, no way to act on the interest." },
+  { stage: "Decide", mood: 3, doing: "Wants to try a class and looks for a schedule and a way to book.", pain: "Booking lives somewhere else entirely." },
+  { stage: "Book", mood: 2, doing: "Gets bounced to a BoxMate or GoTeamUp portal and is told to make an account.", pain: "Leaves the brand, hits a generic login wall." },
+  { stage: "Pay", mood: 2, doing: "Enters card details inside a third-party app.", pain: "Pays someone other than the gym, off-brand and impersonal." },
+  { stage: "Return", mood: 1, doing: "Is asked to download an app with another company's name on it.", pain: "Yet another app, and the gym is now invisible." },
+];
+
+const INSIGHTS = [
+  "Members are handed off at the exact moment they commit. The gym's brand earns the lead, then a third-party portal closes the sale.",
+  "Pricing scales with members while ownership of the relationship stays at zero. The gyms growing fastest pay the most to look the least like themselves.",
+];
+
+const JOBS = [
+  {
+    persona: "Owner",
+    job: "When I run my gym, I want to look professional and capture leads on my own domain, so I grow without paying a fee that climbs with every member I sign.",
+    pains: ["Per-member tax", "Brand split across five tools", "No ownership of member data"],
+  },
+  {
+    persona: "Coach",
+    job: "When I program and run classes, I want members to find and book them without friction, so I spend my time coaching, not chasing admin.",
+    pains: ["Schedule lives in a separate app", "Manual chasing of bookings", "Tools built for admins, not coaches"],
+  },
+  {
+    persona: "Member",
+    job: "When I want to train, I want to book and pay on my gym's own site, so I am not bounced to a generic third-party app with someone else's name on it.",
+    pains: ["Yet another app to download", "Off-brand, impersonal portal", "Friction between deciding and booking"],
+  },
 ];
 
 const OUTCOMES = [
@@ -256,12 +326,112 @@ function MetricCard({ endValue, suffix, label, isReduced }) {
   );
 }
 
+function ResearchModal({ isOpen, onClose }) {
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="cs-research-overlay" onClick={onClose}>
+      <div className="cs-research-modal" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label="Research dossier">
+        <button className="cs-research-close" onClick={onClose} aria-label="Close research">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+
+        <span className="cs-research-eyebrow">Research / 01</span>
+        <h2 className="cs-research-title">Audit &amp; jobs-to-be-done</h2>
+
+        <h3 className="cs-research-subhead">Competitive audit</h3>
+        <p className="cs-research-lead">
+          Every incumbent charges a per-member fee and pulls booking off-brand. The placeholder website keeps the brand but does no work.
+        </p>
+        <div className="cs-audit-table">
+          <div className="cs-audit-row cs-audit-head">
+            <span>Tool</span>
+            <span>Pricing</span>
+            <span>Branding</span>
+            <span>Booking</span>
+            <span>Core gap</span>
+          </div>
+          {AUDIT.map((row) => (
+            <div className="cs-audit-row" key={row.tool}>
+              <span className="cs-audit-tool">{row.tool}</span>
+              <span>{row.pricing}</span>
+              <span>{row.branding}</span>
+              <span>{row.booking}</span>
+              <span className="cs-audit-gap">{row.gap}</span>
+            </div>
+          ))}
+        </div>
+
+        <h3 className="cs-research-subhead">Member journey, today</h3>
+        <p className="cs-research-lead">
+          What it actually feels like to become a member with the incumbent stack. Confidence drops at every step the gym hands off.
+        </p>
+        <div className="cs-journey">
+          {JOURNEY.map((s, i) => (
+            <div
+              className="cs-journey-stage"
+              key={s.stage}
+              style={{
+                backgroundColor: `color-mix(in srgb, ${MOODS[s.mood].color} 8%, var(--color-background))`,
+                borderColor: `color-mix(in srgb, ${MOODS[s.mood].color} 30%, var(--color-border))`,
+              }}
+            >
+              <span className="cs-journey-stage-name">{i + 1}. {s.stage}</span>
+              <p className="cs-journey-doing">{s.doing}</p>
+              <span className="cs-journey-mood" style={{ backgroundColor: MOODS[s.mood].color }}>{MOODS[s.mood].label}</span>
+              <p className="cs-journey-pain">{s.pain}</p>
+            </div>
+          ))}
+        </div>
+
+        <h3 className="cs-research-subhead">What the research told us</h3>
+        <div className="cs-insights">
+          {INSIGHTS.map((text, i) => (
+            <div className="cs-insight" key={i}>
+              <span className="cs-insight-num">0{i + 1}</span>
+              <p className="cs-insight-text">{text}</p>
+            </div>
+          ))}
+        </div>
+
+        <h3 className="cs-research-subhead">Jobs-to-be-done</h3>
+        <div className="cs-jobs-grid">
+          {JOBS.map((job) => (
+            <div className="cs-job-card" key={job.persona}>
+              <span className="cs-job-persona">{job.persona}</span>
+              <p className="cs-job-statement">{job.job}</p>
+              <ul className="cs-job-pains">
+                {job.pains.map((p) => <li key={p}>{p}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
   const overlayRef = useRef(null);
   const scrollContainerRef = useRef(null);
   const heroRef = useRef(null);
   const triggersRef = useRef([]);
   const { isReduced } = useTheme();
+  const [isResearchOpen, setIsResearchOpen] = useState(false);
+
+  const openModal = (which) => {
+    if (which === "research") setIsResearchOpen(true);
+  };
 
   const cleanup = useCallback(() => {
     triggersRef.current.forEach((st) => st.kill());
@@ -442,6 +612,7 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
 
   return (
     <div className="cs-overlay" ref={overlayRef}>
+      <ResearchModal isOpen={isResearchOpen} onClose={() => setIsResearchOpen(false)} />
       <div className="cs-scroll-container" ref={scrollContainerRef}>
         <button className="cs-close-button" onClick={handleClose} aria-label="Close case study">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -564,6 +735,11 @@ export default function CaseStudy({ isOpen, onClose, onOpenArticle }) {
                   <div className="cs-process-step-body">
                     <h3 className="cs-process-step-title">{step.title}</h3>
                     <p className="cs-process-step-detail">{step.detail}</p>
+                    {step.link && step.link.modal && (
+                      <button type="button" className="cs-process-step-link" onClick={() => openModal(step.link.modal)}>
+                        {step.link.label} &rarr;
+                      </button>
+                    )}
                     {step.link && step.link.href && (
                       <a className="cs-process-step-link" href={step.link.href} target="_blank" rel="noopener">
                         {step.link.label} &rarr;
